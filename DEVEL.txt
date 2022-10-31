@@ -1,0 +1,58 @@
+Developers information
+**********************
+
+
+How to develop for python-openzwave
+===================================
+
+Fork the project on Github.
+
+Get the sources :
+
+   git clone https://github.com/yourname/libopenzwave
+
+You can install all the dependances to develop for libopenzwave
+using the command :
+
+   sudo make developer-deps
+
+You must now install libopenzwave in develop mode. Depending on
+which python version you prefer, use :
+
+   make venv2-dev
+
+or
+
+   make venv2-dev
+
+Keep in mind that your updates must be python 3 compatible.
+
+Develop, test, debug, test, ... :)
+
+Update the documentation if needed. You surely found the documentation
+useful, so please keep it up to date.
+
+It a good idea to add automatic tests.
+
+Launch the full test suite:
+
+   make venv-tests
+
+At last but not least, submit your request with the result of tests in
+the comment.
+
+If you don't follow the previous steps, your PR will be refused or
+letting in pending state until I've got time to test it.
+
+
+Documentation
+=============
+
+First, install the dependances :
+
+   sudo make doc-deps
+
+Documentation is managed with sphinx.
+
+Don't update txt and rst files (README, INSTALL, ...) in the root
+directory, update the RST sources in docs.

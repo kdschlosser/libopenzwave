@@ -1,0 +1,14 @@
+div.body {
+    min-width: 450px;
+    max-width: 100%;
+    margin-right: 20%;
+}
+
+cite {
+    background-color: #333;
+    color: #ff9900;
+    margin-left: 3px;
+    margin-right: 3px;
+    padding-left: 3px;
+    padding-right: 5px;
+}

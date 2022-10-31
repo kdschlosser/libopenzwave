@@ -1,0 +1,21 @@
+#####
+# Circle CI
+#
+# For running docker images on circle ci, see: https://circleci.com/docs/docker
+# For circle.yml explanation, see: https://circleci.com/docs/manually
+# Python specific configuration, see: https://circleci.com/docs/language-python
+#####
+machine:
+  python:
+    version: 2.7.6
+    version: 3.5.3
+    version: pypy-2.3.1
+dependencies:
+    override:
+        - sudo apt-get update
+        - sudo make ci-deps
+        - make openzwave.gzip
+        - echo "Don't need to install setup.py"
+test:
+    override:
+        - make venv-continuous-autobuild-tests

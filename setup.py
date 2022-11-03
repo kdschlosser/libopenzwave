@@ -409,7 +409,7 @@ if __name__ == '__main__':
         sys.argv.remove('--manager')
         package_dir['libopenzwave_man'] = 'libopenzwave_man'
         packages += [
-            'libopenzwave.scripts.libopenzwave_manager'
+            'libopenzwave.scripts'
         ]
 
         entry_points['console_scripts'] = [
@@ -421,15 +421,14 @@ if __name__ == '__main__':
         else:
             install_requires += ['sdnotify']
 
-        packages += [
-            'libopenzwave.scripts.libopenzwave_service'
-        ]
-
         if 'console_scripts' in entry_points:
             entry_points['console_scripts'] += [
                 'libopenzwave_service=libopenzwave.scripts.libopenzwave_service:main'
             ]
         else:
+            packages += [
+                'libopenzwave.scripts'
+            ]
             entry_points['console_scripts'] = [
                 'libopenzwave_service=libopenzwave.scripts.libopenzwave_service:main'
             ]

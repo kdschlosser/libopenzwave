@@ -1,6 +1,3 @@
-- checkout: self
-  submodules: recursive
-
 - script: python -m pip install --upgrade pip setuptools wheel
   displayName: 'Install tools'
 

@@ -7,9 +7,9 @@ jobs:
           vmImage: ${{ image }}
         steps:
           - task: UsePythonVersion@0
-              inputs:
-                versionSpec: ${{ pythonVersion }}
-                addToPath: true
+            inputs:
+              versionSpec: ${{ pythonVersion }}
+              addToPath: true
           - script: sudo apt-get install --force-yes -y make libudev-dev g++ libyaml-dev
             displayName: 'Install libs'
 

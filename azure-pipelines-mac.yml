@@ -9,9 +9,9 @@ jobs:
 
         steps:
           - task: UsePythonVersion@0
-              inputs:
-                versionSpec: ${{ pythonVersion }}
-                addToPath: true
+            inputs:
+              versionSpec: ${{ pythonVersion }}
+              addToPath: true
           - script: python -m pip install --upgrade pip setuptools wheel
             displayName: 'Install tools'
 

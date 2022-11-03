@@ -3,8 +3,8 @@
 import sys
 import os
 import shutil
-from distutils import log as LOG  # NOQA
-from setuptools.command.build import build as _build  # NOQA
+from distutils import log as LOG
+from distutils.command.build import build as _build
 import setuptools
 import libopenzwave_version
 from .get_openzwave import get_openzwave

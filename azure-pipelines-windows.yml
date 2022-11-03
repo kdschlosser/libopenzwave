@@ -1,0 +1,10 @@
+jobs:
+  - ${{ each image in parameters.images }}:
+    - ${{ each pythonVersion in parameters.pythonVersions }}:
+    - job:
+      displayName: ${{ format('OS:{0} PY:{1}', image, pythonVersion) }}
+
+      pool:
+        vmImage: ${{ image }}
+      steps:
+        - template: azure-pipelines-steps.yml

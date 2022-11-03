@@ -1,0 +1,12 @@
+jobs:
+  - ${{ each image in parameters.images }}:
+    - ${{ each pythonVersion in parameters.pythonVersions }}:
+      - job:
+        displayName: ${{ format('OS:{0} PY:{1}', image, pythonVersion) }}
+        pool:
+          vmImage: ${{ image }}
+        steps:
+          - script: sudo apt-get install --force-yes -y make libudev-dev g++ libyaml-dev
+            displayName: 'Install libs'
+
+          - template: azure-pipelines-steps.yml

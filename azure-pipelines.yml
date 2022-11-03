@@ -1,48 +1,17 @@
-trigger:
-  branches:
-    include:
-      - master
-      -
 jobs:
-- job: 'libopenzwave'
-  strategy:
-    matrix:
-      maxParallel: 2
 
-      linux:
-        imageName: 'ubuntu-latest'
-      mac:
-        imageName: 'macOS-latest'
-      windows:
-        imageName: 'windows-latest'
+- template: azure-pipelines-mac.yml
+  parameters:
+    images: [ 'macOS-12', 'macOS-11',]
+    pythonVersions: [ '3.6', '3.7', '3.8', '3.9', '3.10']
 
-      Python36:
-        python.version: '3.6'
-      Python37:
-          python.version: '3.7'
-      Python38:
-          python.version: '3.8'
-      Python39:
-          python.version: '3.9'
-      Python310:
-          python.version: '3.10'
+- template: azure-pipelines-linux.yml
+  parameters:
+    images: [ 'ubuntu-22.04', 'ubuntu-20.04',]
+    pythonVersions: [ '3.6', '3.7', '3.8', '3.9', '3.10']
 
+- template: azure-pipelines-windows.yml
+  parameters:
+    images: [ 'windows-2022', 'windows-2019' ]
+    pythonVersions: [ '3.6', '3.7', '3.8', '3.9', '3.10']
 
-  steps:
-    - checkout: self
-      submodules: recursive
-
-    - task: UsePythonVersion@0
-      displayName: 'Use Python $(python.version)'
-      inputs:
-        versionSpec: '$(python.version)'
-
-      - script: python -m pip install --upgrade pip setuptools wheel
-        displayName: 'Install tools'
-
-
-    - task: PublishTestResults@2
-        inputs:
-          testResultsFiles: 'reports/django-basic.xml'
-          testRunTitle: '$(Agent.OS) - $(Build.DefinitionName) - Python $(python.version)'
-          condition: succeededOrFailed()

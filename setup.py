@@ -128,9 +128,9 @@ if __name__ == '__main__':
     #     sys.argv[sys.argv.index('bdist_wheel')] = 'wheel'
 
     install_requires = [
-        'pyserial>=3.5'
-        'pycryptodome>=3.15.0',
-        'lxml>=4.9.1',
+        'pyserial'
+        'pycryptodome',
+        'lxml',
     ]
 
     _verbose = '--verbose' in sys.argv

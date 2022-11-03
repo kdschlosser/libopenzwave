@@ -385,8 +385,8 @@ if __name__ == '__main__':
 
     packages = []
     package_dir = dict(
-        openzwave='libopenzwave',
-        libopenzwave='_libopenzwave'
+        libopenzwave='libopenzwave',
+        _libopenzwave='_libopenzwave'
     )
 
     if '--dev' in sys.argv:
@@ -415,7 +415,6 @@ if __name__ == '__main__':
         entry_points['console_scripts'] = [
             'libopenzwave_manager=libopenzwave.scripts.libopenzwave_manager:main'
         ]
-
     if '--service' in sys.argv:
         if sys.platform.startswith('win'):
             install_requires += ['pywin32>=223']

@@ -14,3 +14,6 @@ sphinxcontrib-fulltoc>=1.2.0
 pyserial>=3.5
 pycryptodome>=3.15.0
 lxml>=4.9.1
+pywin32>=223;sys_platform=='win32'
+sdnotify;sys_platform=='linux'
+sdnotify;sys_platform=='darwin'

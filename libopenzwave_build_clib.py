@@ -196,8 +196,16 @@ class build_clib(_build_clib):
                                 continue
 
                             f = line
+
+                            new_line = b'compiling ' + f + b'...'
+                            sys.stdout.write(
+                                new_line.decode('utf-8') + '\n'
+                            )
+
                         else:
-                            continue
+                            sys.stdout.write(
+                                line.decode('utf-8') + '\n'
+                            )
                         #
                         #     for compiler in COMPILERS:
                         #         if cmd.startswith(compiler):
@@ -219,17 +227,12 @@ class build_clib(_build_clib):
                         #
                         # self.compiled_files += [f]
 
-                        new_line = b'compiling ' + f + b'...'
-                        sys.stdout.write(
-                            new_line.decode('utf-8') + '\n'
-                        )
-
                         sys.stdout.flush()
 
                 for line in iter(p.stderr.readline, DUMMY_RETURN):
                     line = line.strip()
                     if line:
-                        sys.stderr.write(line + '\n')
+                        sys.stderr.write(line.decode('utf-8') + '\n')
                         sys.stderr.flush()
 
         if not p.stdout.closed:
@@ -240,3 +243,4 @@ class build_clib(_build_clib):
 
         sys.stdout.flush()
         sys.stderr.flush()
+

@@ -576,13 +576,13 @@ class Library(object):
 
     def compile_c(self, c_file, build_clib):
         cmd = [
-            '@echo "compiling {c_filename}..."',
-            "@{CC} -MM {CFLAGS} {INCLUDES} {c_file} > {DEPDIR}/{filename}.d",
-            "@mv -f {DEPDIR}/{filename}.d {DEPDIR}/{filename}.d.tmp",
-            "@sed -e 's|.*:|{OBJDIR}/{filename}.o: {DEPDIR}/{filename}.d|' < {DEPDIR}/{filename}.d.tmp > {DEPDIR}/{filename}.d;",
-            "@sed -e 's/.*://' -e 's/\\$$//' < $(DEPDIR)/{filename}.d.tmp | {FMTCMD} | sed -e 's/^ *//' -e 's/$$/:/' >> {DEPDIR}/.{filename}.d;",
-            "@rm -f {DEPDIR}/{filename}.d.tmp",
-            "@{CC} {CFLAGS} {TARCH} {INCLUDES} -o {o_file} {c_file}"
+            'echo "compiling {c_filename}..."',
+            "{CC} -MM {CFLAGS} {INCLUDES} {c_file} > {DEPDIR}/{filename}.d",
+            "mv -f {DEPDIR}/{filename}.d {DEPDIR}/{filename}.d.tmp",
+            "sed -e 's|.*:|{OBJDIR}/{filename}.o: {DEPDIR}/{filename}.d|' < {DEPDIR}/{filename}.d.tmp > {DEPDIR}/{filename}.d;",
+            "sed -e 's/.*://' -e 's/\\$$//' < $(DEPDIR)/{filename}.d.tmp | {FMTCMD} | sed -e 's/^ *//' -e 's/$$/:/' >> {DEPDIR}/.{filename}.d;",
+            "rm -f {DEPDIR}/{filename}.d.tmp",
+            "{CC} {CFLAGS} {TARCH} {INCLUDES} -o {o_file} {c_file}"
         ]
 
         c_file = os.path.abspath(c_file)
@@ -612,13 +612,13 @@ class Library(object):
 
     def compile_cpp(self, cpp_file, build_clib):
         cmd = [
-            '@echo "compiling {cpp_filename}..."',
-            "@{CXX} -MM {CFLAGS} {CPPFLAGS} {INCLUDES} {cpp_file} > {DEPDIR}/{filename}.d",
-            "@mv -f {DEPDIR}/{filename}.d {DEPDIR}/{filename}.d.tmp",
-            "@sed -e 's|.*:|{OBJDIR}/{filename}.o: {DEPDIR}/{filename}.d|' < {DEPDIR}/{filename}.d.tmp > {DEPDIR}/{filename}.d;",
-            "@sed -e 's/.*://' -e 's/\\$$//' < {DEPDIR}/{filename}.d.tmp | {FMTCMD} | sed -e 's/^ *//' -e 's/$$/:/' >> {DEPDIR}/.{filename}.d;",
-            "@rm -f {DEPDIR}/{filename}.d.tmp",
-            "@{CXX} {CFLAGS} {CPPFLAGS} {TARCH} {INCLUDES} -o {o_file} {cpp_file}",
+            'echo "compiling {cpp_filename}..."',
+            "{CXX} -MM {CFLAGS} {CPPFLAGS} {INCLUDES} {cpp_file} > {DEPDIR}/{filename}.d",
+            "mv -f {DEPDIR}/{filename}.d {DEPDIR}/{filename}.d.tmp",
+            "sed -e 's|.*:|{OBJDIR}/{filename}.o: {DEPDIR}/{filename}.d|' < {DEPDIR}/{filename}.d.tmp > {DEPDIR}/{filename}.d;",
+            "sed -e 's/.*://' -e 's/\\$$//' < {DEPDIR}/{filename}.d.tmp | {FMTCMD} | sed -e 's/^ *//' -e 's/$$/:/' >> {DEPDIR}/.{filename}.d;",
+            "rm -f {DEPDIR}/{filename}.d.tmp",
+            "{CXX} {CFLAGS} {CPPFLAGS} {TARCH} {INCLUDES} -o {o_file} {cpp_file}",
         ]
         cpp_file = os.path.abspath(cpp_file)
         filename = os.path.splitext(os.path.split(cpp_file)[-1])[0]

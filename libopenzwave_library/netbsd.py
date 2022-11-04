@@ -4,17 +4,29 @@ import os
 from distutils import log as LOG
 
 from . import library_base
+import libopenzwave_pkgconfig
 
 
 class Library(library_base.Library):
 
     @property
-    def prefix(self):
-        return '/opt/local'
+    def fmt_cmd(self):
+        return 'fmt -g 1'
+
+    @property
+    def include_dirs(self):
+        includes = library_base.Library.include_dirs.fget(self)
+        includes.append(libopenzwave_pkgconfig.cflags('libusb-1.0'))
+
+        return includes
 
     @property
     def libraries(self):
-        return ['-lresolv', '-liconv', '-lusb-1.0']
+        libs = [
+            '-lresolv',
+            libopenzwave_pkgconfig.libs('libusb-1.0')
+        ]
+        return libs
 
     @libraries.setter
     def libraries(self, _):
@@ -28,8 +40,8 @@ class Library(library_base.Library):
                 'windows',
                 'winrt',
                 'mac',
-                'hidapi',
                 'examples',
+                'libusb',
                 'test'
             ]
         )
@@ -51,7 +63,9 @@ class Library(library_base.Library):
 
     @property
     def c_flags(self):
-        c_flags = library_base.parse_flags(os.environ['CFLAGS']) + [
+        c_flags = library_base.parse_flags(os.environ['CFLAGS'])
+
+        for flag in (
             '-c',
             '-Wall',
             '-Wno-unknown-pragmas',
@@ -60,17 +74,11 @@ class Library(library_base.Library):
             '-Wno-sequence-point',
             '-O3',
             '-fPIC',
-        ]
+        ):
+            if flag not in c_flags:
+                c_flags.append(flag)
 
         return c_flags
-
-    @property
-    def include_dirs(self):
-        includes = library_base.Library.include_dirs.fget(self)
-
-        includes.append('-I "/usr/local/include/libusb-1.0"')
-
-        return includes
 
     def clean(self, command_class):
         LOG.info(
@@ -78,7 +86,4 @@ class Library(library_base.Library):
                 self.build_path
             )
         )
-        command_class.spawn(
-            ['make', 'PREFIX=/opt/local', 'clean'],
-            cwd=self.openzwave
-        )
+        command_class.spawn(['gmake', 'clean'], cwd=self.openzwave)

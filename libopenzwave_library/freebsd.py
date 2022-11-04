@@ -4,17 +4,38 @@ import os
 from distutils import log as LOG
 
 from . import library_base
+import platform
+
+
+FREEBSD_VERSION = tuple(int(item) for item in platform.release().split('.'))
+
+if len(FREEBSD_VERSION) < 3:
+    FREEBSD_VERSION += (0,)
+
+if FREEBSD_VERSION >= (10, 2, 0):
+    FREEBSD_10_2_UP = True
+else:
+    FREEBSD_10_2_UP = False
 
 
 class Library(library_base.Library):
 
     @property
-    def ld(self):
-        return os.environ['LD']
+    def include_dirs(self):
+        includes = library_base.Library.include_dirs.fget(self)
+
+        if not FREEBSD_10_2_UP:
+            includes.append('-I "/usr/local/include"')
+
+        return includes
 
     @property
     def libraries(self):
-        return []
+        libs = ['-lresolv', '-lusb']
+        # if not FREEBSD_10_2_UP:
+        #     libs.append('-liconv')
+
+        return libs
 
     @libraries.setter
     def libraries(self, _):
@@ -40,54 +61,23 @@ class Library(library_base.Library):
         pass
 
     @property
-    def obj_path(self):
-        return self.openzwave + '/.lib'
-
-    @property
-    def dep_path(self):
-        return self.openzwave + '/.dep'
-
-    @property
-    def ranlib(self):
-        return os.environ['RANLIB']
-
-    @property
-    def ar(self):
-        return os.environ['AR']
-
-    @property
-    def cc(self):
-        return os.environ['CC']
-
-    @property
-    def cxx(self):
-        return os.environ['CXX']
-
-    @property
-    def shared_lib_name(self):
-        return 'libopenzwave.so.' + self.builder.ozw_version
-
-    @property
-    def shared_lib_no_version_name(self):
-        return 'libopenzwave.so'
-
-    @property
     def ld_flags(self):
         ld_flags = library_base.parse_flags(os.environ['LDFLAGS'])
 
         if not self.builder.static:
-            ld_flags += [
-                '-shared',
-                '-lusb',
-                '-Wl,',
-                '-soname,',
-                self.shared_lib_name
-            ]
+            ld_flags.append('-shared')
+            ld_flags.append('-Wl,-soname,{0}'.format(self.shared_lib_name))
+
+        # if not FREEBSD_10_2_UP:
+        #     ld_flags += ['-L "/usr/local/lib"']
+
         return ld_flags
 
     @property
     def c_flags(self):
-        c_flags = library_base.parse_flags(os.environ['CFLAGS']) + [
+        c_flags = library_base.parse_flags(os.environ['CFLAGS'])
+
+        for flag in (
             '-c',
             '-Wall',
             '-Wno-unknown-pragmas',
@@ -95,52 +85,12 @@ class Library(library_base.Library):
             '-Wno-error=sequence-point',
             '-Wno-sequence-point',
             '-O3',
-            '-DNDEBUG',
             '-fPIC',
-            '-DSYSCONFDIR="/usr/local/etc/openzwave/"'
-        ]
-
-        command = [
-            'test',
-            '$(uname -U)',
-            '-ge',
-            '1002000;'
-            'echo $?'
-        ]
-
-        from subprocess import Popen, PIPE
-
-        p = Popen(command, stdout=PIPE, stderr=PIPE)
-
-        if p.communicate()[0].strip() == '1':
-            if not os.path.exists('/usr/local/include/iconv.h'):
-                raise RuntimeError(
-                    'FreeBSD pre 10.2: Please install libiconv from ports'
-                )
-
-            c_flags += '-I/usr/local/include'
+        ):
+            if flag not in c_flags:
+                c_flags.append(flag)
 
         return c_flags
-
-    @property
-    def cpp_flags(self):
-        cpp_flags = library_base.parse_flags(os.environ['CPPFLAGS']) + [
-            '-std=c++11'
-        ]
-
-        return cpp_flags
-
-    @property
-    def include_dirs(self):
-        include_dirs = [
-            '-I' + os.path.join(self.openzwave, 'cpp', 'src'),
-            '-I' + os.path.join(self.openzwave, 'cpp', 'tinyxml')
-        ]
-        return include_dirs
-
-    @include_dirs.setter
-    def include_dirs(self, _):
-        pass
 
     def clean(self, command_class):
         LOG.info(

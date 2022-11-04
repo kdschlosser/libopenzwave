@@ -2,17 +2,53 @@
 
 from . import library_base
 import os
+import platform
+
+
+DARWIN_VERSION = tuple(int(item) for item in platform.release().split('.'))
+
+if len(DARWIN_VERSION) < 3:
+    DARWIN_VERSION += (0,)
+
+if DARWIN_VERSION >= (10, 14, 0):
+    DARWIN_MOJAVE_UP = True
+else:
+    DARWIN_MOJAVE_UP = False
 
 
 class Library(library_base.Library):
 
+    def __init__(
+        self,
+        define_macros=[],
+        library_dirs=[],
+        libraries=[],
+        extra_compile_args=[],
+        include_dirs=[],
+        extra_link_args=[]
+    ):
+
+        library_base.Library.__init__(
+            self,
+            define_macros=define_macros,
+            libraries=libraries,
+            library_dirs=library_dirs,
+            extra_compile_args=extra_compile_args,
+            extra_link_args=extra_link_args,
+            include_dirs=include_dirs
+        )
+
+        self._define_macros.append(('DARWIN',))
+
     @property
     def libraries(self):
-        return [
-            '-lresolv',
+        libs = [
             '-framework IOKit',
-            '-framework CoreFoundation',
+            '-framework CoreFoundation {0}'.format(' '.join(self.t_arch)),
+            '-lresolv'
         ]
+
+        return libs
 
     @libraries.setter
     def libraries(self, _):
@@ -38,47 +74,16 @@ class Library(library_base.Library):
         pass
 
     @property
-    def obj_path(self):
-        return self.openzwave + '/.lib'
-
-    @property
-    def dep_path(self):
-        return self.openzwave + '/.dep'
-
-    @property
-    def ranlib(self):
-        if 'RANLIB' in os.environ:
-            return os.environ['RANLIB']
-        return 'ranlib'
-
-    @property
     def ar(self):
-        if 'AR' in os.environ:
-            return os.environ['AR']
-
-        return 'ar'
-
-    @property
-    def cc(self):
-        if 'CC' in os.environ:
-            return os.environ['CC']
-        return 'clang'
-
-    @property
-    def cxx(self):
-        if 'CXX' in os.environ:
-            return os.environ['CXX']
-        return 'clang++'
-
-    @property
-    def ld(self):
-        if 'LD' in os.environ:
-            return os.environ['LD']
-        return self.cxx
+        ar = os.environ['AR']
+        for item in ['-static', '-o']:
+            if item not in ar:
+                ar += ' ' + item
+        return ar
 
     @property
     def shared_lib_name(self):
-        return 'libopenzwave-{0}.dylib'.format(self.builder.ozw_version)
+        return 'libopenzwave-{0}.dylib'.format(self.ozw_version_string)
 
     @property
     def shared_lib_no_version_name(self):
@@ -87,30 +92,34 @@ class Library(library_base.Library):
     @property
     def ld_flags(self):
         ld_flags = library_base.parse_flags('LDFLAGS')
+        install_name = os.path.join(
+            self.dest_path,
+            self.lib_inst_path,
+            self.shared_lib_name
+        )
 
-        ld_flags += [
+        for flag in (
             '-dynamiclib',
-            '-install_name "{0}"'.format(
-                os.path.join(
-                    self.dest_path,
-                    self.lib_inst_path,
-                    self.shared_lib_name
-                )
-            )
-        ]
+            '-install_name "{0}"'.format(install_name)
+        ):
+            if flag not in ld_flags:
+                ld_flags.append(flag)
 
         if not self.builder.static:
-            ld_flags += [
+            for flag in (
                 '-shared',
-                '-Wl,',
-                '-soname,',
-                self.shared_lib_name
-            ]
+                '-Wl,-soname,{0}'.format(self.shared_lib_name)
+            ):
+                if flag not in ld_flags:
+                    ld_flags.append(flag)
+
         return ld_flags
 
     @property
     def c_flags(self):
-        c_flags = library_base.parse_flags('CFLAGS') + [
+        c_flags = library_base.parse_flags('CFLAGS')
+
+        for flag in (
             '-c',
             '-Wall',
             '-Wno-unknown-pragmas',
@@ -118,18 +127,19 @@ class Library(library_base.Library):
             '-Wno-error=sequence-point',
             '-Wno-sequence-point',
             '-O3',
-            '-DNDEBUG',
-            '-fPIC',
-            '-DDARWIN'
-        ]
+            '-fPIC'
+        ):
+            if flag not in c_flags:
+                c_flags.append(flag)
 
         return c_flags
 
     @property
     def cpp_flags(self):
-        cpp_flags = library_base.parse_flags('CPPFLAGS') + [
-            '-std=c++11'
-        ]
+        cpp_flags = library_base.parse_flags('CPPFLAGS')
+
+        if '-std=c++11' not in cpp_flags:
+            cpp_flags.append('-std=c++11')
 
         return cpp_flags
 
@@ -147,17 +157,12 @@ class Library(library_base.Library):
 
     @property
     def t_arch(self):
-        from subprocess import Popen, PIPE
-
-        command = ['sw_vers', '-productVersion']
-        p = Popen(command, stdout=PIPE, stderr=PIPE)
-        darwin_version = p.communicate()[0].strip().decode('utf-8')
-        mojave = float('.'.join(darwin_version.split('.')[:2])) >= 10.14
-
-        if mojave:
+        if DARWIN_MOJAVE_UP:
             # Newer macOS releases don't support i386 so only build 64-bit
-            target = ['-arch x86_64']
+            tarch = ['-arch x86_64']
         else:
-            target = ['-arch i386, -arch x86_64']
+            # Support older versions of OSX that may need to
+            # build both 32-bit and 64-bit
+            tarch = ['-arch i386', '-arch x86_64']
 
-        return target
+        return tarch

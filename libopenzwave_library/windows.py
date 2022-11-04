@@ -42,7 +42,31 @@ class Library(library_base.Library):
         with open(dll_main_path, 'w') as f:
             f.write(DLL_MAIN)
 
-    def build_version_file(self, build_clib):
+    def build_version_file(self):
+
+        template = (
+            'unsigned short ozw_vers_major = {major};\n' 
+            'unsigned short ozw_vers_minor = {minor};\n' 
+            'unsigned short ozw_vers_revision = {revision};\n' 
+            'char ozw_version_string[] = "{version}.{revision}\0";'
+        )
+
+        import libopenzwave_version
+
+        minor = libopenzwave_version.OZW_VERSION_MIN
+        major = libopenzwave_version.OZW_VERSION_MAJ
+        version = libopenzwave_version.OZW_VERSION
+        revision = libopenzwave_version.OZW_VERSION_REV
+        if revision == -1:
+            revision = 0
+
+        template = template.format(
+            minor=minor,
+            major=major,
+            version=version,
+            revision=revision
+        )
+
         version_dir = os.path.abspath(
             os.path.join(
                 self.openzwave,
@@ -56,18 +80,8 @@ class Library(library_base.Library):
             'winversion.cpp'
         )
 
-        if os.path.exists(version_file):
-            os.remove(version_file)
-
-        version_command_template = (
-            '"{path}\\GIT-VS-VERSION-GEN.bat" --quiet "{path}" "{output}"'
-        )
-        version_command = version_command_template.format(
-            path=version_dir,
-            output=version_file
-        )
-
-        build_clib.spawn(version_command)
+        with open(version_file, 'w') as f:
+            f.write(template)
 
         self.build_dll_main()
 
@@ -92,7 +106,6 @@ class Library(library_base.Library):
 
     @property
     def include_dirs(self):
-
         cpp_path = os.path.join(os.path.relpath(self.openzwave), 'cpp')
         includes = [
             '/I{0}'.format(os.path.join(cpp_path, 'src')),
@@ -244,6 +257,10 @@ class Library(library_base.Library):
             extra_compile_args=extra_compile_args,
             extra_link_args=extra_link_args
         )
+
+    @property
+    def define_macros(self):
+        return self._define_macros
 
     def install(self, command_class):
         pass

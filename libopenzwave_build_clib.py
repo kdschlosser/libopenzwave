@@ -12,6 +12,7 @@ DUMMY_RETURN = b''
 FILE_TYPES = [b'.cpp', b'.c']
 COMPILERS = ['g++', 'gcc', 'clang', 'clang++', 'cc', 'c++']
 
+
 if sys.platform.startswith('win'):
     SHELL = 'cmd'
 else:
@@ -193,7 +194,9 @@ class build_clib(_build_clib):
                                 if line.endswith(file_type):
                                     break
                             else:
-                                continue
+                                sys.stdout.write(
+                                    line.decode('utf-8') + '\n'
+                                )
 
                             f = line
 
@@ -243,4 +246,3 @@ class build_clib(_build_clib):
 
         sys.stdout.flush()
         sys.stderr.flush()
-

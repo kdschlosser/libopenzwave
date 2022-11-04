@@ -4,17 +4,21 @@ import sys
 
 print('Getting Library for platform {0}'.format(sys.platform))
 
-if sys.platform.startswith('win'):
+os = sys.platform.lower()
+
+if os.startswith('win'):
     from .windows import Library
-elif sys.platform.startswith("cygwin"):
+elif os.startswith("cygwin"):
     from .cygwin import Library
-elif sys.platform.startswith("darwin"):
+elif os.startswith("darwin"):
     from .darwin import Library
-elif sys.platform.startswith('freebsd'):
+elif os.startswith('freebsd'):
     from .freebsd import Library
-elif sys.platform.startswith('sunos'):
+elif os.startswith('netbsd'):
+    from .netbsd import Library
+elif os.startswith('sunos'):
     from .sunos import Library
-elif sys.platform.startswith('linux'):
+elif os.startswith('linux'):
     from .linux import Library
 else:
     raise RuntimeError(

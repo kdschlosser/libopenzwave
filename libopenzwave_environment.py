@@ -2,35 +2,54 @@
 
 import sys
 import os
+import platform
 from setuptools.command.easy_install import find_executable  # NOQA
 
 
-def check_packages():
+AR = None
+RANLIB = None
+C = None
+CPP = None
+LD = None
+MAKE = None
+PACKAGE_CONFIG = None
+
+
+def check_packages(*needed_packages):
+    global PACKAGE_CONFIG
+
     pkg_config = find_executable("pkg-config")
-    print("Found pkg-config : {0}".format(pkg_config))
 
     if pkg_config:
+        PACKAGE_CONFIG = pkg_config
+        print("Found pkg-config : {0}".format(pkg_config))
+
         import libopenzwave_pkgconfig
 
-        packages = ['']
+        packages = libopenzwave_pkgconfig.list_all()
 
-        for package in libopenzwave_pkgconfig.list_all():
-            if len(packages[-1] + package + ', ') > 78:
-                packages += ['']
+        for package in needed_packages:
+            if package not in packages:
+                raise RuntimeError('Missing package "{0}"'.format(package))
 
-            packages[len(packages) - 1] += package + ', '
-
-        packages = '\n'.join('  ' + pkg for pkg in packages)[:-2]
-
-        print('Installed packages:')
-        print(packages)
+            print('Found Package "{0}"'.format(package))
 
 
 def setup():
-    if sys.platform.startswith('win'):
+    os_ = sys.platform.lower()
+
+    if os_.startswith('win'):
         import libopenzwave_library  # NOQA
 
-    elif sys.platform.startswith("cygwin"):
+    elif os_.startswith("cygwin"):
+        global AR
+        global RANLIB
+        global C
+        global CPP
+        global LD
+        global MAKE
+        global PACKAGE_CONFIG
+
         gcc = find_executable("gcc")
         gpp = find_executable("g++")
         ar = find_executable('ar')
@@ -43,69 +62,81 @@ def setup():
         ranlib_env = os.environ.get('RANLIB', '')
 
         if ld:
-            if ld != ld_env and ar_env.endswith('ld'):
+            if ld != ld_env and 'ld' in ld_env:
                 ld = ld_env
-            else:
-                os.environ['LD'] = ld
-        elif ld_env.endswith('ld'):
+        elif 'ld' in ld_env:
             ld = ld_env
         else:
             raise RuntimeError('Unable to locate ld')
 
         if ranlib:
-            if ranlib != ranlib_env and ranlib_env.endswith('ranlib'):
+            if ranlib != ranlib_env and 'ranlib' in ranlib_env:
                 ranlib = ranlib_env
-            else:
-                os.environ['RANLIB'] = ranlib
-        elif ranlib_env.endswith('ranlib'):
+        elif 'ranlib' in ranlib_env:
             ranlib = ranlib_env
         else:
             raise RuntimeError('Unable to locate ranlib')
 
         if ar:
-            if ar != ar_env and ar_env.endswith('ar'):
+            if ar != ar_env and 'ar' in ar_env:
                 ar = ar_env
-            else:
-                os.environ['AR'] = ar
-        elif ar_env.endswith('ar'):
+        elif 'ar' in ar_env:
             ar = ar_env
         else:
             raise RuntimeError('Unable to locate ar')
 
         if gcc:
-            if gcc != cc and cc.endswith('gcc'):
+            if gcc != cc and 'gcc' in cc:
                 gcc = cc
-            else:
-                os.environ['CC'] = gcc
-        elif cc.endswith('gcc'):
+        elif 'gcc' in cc:
             gcc = cc
         else:
             raise RuntimeError('Unable to locate gcc')
 
-        print("Found gcc : {0}".format(gcc))
-
         if gpp:
-            if gpp != cxx and cxx.endswith('g++'):
+            if gpp != cxx and 'g++' in cxx:
                 gpp = cxx
-            else:
-                os.environ['CXX'] = gpp
-        elif cxx.endswith('g++'):
+        elif 'g++' in cxx:
             gpp = cxx
         else:
             raise RuntimeError('Unable to locate g++')
 
+        if 'rc' not in ar:
+            ar = ar.replace('ar', 'ar rc')
+
+        AR = ar
+        C = gcc
+        CPP = gpp
+        RANLIB = ranlib
+        LD = ld
+
+        print("Found gcc : {0}".format(gcc))
         print("Found g++ : {0}".format(gpp))
         print("Found ar : {0}".format(ar))
         print("Found ld : {0}".format(ld))
         print("Found ranlib : {0}".format(ranlib))
 
+        os.environ['CC'] = gcc
+        os.environ['CXX'] = gpp
+        os.environ['AR'] = ar
+        os.environ['RANLIB'] = ranlib
+        os.environ['LD'] = ld
+
         check_packages()
 
-    elif sys.platform.startswith("darwin"):
+    elif os_.startswith("darwin"):
+        global AR
+        global RANLIB
+        global C
+        global CPP
+        global LD
+        global MAKE
+        global PACKAGE_CONFIG
+
         clang = find_executable("clang")
         clang_pp = find_executable("clang++")
-        ar = find_executable('ar')
-        ld = find_executable('ld')
+        ar = find_executable('libtool')
+        ld = clang_pp
         ranlib = find_executable('ranlib')
         cc = os.environ.get('CC', '')
         cxx = os.environ.get('CXX', '')
@@ -114,58 +145,50 @@ def setup():
         ranlib_env = os.environ.get('RANLIB', '')
 
         if ranlib:
-            ranlib = 'ranlib'
-            if ranlib != ranlib_env and ranlib_env.endswith('ranlib'):
+            if ranlib != ranlib_env and 'ranlib' in ranlib_env:
                 ranlib = ranlib_env
-            else:
-                os.environ['RANLIB'] = 'ranlib'
-        elif ranlib_env.endswith('ranlib'):
+        elif 'ranlib' in ranlib_env:
             ranlib = ranlib_env
         else:
             raise RuntimeError('Unable to locate ranlib')
 
         if ar:
-            if ar != ar_env and ar_env.endswith('ar'):
+            if ar != ar_env and 'libtool' in ar_env:
                 ar = ar_env
-            else:
-                os.environ['AR'] = 'ar'
-        elif ar_env.endswith('ar'):
+        elif 'libtool' in ar_env:
             ar = ar_env
         else:
             raise RuntimeError('Unable to locate ar')
 
         if clang:
-            if clang != cc and cc.endswith('clang'):
+            if clang != cc and 'clang' in cc:
                 clang = cc
-            else:
-                os.environ['CC'] = clang
-        elif cc.endswith('clang'):
+        elif 'clang' in cc:
             clang = cc
         else:
             raise RuntimeError('Unable to locate clang')
 
-        print("Found clang : {0}".format(clang))
-
         if clang_pp:
-            if clang_pp != cxx and cxx.endswith('clang++'):
+            if clang_pp != cxx and 'clang++' in cxx:
                 clang_pp = cxx
-            else:
-                os.environ['CXX'] = clang_pp
-        elif cxx.endswith('clang++'):
+        elif 'clang++' in cxx:
             clang_pp = cxx
         else:
             raise RuntimeError('Unable to locate clang++')
 
         if ld:
-            if ld != ld_env and ar_env.endswith('ld'):
+            if ld != ld_env and 'clang++' in ld_env:
                 ld = ld_env
-            else:
-                os.environ['LD'] = 'ld'
-        elif ld_env.endswith('ld'):
+        elif 'clang++' in ld_env:
             ld = ld_env
         else:
-            ld = 'ld'
-            os.environ['LD'] = 'ld'
+            ld = clang_pp
+
+        AR = ar
+        C = clang
+        CPP = clang_pp
+        RANLIB = ranlib
+        LD = ld
 
         print("Found clang : {0}".format(clang))
         print("Found clang++ : {0}".format(clang_pp))
@@ -173,49 +196,216 @@ def setup():
         print("Found ld : {0}".format(ld))
         print("Found ranlib : {0}".format(ranlib))
 
+        os.environ['CXX'] = clang_pp
+        os.environ['AR'] = ar
+        os.environ['LD'] = ld
+        os.environ['CC'] = clang
+        os.environ['RANLIB'] = ranlib
+
         check_packages()
 
-    elif sys.platform.startswith('freebsd'):
+    elif os_.startswith('freebsd'):
+        global AR
+        global RANLIB
+        global C
+        global CPP
+        global LD
+        global MAKE
+        global PACKAGE_CONFIG
+
         c = find_executable("cc")
         cpp = find_executable("c++")
+
         gmake = find_executable("gmake")
+
         cc = os.environ.get('CC', '')
         cxx = os.environ.get('CXX', '')
 
-        if not gmake:
-            raise RuntimeError('Unable to locate gmake')
+        ar = find_executable("ar")
+        ar_env = os.environ.get('AR', '')
+
+        ranlib = find_executable("ranlib")
+        ranlib_env = os.environ.get('RANLIB', '')
+
+        ld_env = os.environ.get('LD', '')
 
         if c:
-            if c != cc and cc.endswith('cc'):
+            if c != cc and 'cc' in cc:
                 c = cc
-            else:
-                os.environ['CC'] = c
-        elif cc.endswith('cc'):
+        elif 'cc' in cc:
             c = cc
         else:
             raise RuntimeError('Unable to locate cc')
 
-        print("Found cc : {0}".format(c))
-
         if cpp:
-            if cpp != cxx and cxx.endswith('c++'):
+            if cpp != cxx and 'c++' in cxx:
                 cpp = cxx
-            else:
-                os.environ['CXX'] = cpp
-        elif cxx.endswith('c++'):
+        elif 'c++' in cxx:
             cpp = cxx
         else:
             raise RuntimeError('Unable to locate c++')
 
+        if ar:
+            if ar != ar_env and 'ar' in ar_env:
+                ar = ar_env
+        elif 'ar' in ar_env:
+            ar = ar_env
+        else:
+            raise RuntimeError('Unable to locate ar')
+
+        if 'rc' not in ar:
+            ar = ar.replace('ar', 'ar rc')
+
+        if ranlib:
+            if ranlib != ranlib_env and 'ranlib' in ranlib_env:
+                ranlib = ranlib_env
+        elif 'ranlib' in ranlib_env:
+            ranlib = ranlib_env
+        else:
+            raise RuntimeError('Unable to locate ranlib')
+
+        if ld_env:
+            if ld_env != cpp and 'c++' in ld_env:
+                ld = ld_env
+            else:
+                ld = cpp
+        else:
+            ld = cpp
+
+        AR = ar
+        C = c
+        CPP = cpp
+        RANLIB = ranlib
+        LD = ld
+        MAKE = gmake
+
+        print("Found cc : {0}".format(c))
         print("Found c++ : {0}".format(cpp))
+        print("Found ranlib : {0}".format(ranlib))
+        print("Found ld : {0}".format(ld))
+        print("Found ar : {0}".format(ar))
         print("Found gmake : {0}".format(gmake))
-        check_packages()
 
-        os.environ['LD'] = cpp
-        os.environ['AR'] = 'ar rc'
-        os.environ['RANLIB'] = 'ranlib'
+        os.environ['CXX'] = cpp
+        os.environ['CC'] = c
+        os.environ['LD'] = ld
+        os.environ['AR'] = ar
+        os.environ['RANLIB'] = ranlib
 
-    elif sys.platform.startswith('sunos'):
+        packages = ['libresolv', 'libusb-1.0', 'e2fsprogs-libuuid']
+
+        version = tuple(
+            int(item) for item in platform.release().split('.'))
+
+        if len(version) < 3:
+            version += (0,)
+
+        if version < (10, 2, 0):
+            packages.append('libiconv')
+
+        check_packages(*packages)
+
+    elif os_.startswith('netbsd'):
+        global AR
+        global RANLIB
+        global C
+        global CPP
+        global LD
+        global MAKE
+        global PACKAGE_CONFIG
+
+        c = find_executable("gcc")
+        cpp = find_executable("g++")
+
+        gmake = find_executable("gmake")
+
+        cc = os.environ.get('CC', '')
+        cxx = os.environ.get('CXX', '')
+
+        ar = find_executable("ar")
+        ar_env = os.environ.get('AR', '')
+
+        ranlib = find_executable("ranlib")
+        ranlib_env = os.environ.get('RANLIB', '')
+
+        ld_env = os.environ.get('LD', '')
+
+        if c:
+            if c != cc and 'gcc' in cc:
+                c = cc
+        elif 'gcc' in cc:
+            c = cc
+        else:
+            raise RuntimeError('Unable to locate cc')
+
+        if cpp:
+            if cpp != cxx and 'g++' in cxx:
+                cpp = cxx
+        elif 'g++' in cxx:
+            cpp = cxx
+        else:
+            raise RuntimeError('Unable to locate c++')
+
+        if ar:
+            if ar != ar_env and 'ar' in ar_env:
+                ar = ar_env
+        elif 'ar' in ar_env:
+            ar = ar_env
+        else:
+            raise RuntimeError('Unable to locate ar')
+
+        if 'rc' not in ar:
+            ar = ar.replace('ar', 'ar rc')
+
+        if ranlib:
+            if ranlib != ranlib_env and 'ranlib' in ranlib_env:
+                ranlib = ranlib_env
+        elif 'ranlib' in ranlib_env:
+            ranlib = ranlib_env
+        else:
+            raise RuntimeError('Unable to locate ranlib')
+
+        if ld_env:
+            if ld_env != cpp and 'c++' in ld_env:
+                ld = ld_env
+            else:
+                ld = cpp
+        else:
+            ld = cpp
+
+        AR = ar
+        C = c
+        CPP = cpp
+        RANLIB = ranlib
+        LD = ld
+        MAKE = gmake
+
+        print("Found cc : {0}".format(c))
+        print("Found c++ : {0}".format(cpp))
+        print("Found ranlib : {0}".format(ranlib))
+        print("Found ld : {0}".format(ld))
+        print("Found ar : {0}".format(ar))
+        print("Found gmake : {0}".format(gmake))
+
+        os.environ['CXX'] = cpp
+        os.environ['CC'] = c
+        os.environ['LD'] = ld
+        os.environ['AR'] = ar
+        os.environ['RANLIB'] = ranlib
+
+        packages = ['libresolv', 'libusb-1.0']
+
+        check_packages(*packages)
+
+    elif os_.startswith('sunos'):
+        global AR
+        global RANLIB
+        global C
+        global CPP
+        global LD
+        global MAKE
+        global PACKAGE_CONFIG
+
         gcc = find_executable("gcc")
         gpp = find_executable("g++")
         make = find_executable("make")
@@ -228,34 +418,47 @@ def setup():
         if gcc:
             if gcc != cc and cc.endswith('gcc'):
                 gcc = cc
-            else:
-                os.environ['CC'] = gcc
         elif cc.endswith('gcc'):
             gcc = cc
         else:
             raise RuntimeError('Unable to locate gcc')
 
-        print("Found gcc : {0}".format(gcc))
-
         if gpp:
             if gpp != cxx and cxx.endswith('g++'):
                 gpp = cxx
-            else:
-                os.environ['CXX'] = gpp
+
         elif cxx.endswith('g++'):
             gpp = cxx
         else:
             raise RuntimeError('Unable to locate g++')
 
-        print("Found g++ : {0}".format(gpp))
-        print("Found make : {0}".format(make))
-        check_packages()
+        AR = 'ar rc'
+        C = gcc
+        CPP = gpp
+        RANLIB = 'ranlib'
+        LD = gpp
+        MAKE = make
 
+        os.environ['CC'] = gcc
         os.environ['LD'] = gpp
         os.environ['AR'] = 'ar rc'
         os.environ['RANLIB'] = 'ranlib'
+        os.environ['CXX'] = gpp
 
-    elif sys.platform.startswith('linux'):
+        print("Found gcc : {0}".format(gcc))
+        print("Found g++ : {0}".format(gpp))
+        print("Found make : {0}".format(make))
+        check_packages('libresolv', 'libiconv', 'libusb-1.0')
+
+    elif os_.startswith('linux'):
+        global AR
+        global RANLIB
+        global C
+        global CPP
+        global LD
+        global MAKE
+        global PACKAGE_CONFIG
+
         gcc = find_executable("gcc")
         gpp = find_executable("g++")
         ar = find_executable('ar')
@@ -321,13 +524,19 @@ def setup():
             ld = gpp
             os.environ['LD'] = 'g++'
 
+        AR = ar
+        C = gcc
+        CPP = gpp
+        RANLIB = ranlib
+        LD = ld
+
         print("Found gcc : {0}".format(gcc))
         print("Found g++ : {0}".format(gpp))
         print("Found ar : {0}".format(ar))
         print("Found ld : {0}".format(ld))
         print("Found ranlib : {0}".format(ranlib))
 
-        check_packages()
+        check_packages('lusb-1.0', 'liconv', 'libudev-dev')
 
     else:
         raise RuntimeError(

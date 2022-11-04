@@ -294,7 +294,7 @@ class Library(object):
             'uint16_t ozw_vers_major = {VERSION_MAJ};',
             'uint16_t ozw_vers_minor = {VERSION_MIN};',
             'uint16_t ozw_vers_revision = {VERSION_REV};',
-            'char ozw_version_string[] = "{VERSION_STR}";'
+            'char ozw_version_string[] = "{VERSION_STRING}";'
         ]
 
         template = '\n'.join(template)

@@ -40,7 +40,6 @@ class DynamicModule(object):
     def __init__(self):
         mod = sys.modules[__name__]
         self.__name__ = __name__
-        self.__module__ = mod.__module__
         self.__package__ = mod.__package__
         self.__file__ = mod.__package__
         self.__loader__ = mod.__loader__

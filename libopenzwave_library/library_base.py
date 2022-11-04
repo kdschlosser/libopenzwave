@@ -317,7 +317,7 @@ class Library(object):
             print('generating {0} ...'.format(spec_out))
 
         with open(spec_in, 'r') as f:
-            spec = f.read().encode('utf-8')
+            spec = f.read()
 
         spec = spec.replace('@VERSION@', self.ozw_version_string)
 

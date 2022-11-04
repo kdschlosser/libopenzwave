@@ -499,7 +499,7 @@ def setup():
         print("Found ld : {0}".format(ld))
         print("Found ranlib : {0}".format(ranlib))
 
-        check_packages('lusb-1.0', 'liconv', 'libudev-dev')
+        check_packages('libusb-1.0', 'liconv', 'libudev-dev')
 
     else:
         raise RuntimeError(

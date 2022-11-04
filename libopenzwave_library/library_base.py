@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
 from distutils import log as LOG  # NOQA
-import subprocess
 import sys
 import threading
 import shutil
@@ -423,6 +422,12 @@ class Library(object):
             f.write(pc)
 
     def build_config_file(self):
+        if self.pkg_config_path is None:
+            with self.print_lock:
+                print('skipping config file generation ...')
+
+            return
+
         config_in_path = os.path.join(
             self.openzwave,
             'cpp',

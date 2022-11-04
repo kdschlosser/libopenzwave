@@ -36,20 +36,19 @@ def check_packages(*needed_packages):
 
 
 def setup():
+    global AR
+    global RANLIB
+    global C
+    global CPP
+    global LD
+    global MAKE
+
     os_ = sys.platform.lower()
 
     if os_.startswith('win'):
         import libopenzwave_library  # NOQA
 
     elif os_.startswith("cygwin"):
-        global AR
-        global RANLIB
-        global C
-        global CPP
-        global LD
-        global MAKE
-        global PACKAGE_CONFIG
-
         gcc = find_executable("gcc")
         gpp = find_executable("g++")
         ar = find_executable('ar')
@@ -125,14 +124,6 @@ def setup():
         check_packages()
 
     elif os_.startswith("darwin"):
-        global AR
-        global RANLIB
-        global C
-        global CPP
-        global LD
-        global MAKE
-        global PACKAGE_CONFIG
-
         clang = find_executable("clang")
         clang_pp = find_executable("clang++")
         ar = find_executable('libtool')
@@ -205,13 +196,6 @@ def setup():
         check_packages()
 
     elif os_.startswith('freebsd'):
-        global AR
-        global RANLIB
-        global C
-        global CPP
-        global LD
-        global MAKE
-        global PACKAGE_CONFIG
 
         c = find_executable("cc")
         cpp = find_executable("c++")
@@ -306,13 +290,6 @@ def setup():
         check_packages(*packages)
 
     elif os_.startswith('netbsd'):
-        global AR
-        global RANLIB
-        global C
-        global CPP
-        global LD
-        global MAKE
-        global PACKAGE_CONFIG
 
         c = find_executable("gcc")
         cpp = find_executable("g++")
@@ -398,13 +375,6 @@ def setup():
         check_packages(*packages)
 
     elif os_.startswith('sunos'):
-        global AR
-        global RANLIB
-        global C
-        global CPP
-        global LD
-        global MAKE
-        global PACKAGE_CONFIG
 
         gcc = find_executable("gcc")
         gpp = find_executable("g++")
@@ -451,13 +421,6 @@ def setup():
         check_packages('libresolv', 'libiconv', 'libusb-1.0')
 
     elif os_.startswith('linux'):
-        global AR
-        global RANLIB
-        global C
-        global CPP
-        global LD
-        global MAKE
-        global PACKAGE_CONFIG
 
         gcc = find_executable("gcc")
         gpp = find_executable("g++")

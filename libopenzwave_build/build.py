@@ -197,7 +197,7 @@ class build(_build):
         ]
 
         for f in os.listdir(lib_command_classes_path):
-            if f in ('__init__.py', 'zwave_cmd_class.py'):
+            if f in ('__init__.py', 'zwave_cmd_class.py', '__pycache__'):
                 continue
 
             names.append(os.path.splitext(f)[0])

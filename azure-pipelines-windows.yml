@@ -19,6 +19,9 @@ jobs:
 
           - script: python setup.py build --service
             displayName: 'build --service'
+            
+          - script: python setup.py build_docs
+            displayName: 'build_docs'
 
           - script: python setup.py bdist_wheel --service
             displayName: 'bdist_wheel --service'
@@ -32,5 +35,3 @@ jobs:
           - script: python setup.py bdist_wheel --cython --service
             displayName: 'bdist_wheel --cython --service'
 
-          - script: python setup.py build-docs
-            displayName: 'build-docs'

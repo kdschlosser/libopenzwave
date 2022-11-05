@@ -95,6 +95,30 @@ identifier that a command is being run on a specific node. and you will be
 able to update the user as to the progress of that command for that specific
 node. You will also be able to provide the same thing for network wide commands.
 
+|
+
+There is a pretty major overhaul of how nodes are handled. A ZWaveNode instance
+no longer has methods or properties that do not belong to it. When a node gets
+loaded the class for that instance gets dynamically created based on the command
+classes the node supports. So you have to make sure you test and see if a node
+supports a command class before accessing methods or properties for that command
+class.
+
+I added support for devices that have multiple "nodes" built into them. This is
+commonly seen in special lighting controllers. An example of this would be a
+landscape lighting that has multiple zones. Each zone of that lighting controller
+should be presented to the user as a device that can be turned on and off. So
+what I did was I created virtual nodes which function just like a normal node would.
+The instances are dynamically created using the command classes and the ZWaveNode
+class just like a normal node is. you can test if a node is a virtual node by using
+the `is_endpoint` propertyfor that node.
+
+
+The real magic to the changes I have made is when you want to populate a GUI.
+You can take a look at the libopenzwave_man portion of this library. It is not
+yet finished but it will help you to understand how to create GUI controls for
+the various command classes
+
 ---------
 Contents
 ---------

@@ -66,7 +66,10 @@ class Extension(setuptools.extension.Extension):
             self.include_dirs += [
                 src_path,
                 os.path.join(src_path, 'value_classes'),
-                os.path.join(src_path, 'platform')
+                os.path.join(src_path, 'platform'),
+                os.path.join(src_path, 'command_classes'),
+                os.path.join(src_path, 'aes'),
+                os.path.join(src_path, 'tinyxml')
             ]
 
     def __init__(

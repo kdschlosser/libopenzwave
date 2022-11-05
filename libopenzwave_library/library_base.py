@@ -730,7 +730,7 @@ class Library(object):
         thread_count = os.cpu_count()
         num_files = int(round(len(sources) / thread_count))
 
-        max_filename_len = max(len(os.path.split(f_name)[-1] for f_name in sources))
+        max_filename_len = max(list(len(os.path.split(f_name)[-1]) for f_name in sources))
 
         while sources:
             try:

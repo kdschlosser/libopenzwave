@@ -17,20 +17,20 @@ jobs:
           - script: python -m pip install -r build_requirements.txt
             displayName: 'Install build requirements'
 
-          - script: python setup.py build --service --dev
-            displayName: 'build --service --dev'
+          - script: python setup.py build --service
+            displayName: 'build --service'
 
-          - script: python setup.py bdist-wheel --service --dev
-            displayName: 'bdist-wheel --service --dev'
+          - script: python setup.py bdist-wheel --service
+            displayName: 'bdist-wheel --service'
 
           - script: python setup.py install --service --dev
-            displayName: 'install --service --dev'
+            displayName: 'install --service'
 
           - script: python setup.py build --service --cython --dev
-            displayName: 'build --service --cython --dev'
+            displayName: 'build --service --cython'
 
-          - script: python setup.py bdist_wheel --cython --service --dev
-            displayName: 'bdist_wheel --cython --service --dev'
+          - script: python setup.py bdist_wheel --cython --service
+            displayName: 'bdist_wheel --cython --service'
 
           - script: python setup.py build-docs
             displayName: 'build-docs'

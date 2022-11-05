@@ -292,7 +292,7 @@ class build(_build):
 
         lines = list(line.strip() for line in response.replace('<tr>', '').split('</tr>')[1:-1])
         download_url = None
-        download_version = 0
+        download_version = (0, 0, 0)
 
         for line in lines:
             line = line.replace('<td>', '').split('</td>')
@@ -304,10 +304,12 @@ class build(_build):
             version = tuple(
                 int(ver) for ver in version.split('.') if ver.isdigit()
             )
+            if len(version) < 3:
+                version += (0,)
 
             if version[:2] == libopenzwave_version.ozw_version:
-                if version[2] > download_version:
-                    download_version = version[2]
+                if str(version[2]) > str(download_version[2]):
+                    download_version = version
                     download_url = url + download_file_name.encode('utf-8')
 
         if download_url is None:
@@ -316,6 +318,7 @@ class build(_build):
             )
 
         get_openzwave(self.openzwave, download_url)
+        libopenzwave_version.OZW_VERSION_REV = download_version[2]
 
 
 IMPORT_WRAPPER = '''\

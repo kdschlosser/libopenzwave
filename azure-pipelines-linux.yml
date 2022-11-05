@@ -20,7 +20,7 @@ jobs:
           - script: python -m pip install -r build_requirements.txt
             displayName: 'Install build requirements'
 
-          - script: python setup.py build --service
+          - script: python setup.py build --service --DISTUTILS_DEBUG
             displayName: 'build --service --DISTUTILS_DEBUG'
 
           - script: python setup.py build_docs

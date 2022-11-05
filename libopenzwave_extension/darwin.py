@@ -33,8 +33,6 @@ class Extension(extension_base.Extension):
         sources = []
         extra_link_args = [
             "-std=c++11"
-            '-framework CoreFoundation',
-            '-framework IOKit'
         ]
         extra_compile_args = [
             '-stdlib=libc++',
@@ -42,7 +40,8 @@ class Extension(extension_base.Extension):
             '-mmacosx-version-min=10.7',
             '-Wno-builtin-macro-redefined',
             '-Wno-deprecated-declarations',
-            '-Wno-deprecated'
+            '-Wno-deprecated',
+            '-Wno-unreachable-code-fallthrough'
         ]
 
         extension_base.Extension.__init__(

@@ -47,8 +47,8 @@ class Extension(extension_base.Extension):
             '-std=c++11',
             '-Wno-builtin-macro-redefined',
             '-Wno-deprecated-declarations',
-            '-Wno-deprecated'
-
+            '-Wno-deprecated',
+            '-Wno-unreachable-code-fallthrough'
         ]
 
         extension_base.Extension.__init__(

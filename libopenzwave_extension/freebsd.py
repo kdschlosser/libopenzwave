@@ -39,7 +39,8 @@ class Extension(extension_base.Extension):
         extra_compile_args = [
             '-std=c++11',
             '-Wmacro-redefined',
-            '-Wdeprecated-declarations'
+            '-Wdeprecated-declarations',
+            '-Wno-unreachable-code-fallthrough'
         ]
 
         extension_base.Extension.__init__(

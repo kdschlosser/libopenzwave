@@ -34,7 +34,7 @@ def get_openzwave(ozw_path, url):
         sys.stdout.write('\r' + str(chunks) + '/' + str(content_length))
         sys.stdout.flush()
 
-        for chunk in r.iter_content(chunk_size=1024):
+        for chunk in r.iter_content(chunk_size=1024 * 1024):
             dst_file.write(chunk)
             chunks += len(chunk)
             sys.stdout.write('\r' + str(chunks) + '/' + str(content_length))

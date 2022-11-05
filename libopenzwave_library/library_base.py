@@ -579,7 +579,7 @@ class Library(object):
             "{CC} -MM {CFLAGS} {INCLUDES} {c_file} > {DEPDIR}/{filename}.d",
             "mv -f {DEPDIR}/{filename}.d {DEPDIR}/{filename}.d.tmp",
             "sed -e 's|.*:|{OBJDIR}/{filename}.o: {DEPDIR}/{filename}.d|' < {DEPDIR}/{filename}.d.tmp > {DEPDIR}/{filename}.d;",
-            "sed -e 's/.*://' -e 's/\\$$//' < $(DEPDIR)/{filename}.d.tmp | {FMTCMD} | sed -e 's/^ *//' -e 's/$$/:/' >> {DEPDIR}/.{filename}.d;",
+            "sed -e 's/.*://' -e 's/\\$$//' < {DEPDIR}/{filename}.d.tmp | {FMTCMD} | sed -e 's/^ *//' -e 's/$$/:/' >> {DEPDIR}/.{filename}.d;",
             "rm -f {DEPDIR}/{filename}.d.tmp",
             "{CC} {CFLAGS} {TARCH} {INCLUDES} -o {o_file} {c_file}"
         ]

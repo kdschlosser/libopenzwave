@@ -21,7 +21,7 @@ jobs:
             displayName: 'Install build requirements'
 
           - script: python setup.py build --service
-            displayName: 'build --service --debug'
+            displayName: 'build --service --DISTUTILS_DEBUG'
 
           - script: python setup.py build_docs
             displayName: 'build_docs'

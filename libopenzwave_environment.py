@@ -100,9 +100,6 @@ def setup():
         else:
             raise RuntimeError('Unable to locate g++')
 
-        if 'rc' not in ar:
-            ar = ar.replace('ar', 'ar rc')
-
         AR = ar
         C = gcc
         CPP = gpp
@@ -237,9 +234,6 @@ def setup():
         else:
             raise RuntimeError('Unable to locate ar')
 
-        if 'rc' not in ar:
-            ar = ar.replace('ar', 'ar rc')
-
         if ranlib:
             if ranlib != ranlib_env and 'ranlib' in ranlib_env:
                 ranlib = ranlib_env
@@ -331,9 +325,6 @@ def setup():
         else:
             raise RuntimeError('Unable to locate ar')
 
-        if 'rc' not in ar:
-            ar = ar.replace('ar', 'ar rc')
-
         if ranlib:
             if ranlib != ranlib_env and 'ranlib' in ranlib_env:
                 ranlib = ranlib_env
@@ -402,7 +393,7 @@ def setup():
         else:
             raise RuntimeError('Unable to locate g++')
 
-        AR = 'ar rc'
+        AR = 'ar'
         C = gcc
         CPP = gpp
         RANLIB = 'ranlib'
@@ -411,7 +402,7 @@ def setup():
 
         os.environ['CC'] = gcc
         os.environ['LD'] = gpp
-        os.environ['AR'] = 'ar rc'
+        os.environ['AR'] = 'ar'
         os.environ['RANLIB'] = 'ranlib'
         os.environ['CXX'] = gpp
 

@@ -402,6 +402,15 @@ if __name__ == '__main__':
             bdist_egg=dict(bdist_dir=bdist_dir),
         )
 
+    if '--cython' in sys.argv:
+        sys.argv.remove('--cython')
+        if 'build' in options:
+            options['build']['cython'] = True
+        else:
+            options['build'] = dict(
+                cython=True
+            )
+    
     entry_points = dict()
 
     if '--manager' in sys.argv:

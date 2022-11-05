@@ -114,6 +114,5 @@ Contents
     scene module <scene>
     object module <object>
     exception module <exception>
-    multi_instance module <multi_instance>
     common definitions <data>
 

@@ -60,6 +60,81 @@ This file is part of the **libopenzwave** project
 
 .. moduleauthor:: Kevin G Schlosser
 """
+
+sphinx_extra_lines = '''
+# uncomment all of the lines below to have it build a new node_types rst file
+# node_types_doc = []
+# 
+# def gen_doc(name):
+#     from libopenzwave import node_types
+# 
+#     header = ['-' * len(name)]
+#     header += [name]
+#     header += [header[0]]
+#     header += ['']
+#     
+#     def get_key(val):
+#         for k, v in node_types.__dict__.items():
+#             if v == val:
+#                 return k
+# 
+#     items = getattr(node_types, name.replace(' ', '_').upper())
+#     for item in items:
+#         key = get_key(item)
+#         if key is None:
+#             continue
+#         
+#         header += ['.. py:data:: libopenzwave.node_types.' + key]
+#         header += ['']
+#         header += ['    * `str(' + key + ')`: ' + str(item)]
+#         header += ['    * `int(' + key + ')`: 0x' + hex(int(item))[2:].upper()]
+#         
+#         if name == 'Generic Types':
+#         
+#             if not item.specific_types:
+#                 header += ['    * Specific Types: `None`']
+#                 header += ['', '']
+#                 continue
+#                 
+#             header += ['    * Specific Types:']
+#             header += ['']
+#                 
+#             for specific_type in item.specific_types:
+#                 key = get_key(specific_type)
+#                 if key is None:
+#                     continue
+#                    
+#                 header += ['        * `' + key + '`: ']
+#                 header += ['']
+#                 header += ['            * `str(' + key + ')`: ' + str(specific_type)]
+#                 header += ['            * `int(' + key + ')`: 0x' + hex(int(specific_type))[2:].upper()]
+#                 header += ['']
+#                 
+#             header += ['']
+#                 
+#         header += ['', '']
+# 
+#     header += ['', '']
+#     header = '\\n'.join(header)
+#     node_types_doc.append(header)
+# 
+
+def setup(app):
+    # gen_doc('Basic Types')
+    # gen_doc('Generic Types')
+    # gen_doc('Role Types')
+    # gen_doc('Device Types')
+    # gen_doc('Node Types')
+    # 
+    # with open('docs/libopenzwave/node_types.rst', 'w') as f:
+    #     f.write('========================\\n')
+    #     f.write('Node Types documentation\\n')
+    #     f.write('========================\\n\\n\\n')
+    #     f.write('\\n'.join(node_types_doc))
+
+    app.add_stylesheet('css/libopenzwave.css')
+'''
+
 if __name__ == '__main__':
     import os
     import sys
@@ -180,79 +255,7 @@ if __name__ == '__main__':
     import libopenzwave_build_docs  # NOQA
     import libopenzwave_build_stub  # NOQA
 
-    sphinx_extra_lines = '''
-    # uncomment all of the lines below to have it build a new node_types rst file
-    # node_types_doc = []
-    # 
-    # def gen_doc(name):
-    #     from libopenzwave import node_types
-    # 
-    #     header = ['-' * len(name)]
-    #     header += [name]
-    #     header += [header[0]]
-    #     header += ['']
-    #     
-    #     def get_key(val):
-    #         for k, v in node_types.__dict__.items():
-    #             if v == val:
-    #                 return k
-    # 
-    #     items = getattr(node_types, name.replace(' ', '_').upper())
-    #     for item in items:
-    #         key = get_key(item)
-    #         if key is None:
-    #             continue
-    #         
-    #         header += ['.. py:data:: libopenzwave.node_types.' + key]
-    #         header += ['']
-    #         header += ['    * `str(' + key + ')`: ' + str(item)]
-    #         header += ['    * `int(' + key + ')`: 0x' + hex(int(item))[2:].upper()]
-    #         
-    #         if name == 'Generic Types':
-    #         
-    #             if not item.specific_types:
-    #                 header += ['    * Specific Types: `None`']
-    #                 header += ['', '']
-    #                 continue
-    #                 
-    #             header += ['    * Specific Types:']
-    #             header += ['']
-    #                 
-    #             for specific_type in item.specific_types:
-    #                 key = get_key(specific_type)
-    #                 if key is None:
-    #                     continue
-    #                    
-    #                 header += ['        * `' + key + '`: ']
-    #                 header += ['']
-    #                 header += ['            * `str(' + key + ')`: ' + str(specific_type)]
-    #                 header += ['            * `int(' + key + ')`: 0x' + hex(int(specific_type))[2:].upper()]
-    #                 header += ['']
-    #                 
-    #             header += ['']
-    #                 
-    #         header += ['', '']
-    # 
-    #     header += ['', '']
-    #     header = '\\n'.join(header)
-    #     node_types_doc.append(header)
-    # 
-    
-    def setup(app):
-        # gen_doc('Basic Types')
-        # gen_doc('Generic Types')
-        # gen_doc('Role Types')
-        # gen_doc('Device Types')
-        # gen_doc('Node Types')
-        # 
-        # with open('docs/libopenzwave/node_types.rst', 'w') as f:
-        #     f.write('========================\\n')
-        #     f.write('Node Types documentation\\n')
-        #     f.write('========================\\n\\n\\n')
-        #     f.write('\\n'.join(node_types_doc))
-        
-        app.add_stylesheet('css/libopenzwave.css')
-    '''
+
 
     if 'build_docs' in sys.argv:
 

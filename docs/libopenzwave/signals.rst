@@ -69,6 +69,18 @@ Signals (callback notifications)
 |
 |
 
+.. autoclass:: libopenzwave.signals._SIGNAL_NETWORK_DATASET_LOADED
+    :members: register, unregister
+    :show-inheritance:
+
+|
+|
+
+`libopenzwave.SIGNAL_NETWORK_DATASET_LOADED = _SIGNAL_NETWORK_DATASET_LOADED`
+
+|
+|
+
 .. autoclass:: libopenzwave.signals._SIGNAL_NETWORK_READY
     :members: register, unregister
     :show-inheritance:
@@ -225,26 +237,26 @@ Signals (callback notifications)
 |
 |
 
-.. autoclass:: libopenzwave.signals._SIGNAL_VALUE_LOADING_STARTED
+.. autoclass:: libopenzwave.signals._SIGNAL_VALUE_ADDED
     :members: register, unregister
     :show-inheritance:
 
 |
 |
 
-`libopenzwave.SIGNAL_VALUE_LOADING_STARTED = _SIGNAL_VALUE_LOADING_STARTED`
+`libopenzwave.SIGNAL_VALUE_ADDED = _SIGNAL_VALUE_ADDED`
 
 |
 |
 
-.. autoclass:: libopenzwave.signals._SIGNAL_VALUE_LOADING_CACHED
+.. autoclass:: libopenzwave.signals._SIGNAL_VALUE_DATASET_LOADED
     :members: register, unregister
     :show-inheritance:
 
 |
 |
 
-`libopenzwave.SIGNAL_VALUE_LOADING_CACHED = _SIGNAL_VALUE_LOADING_CACHED`
+`libopenzwave.SIGNAL_VALUE_DATASET_LOADED = _SIGNAL_VALUE_DATASET_LOADED`
 
 |
 |
@@ -309,26 +321,26 @@ Signals (callback notifications)
 |
 |
 
-.. autoclass:: libopenzwave.signals._SIGNAL_NODE_LOADING_STARTED
+.. autoclass:: libopenzwave.signals._SIGNAL_NODE_NEW
     :members: register, unregister
     :show-inheritance:
 
 |
 |
 
-`libopenzwave.SIGNAL_NODE_LOADING_STARTED = _SIGNAL_NODE_LOADING_STARTED`
+`libopenzwave.SIGNAL_NODE_NEW = _SIGNAL_NODE_NEW`
 
 |
 |
 
-.. autoclass:: libopenzwave.signals._SIGNAL_NODE_LOADING_CACHED
+.. autoclass:: libopenzwave.signals._SIGNAL_NODE_DATASET_LOADED
     :members: register, unregister
     :show-inheritance:
 
 |
 |
 
-`libopenzwave.SIGNAL_NODE_LOADING_CACHED = _SIGNAL_NODE_LOADING_CACHED`
+`libopenzwave.SIGNAL_NODE_DATASET_LOADED = _SIGNAL_NODE_DATASET_LOADED`
 
 |
 |
@@ -377,6 +389,54 @@ Signals (callback notifications)
 |
 
 `libopenzwave.SIGNAL_NODE_RESET = _SIGNAL_NODE_RESET`
+
+|
+|
+
+.. autoclass:: libopenzwave.signals._SIGNAL_VIRTUAL_NODE_ADDED
+    :members: register, unregister
+    :show-inheritance:
+
+|
+|
+
+`libopenzwave.SIGNAL_VIRTUAL_NODE_ADDED = _SIGNAL_VIRTUAL_NODE_ADDED`
+
+|
+|
+
+.. autoclass:: libopenzwave.signals._SIGNAL_VIRTUAL_NODE_DATASET_LOADED
+    :members: register, unregister
+    :show-inheritance:
+
+|
+|
+
+`libopenzwave.SIGNAL_VIRTUAL_NODE_DATASET_LOADED = _SIGNAL_VIRTUAL_NODE_DATASET_LOADED`
+
+|
+|
+
+.. autoclass:: libopenzwave.signals._SIGNAL_VIRTUAL_NODE_READY
+    :members: register, unregister
+    :show-inheritance:
+
+|
+|
+
+`libopenzwave.SIGNAL_VIRTUAL_NODE_READY = _SIGNAL_VIRTUAL_NODE_READY`
+
+|
+|
+
+.. autoclass:: libopenzwave.signals._SIGNAL_VIRTUAL_NODE_REMOVED
+    :members: register, unregister
+    :show-inheritance:
+
+|
+|
+
+`libopenzwave.SIGNAL_VIRTUAL_NODE_REMOVED = _SIGNAL_VIRTUAL_NODE_REMOVED`
 
 |
 |

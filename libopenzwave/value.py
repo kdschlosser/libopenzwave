@@ -14,7 +14,6 @@
 # along with libopenzwave. If not, see http://www.gnu.org/licenses.
 
 """
-
 This file is part of the **libopenzwave** project
 
 :platform: Unix, Windows, OSX
@@ -1039,7 +1038,6 @@ class ZWaveValue(ZWaveObject):
         """
         The python data type the value uses when setting the data.
 
-
         ..code-block:: python
 
             new_value = False
@@ -1051,8 +1049,8 @@ class ZWaveValue(ZWaveObject):
             # new_way
             value.data = value.py_type(new_value)
 
-        not a big difference but it is helpful
 
+        not a big difference but it is helpful
 
         Returns one of the following based on
         :py:func:`libopenzwave.value.ZWaveValue.type`
@@ -1070,7 +1068,6 @@ class ZWaveValue(ZWaveObject):
               report the bug
 
         :rtype: bool, int, float, str, None
-
         """
         type_ = self.type
 

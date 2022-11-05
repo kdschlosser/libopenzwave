@@ -398,26 +398,23 @@ class build_docs(setuptools.Command):
         build_ext.ensure_finalized()
         extension = self.distribution.ext_modules[0]
         ext_path = build_ext.get_ext_fullpath(extension.name)
-
-        mod = imp.load_dynamic(
-            '_libopenzwave',
-            ext_path
-        )
-
-        sys.modules['_libopenzwave'] = mod
+        ext_path = os.path.split(ext_path)[-1]
+        sys.path.insert(0, ext_path)
 
         for path in sys.path[:]:
             if 'libopenzwave' in path:
                 sys.path.remove(path)
 
-        sys.path.insert(0, os.path.abspath(self.build_lib))
+        sys.path.insert(0, os.path.abspath(ext_path))
+        __import__('_libopenzwave')
+
         # *********************************************************************
 
         if self.sphinx_conf is not None:
             self.sphinx_conf.additional_lines = (
                 'import sys\n'
                 'sys.path.insert(0, r\'{path}\')\n\n'.format(
-                    path=os.path.abspath(self.build_lib)
+                    path=os.path.abspath(ext_path)
                 )
             ) + self.sphinx_conf.additional_lines
 
@@ -428,9 +425,7 @@ class build_docs(setuptools.Command):
             if self.output_path is None:
                 self.output_path = os.path.join(self.build_lib, 'docs')
 
-            self.run_command('egg')
-
-            sys.path.insert(0, os.path.abspath(self.build_lib))
+            self.run_command('bdist_egg')
 
             from sphinx.cmd.build import build_main
 
@@ -462,11 +457,11 @@ class build_docs(setuptools.Command):
             traceback.print_exc()
             sys.exit(1)
 
-        if self.config_backup is not None:
-            config_file = self.config_backup.replace('.backup', '')
-
-            os.remove(config_file)
-            os.rename(self.config_backup, config_file)
+        # if self.config_backup is not None:
+        #     config_file = self.config_backup.replace('.backup', '')
+        #
+        #     os.remove(config_file)
+        #     os.rename(self.config_backup, config_file)
 
 
 def create_property(func):

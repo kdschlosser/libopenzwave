@@ -4,13 +4,11 @@ from distutils import log as LOG  # NOQA
 import sys
 import threading
 import shutil
-import progressbar
 
 import libopenzwave_environment
 import libopenzwave_version
 
 dummy_return = b''
-
 
 def parse_flags(env_param):
     if env_param in os.environ:
@@ -680,10 +678,8 @@ class Library(object):
         objects = []
         thread_event = threading.Event()
 
-        def do(files, b):
+        def do(files):
             objs = []
-
-            count = 0
 
             while files:
                 f = files.pop(0)
@@ -703,10 +699,6 @@ class Library(object):
                         evt = self.running_threads[threading.current_thread()]
                         evt.set()
 
-                    filename = os.path.split(f)[-1]
-                    count += 1
-                    b.update(filename=filename, filetime=datetime.now(), fileno=count)
-
                     if f.endswith('cpp'):
                         obj = self.compile_cpp(f, build_clib)
                     else:
@@ -717,8 +709,6 @@ class Library(object):
             objects.extend(objs)
 
             threads.remove(threading.current_thread())
-            running_bars.remove(b)
-            b.finish()
 
             if not threads:
                 thread_event.set()
@@ -730,8 +720,6 @@ class Library(object):
         thread_count = os.cpu_count()
         num_files = int(round(len(sources) / thread_count))
 
-        max_filename_len = max(list(len(os.path.split(f_name)[-1]) for f_name in sources))
-
         while sources:
             try:
                 split_files += [sources[:num_files]]
@@ -742,62 +730,14 @@ class Library(object):
 
         threads = []
 
-        import functools
-        from datetime import datetime, timedelta
-
-        fmt = functools.partial(progressbar.FormatLabel, new_style=True)
-
-        class TimeSince(progressbar.Timer):
-
-            def __init__(self, variable, format='{elapsed}'):
-                super().__init__()
-                self.variable = variable
-                self.format = format
-
-            def __call__(self, progress, data):
-                elapsed = datetime.now() - data['variables'][self.variable]
-                # Strip the microseconds
-                elapsed -= timedelta(microseconds=elapsed.microseconds)
-                return self.format.format(elapsed=elapsed)
-
-        running_bars = []
-
         for fls in split_files:
-            widgets = [
-                # Note, we're using a custom widget with fileno instead of value here
-                # because we want progress within a single filename
-                fmt('{{variables.filename:{0}}} '.format(max_filename_len)),
-                fmt('[{variables.fileno:02d}/{max_value}] '),
-                progressbar.Bar(),
-                ' ',
-                progressbar.Percentage(),
-                TimeSince('filetime', format=' [FT {elapsed}]'),
-                TimeSince('total_time', format=' [TT {elapsed}]'),
-            ]
-
-            bar = progressbar.ProgressBar(
-                widgets=widgets,
-                variables=dict(
-                    filename=' ',
-                    fileno=0,
-                    filetime=datetime.min,
-                    total_time=datetime.min
-                ),
-                max_value=len(split_files),
-            )
-            bar.start()
-
-            t = threading.Thread(target=do, args=(fls, bar))
+            t = threading.Thread(target=do, args=(fls,))
             t.daemon = True
-            running_bars.append(bar)
             self.running_threads[t] = threading.Event()
             threads.append(t)
             t.start()
 
-        while not thread_event.is_set():
-            for bar in running_bars:
-                bar.update()
-            thread_event.wait(1.0)
+        thread_event.wait()
 
         self.link_static(objects, build_clib)
 

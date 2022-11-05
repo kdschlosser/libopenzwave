@@ -17,4 +17,3 @@ lxml
 pywin32>=223;sys_platform=='win32'
 sdnotify;sys_platform=='linux'
 sdnotify;sys_platform=='darwin'
-https://github.com/kdschlosser/python-progressbar/archive/dd13d0cfe7f9a25e04143a01efc484f795715787.zip

@@ -4,8 +4,8 @@
 import zipfile
 import io
 import os
+import sys
 from distutils import log as LOG  # NOQA
-import progressbar
 
 import libopenzwave_version
 
@@ -29,14 +29,16 @@ def get_openzwave(ozw_path, url):
         r.raise_for_status()
 
         content_length = int(r.headers['Content-Length'])
-        bar = progressbar.DataTransferBar(min_value=0, max_value=content_length)
-        bar.start()
         chunks = 0
+        print()
+        sys.stdout.write('\r' + str(chunks) + '/' + str(content_length))
+        sys.stdout.flush()
+
         for chunk in r.iter_content(chunk_size=1024):
             dst_file.write(chunk)
             chunks += len(chunk)
-            bar.update(chunks)
-        bar.finish()
+            sys.stdout.write('\r' + str(chunks) + '/' + str(content_length))
+            sys.stdout.flush()
 
     zip_ref = zipfile.ZipFile(dst_file)
     dst = os.path.split(ozw_path)[0]

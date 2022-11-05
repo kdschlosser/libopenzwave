@@ -410,7 +410,7 @@ if __name__ == '__main__':
             options['build'] = dict(
                 cython=True
             )
-    
+
     entry_points = dict()
 
     if '--manager' in sys.argv:

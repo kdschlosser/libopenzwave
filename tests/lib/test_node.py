@@ -36,7 +36,6 @@ import socket
 from .common import TestLib
 import re
 from tests.common import pyozw_version
-from six import string_types
 import libopenzwave
 
 import logging

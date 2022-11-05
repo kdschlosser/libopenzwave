@@ -19,7 +19,7 @@ jobs:
 
           - script: python setup.py build --service
             displayName: 'build --service'
-            
+
           - script: python setup.py build_docs
             displayName: 'build_docs'
 

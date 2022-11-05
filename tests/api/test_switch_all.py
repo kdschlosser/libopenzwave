@@ -34,11 +34,6 @@ import datetime
 import random
 import socket
 import re
-import six
-if six.PY3:
-    from pydispatch import dispatcher
-else:
-    from louie import dispatcher
 import libopenzwave
 import openzwave
 from openzwave.node import ZWaveNode
@@ -51,7 +46,6 @@ from tests.common import pyozw_version
 from tests.common import SLEEP
 from tests.api.common import TestApi
 from tests.common import TestPyZWave
-from six import string_types
 
 class TestSwitchAll(TestApi):
 

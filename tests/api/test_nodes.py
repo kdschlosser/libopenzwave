@@ -34,12 +34,7 @@ import datetime
 import random
 import socket
 import re
-import six
-if six.PY3:
-    from pydispatch import dispatcher
-else:
-    from louie import dispatcher
-from six import string_types, integer_types
+
 import libopenzwave
 import openzwave
 from openzwave.node import ZWaveNode

@@ -38,7 +38,6 @@ from tests.lib.common import TestLib
 import re
 import glob
 from tests.common import pyozw_version
-import six
 
 OZWDIR = "openzwave"
 

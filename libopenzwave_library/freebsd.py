@@ -75,7 +75,7 @@ class Library(library_base.Library):
 
     @property
     def c_flags(self):
-        c_flags = library_base.parse_flags(os.environ['CFLAGS'])
+        c_flags = library_base.parse_flags('CFLAGS')
 
         for flag in (
             '-c',

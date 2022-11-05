@@ -71,8 +71,6 @@ from notification cimport (
     Type_UserAlerts,
 )
 
-# noinspection PyPackageRequirements
-import six
 
 import logging
 import os
@@ -4113,10 +4111,8 @@ cdef class PyManager:
 
             elif datatype == "List":
                 logger.debug("SetValueListSelection %s", value)
-                if six.PY3:
-                    type_string = _cstr(value)
-                else:
-                    type_string = _cstr(string(value))
+
+                type_string = _cstr(value)
 
                 cret = self.manager.SetValueListSelection(
                     _values_map.at(value_id),

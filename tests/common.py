@@ -37,7 +37,6 @@ import threading
 import logging
 import json
 #~ import bson
-import six
 
 class SetEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -100,8 +99,7 @@ class TestPyZWave(unittest.TestCase):
     def skipPython3(self):
         """Skip a test on python 3
         """
-        if six.PY3:
-            raise SkipTest("Skip on Python 3")
+        raise SkipTest("Skip on Python 3")
 
     def skipTravisTest(self, message):
         """Skip a test on travis

@@ -37,7 +37,6 @@ import libopenzwave
 from .common import TestLib
 import re
 from tests.common import pyozw_version
-from six import string_types
 
 import logging
 try:  # Python 2.7+

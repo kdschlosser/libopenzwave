@@ -245,7 +245,7 @@ class Library(object):
 
     @property
     def cpp_flags(self):
-        cpp_flags = parse_flags(os.environ['CPPFLAGS'])
+        cpp_flags = parse_flags('CFLAGS')
 
         if '-std=c++11' not in cpp_flags:
             cpp_flags.append('-std=c++11')

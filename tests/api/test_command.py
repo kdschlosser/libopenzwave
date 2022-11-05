@@ -37,11 +37,6 @@ import libopenzwave
 import re
 import time
 import sys
-import six
-if six.PY3:
-    from pydispatch import dispatcher
-else:
-    from louie import dispatcher
 import libopenzwave
 import openzwave
 from openzwave.node import ZWaveNode

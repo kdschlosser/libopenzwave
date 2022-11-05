@@ -39,7 +39,12 @@ class Extension(extension_base.Extension):
 
         define_macros = []
         sources = []
+
+        extra_link_args = [
+            '-std=c++11'
+        ]
         extra_compile_args = [
+            '-std=c++11',
             '-Wno-builtin-macro-redefined',
             '-Wno-deprecated-declarations',
             '-Wno-deprecated'
@@ -48,6 +53,7 @@ class Extension(extension_base.Extension):
 
         extension_base.Extension.__init__(
             self,
+            extra_link_args=extra_link_args,
             extra_objects=extra_objects,
             sources=sources,
             include_dirs=include_dirs,

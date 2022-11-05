@@ -32,13 +32,13 @@ class Extension(extension_base.Extension):
         define_macros = []
         sources = []
         extra_link_args = [
-            '-framework',
-            'CoreFoundation',
-            '-framework',
-            'IOKit'
+            "-std=c++11"
+            '-framework CoreFoundation',
+            '-framework IOKit'
         ]
         extra_compile_args = [
             '-stdlib=libc++',
+            '-std=c++11',
             '-mmacosx-version-min=10.7',
             '-Wno-builtin-macro-redefined',
             '-Wno-deprecated-declarations',

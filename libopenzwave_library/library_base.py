@@ -10,6 +10,135 @@ import libopenzwave_version
 
 dummy_return = b''
 
+"""
+    c language options
+
+    -ansi 
+    -std=standard 
+    -fgnu89-inline 
+    -aux-info filename 
+    -fno-asm 
+    -fno-builtin 
+    -fno-builtin-function 
+    -fhosted 
+    -ffreestanding 
+    -fopenmp 
+    -fms-extensions 
+    -trigraphs 
+    -no-integrated-cpp 
+    -traditional 
+    -traditional-cpp 
+    -fallow-single-precision 
+    -fcond-mismatch 
+    -flax-vector-conversions 
+    -fsigned-bitfields 
+    -fsigned-char 
+    -funsigned-bitfields 
+    -funsigned-char 
+    
+    cpp language options
+    -fabi-version=n
+    -fno-access-control
+    -fcheck-new
+    -fconserve-space
+    -ffriend-injection
+    -fno-elide-constructors
+    -fno-enforce-eh-specs
+    -ffor-scope
+    -fno-for-scope
+    -fno-gnu-keywords
+    -fno-implicit-templates
+    -fno-implicit-inline-templates
+    -fno-implement-inlines
+    -fms-extensions
+    -fno-nonansi-builtins
+    -fno-operator-names
+    -fno-optional-diags
+    -fpermissive
+    -frepo
+    -fno-rtti
+    -fstats
+    -ftemplate-depth-n
+    -fno-threadsafe-statics
+    -fuse-cxa-atexit
+    -fno-weak
+    -nostdinc++
+    -fno-default-inline
+    -fvisibility-inlines-hidden
+    -fvisibility-ms-compat
+    -Wabi
+    -Wctor-dtor-privacy
+    -Wnon-virtual-dtor
+    -Wreorder
+    -Weffc++
+    -Wstrict-null-sentinel
+    -Wno-non-template-friend
+    -Wold-style-cast
+    -Woverloaded-virtual
+    -Wno-pmf-conversions
+    -Wsign-promo 
+    
+    processor options
+    
+        -Aquestion=answer 
+        -A-question[=answer] 
+        -C 
+        -dD 
+        -dI 
+        -dM 
+        -dN 
+        -Dmacro[=defn] 
+        -E 
+        -H 
+        -idirafter dir 
+        -include file 
+        -imacros file 
+        -iprefix file 
+        -iwithprefix dir 
+        -iwithprefixbefore dir 
+        -isystem dir 
+        -imultilib dir 
+        -isysroot dir 
+        -M 
+        -MM 
+        -MF 
+        -MG 
+        -MP 
+        -MQ 
+        -MT 
+        -nostdinc 
+        -P 
+        -fworking-directory 
+        -remap 
+        -trigraphs 
+        -undef 
+        -Umacro 
+        -Wp,option 
+        -Xpreprocessor option 
+        
+            object-file-name -llibrary -nostartfiles -nodefaultlibs -nostdlib -pie -rdynamic -s -static -static-libgcc -shared -shared-libgcc -symbolic -T script -Wl,option -Xlinker option -u symbol 
+    
+    
+    
+/usr/bin/g++
+ -MM 
+ -c 
+ -Wall 
+ -Wno-unknown-pragmas 
+ -Werror 
+ -Wno-error=sequence-point 
+ -Wno-sequence-point 
+ -O3 
+ -fPIC 
+ -std=c++11 
+ 
+ -I "/home/vsts/work/1/s/openzwave/cpp/src" 
+ -I "/home/vsts/work/1/s/openzwave/cpp/tinyxml" 
+ 
+ /home/vsts/work/1/s/openzwave/cpp/tinyxml/tinystr.cpp > /home/vsts/work/1/s/openzwave/.dep/tinystr.d
+ 
+"""
+
 def parse_flags(env_param):
     if env_param in os.environ:
         flags = os.environ[env_param]
@@ -137,7 +266,7 @@ class Library(object):
                 include_dirs.append(include)
 
         for include in include_dirs:
-            includes.append('I "{0}"'.format(include))
+            includes.append('-I "{0}"'.format(include))
 
         return includes
 

@@ -144,18 +144,6 @@ class Library(library_base.Library):
         return cpp_flags
 
     @property
-    def include_dirs(self):
-        include_dirs = [
-            '-I' + os.path.join(self.openzwave, 'cpp', 'src'),
-            '-I' + os.path.join(self.openzwave, 'cpp', 'tinyxml')
-        ]
-        return include_dirs
-
-    @include_dirs.setter
-    def include_dirs(self, _):
-        pass
-
-    @property
     def t_arch(self):
         if DARWIN_MOJAVE_UP:
             # Newer macOS releases don't support i386 so only build 64-bit

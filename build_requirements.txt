@@ -15,5 +15,4 @@ pyserial
 pycryptodome
 lxml
 pywin32>=223;sys_platform=='win32'
-sdnotify;sys_platform=='linux'
-sdnotify;sys_platform=='darwin'
+sdnotify;sys_platform!='win32'

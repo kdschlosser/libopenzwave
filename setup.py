@@ -128,7 +128,7 @@ if __name__ == '__main__':
     #     sys.argv[sys.argv.index('bdist_wheel')] = 'wheel'
 
     install_requires = [
-        'pyserial'
+        'pyserial',
         'pycryptodome',
         'lxml',
     ]
@@ -416,10 +416,10 @@ if __name__ == '__main__':
             'libopenzwave_manager=libopenzwave.scripts.libopenzwave_manager:main'
         ]
     if '--service' in sys.argv:
-        if sys.platform.startswith('win'):
-            install_requires += ['pywin32>=223']
-        else:
-            install_requires += ['sdnotify']
+        install_requires += [
+            "pywin32>=223;sys_platform=='win32'",
+            "sdnotify;sys_platform!='win32'"
+        ]
 
         if 'console_scripts' in entry_points:
             entry_points['console_scripts'] += [

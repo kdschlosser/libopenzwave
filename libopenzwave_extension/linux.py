@@ -12,16 +12,22 @@ class Extension(extension_base.Extension):
         extension_base.Extension.__call__(self, build_ext)
 
         if self.static:
+            self.libraries += ['resolv']
+
             build_clib = build_ext.distribution.get_command_obj('build_clib')
             self.extra_objects += [
                 os.path.join(build_clib.build_clib, 'libopenzwave.a')
             ]
 
+            self.include_dirs += [
+                os.path.join(self.openzwave, 'cpp', 'build', 'linux')
+            ]
+
         else:
-            import pyozw_pkgconfig
+            import libopenzwave_pkgconfig
 
             self.libraries += ["openzwave"]
-            extra = pyozw_pkgconfig.cflags('libopenzwave')
+            extra = libopenzwave_pkgconfig.cflags('libopenzwave')
             if extra != '':
                 for ssubstitute in ['', 'value_classes', 'platform']:
                     self.extra_compile_args += [
@@ -31,7 +37,7 @@ class Extension(extension_base.Extension):
         self.report_config()
 
     def __init__(self):
-        libraries = ['resolv']
+        libraries = []
         include_dirs = []
         extra_objects = []
 

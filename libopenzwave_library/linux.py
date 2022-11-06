@@ -26,11 +26,6 @@ class Library(library_base.Library):
             include_dirs=include_dirs
         )
 
-        self._define_macros.extend([
-            ('SYSCONFDIR', '"\\"{0}"\\"'.format(self.sys_config_path)),
-            ('NDEBUG',)
-        ])
-
     @property
     def sources(self):
         sources = library_base.get_sources(

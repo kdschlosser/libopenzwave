@@ -11,7 +11,7 @@ jobs:
               versionSpec: ${{ pythonVersion }}
               addToPath: true
 
-          - script: sudo apt-get install --force-yes -y make libudev-dev g++ libyaml-dev libusb-1.0 libresolv
+          - script: sudo apt-get install --force-yes -y make libudev-dev g++ libyaml-dev libusb-1.0
             displayName: 'Install libs'
 
           - script: python -m pip install --upgrade pip setuptools wheel

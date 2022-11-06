@@ -255,27 +255,53 @@ if __name__ == '__main__':
     import libopenzwave_build_docs  # NOQA
     import libopenzwave_build_stub  # NOQA
 
+    if '--dev' in sys.argv:
+        sys.argv.remove('--dev')
+        options = dict(
+            build_docs=dict(dev=True),
+            bdist_egg=dict(dev=True, bdist_dir=bdist_dir),
+            build=dict(dev=True, dev_repo=dev_repo),
+            install=dict(dev=True),
+        )
 
+    else:
+        options = dict(
+            bdist_egg=dict(bdist_dir=bdist_dir),
+        )
+
+    if '--cython' in sys.argv:
+        sys.argv.remove('--cython')
+
+        if 'build' in options:
+            options['build']['cython'] = True
+        else:
+            options['build'] = dict(
+                cython=True
+            )
 
     if 'build_docs' in sys.argv:
+        options['build_docs'] = dict(
+            full_traceback=True
+        )
 
-        for arg in sys.argv:
-            if arg.startswith('--source-path'):
-                break
-        else:
-            sys.argv.append('--source-path=docs')
+        bd = options['build_docs']
 
-        for arg in sys.argv:
-            if arg.startswith('--builder-name'):
-                break
-        else:
-            sys.argv.append('--builder-name=html')
+        for arg in sys.argv[:]:
+            for switch in ('--source-path', '--builder-name'):
+                if arg.startswith(switch):
+                    name, value = list(item.strip() for item in arg.split('='))
+                    name = name[2:].replace('-', '_')
+                    bd[name] = value
+                    sys.argv.remove(arg)
 
-        for arg in sys.argv:
-            if arg.startswith('--full-traceback'):
-                break
-        else:
-            sys.argv.append('--full-traceback')
+        if '--full-traceback' in sys.argv:
+            sys.argv.remove('--full-traceback')
+
+        for key, value in (
+            ('source_path', 'docs'),
+            ('builder_name', 'html'),
+        ):
+            bd[key] = bd.get(key, value)
 
         sphinx_conf = libopenzwave_build_docs.ConfigOptions()
         libopenzwave_build_docs.build_docs.sphinx_conf = sphinx_conf
@@ -392,28 +418,6 @@ if __name__ == '__main__':
         _libopenzwave='_libopenzwave'
     )
 
-    if '--dev' in sys.argv:
-        options = dict(
-            build_docs=dict(dev=True),
-            bdist_egg=dict(dev=True, bdist_dir=bdist_dir),
-            build=dict(dev=True, dev_repo=dev_repo),
-            install=dict(dev=True),
-        )
-
-    else:
-        options = dict(
-            bdist_egg=dict(bdist_dir=bdist_dir),
-        )
-
-    if '--cython' in sys.argv:
-        sys.argv.remove('--cython')
-        if 'build' in options:
-            options['build']['cython'] = True
-        else:
-            options['build'] = dict(
-                cython=True
-            )
-
     entry_points = dict()
 
     if '--manager' in sys.argv:
@@ -425,28 +429,26 @@ if __name__ == '__main__':
         ]
 
         entry_points['console_scripts'] = [
-            'libopenzwave_manager=libopenzwave.scripts.libopenzwave_manager:main'
+            'libopenzwave_manager=libopenzwave.scripts.'
+            'libopenzwave_manager:main'
         ]
     if '--service' in sys.argv:
+        sys.argv.remove('--service')
         install_requires += [
             "pywin32>=223;sys_platform=='win32'",
             "sdnotify;sys_platform!='win32'"
         ]
 
-        if 'console_scripts' in entry_points:
-            entry_points['console_scripts'] += [
-                'libopenzwave_service=libopenzwave.scripts.libopenzwave_service:main'
-            ]
-        else:
-            packages += [
-                'libopenzwave.scripts'
-            ]
-            entry_points['console_scripts'] = [
-                'libopenzwave_service=libopenzwave.scripts.libopenzwave_service:main'
-            ]
+        cs = entry_points.get('console_scripts', [])
+        cs.append(
+            'libopenzwave_service=libopenzwave.scripts.'
+            'libopenzwave_service:main'
+        )
 
-        sys.argv.remove('--service')
+        if 'libopenzwave.scripts' not in packages:
+            packages.append('libopenzwave.scripts')
 
+        entry_points['console_scripts'] = cs
 
     setup(
         name='libopenzwave',

@@ -10,12 +10,13 @@ class Extension(extension_base.Extension):
         build_ext.distribution.has_c_libraries = self.has_c_libraries
 
         extension_base.Extension.__call__(self, build_ext)
-        
+
         if self.static:
-            self.libraries += ['lresolv']
+            build_clib = build_ext.distribution.get_command_obj('build_clib')
             self.extra_objects += [
-                os.path.join(self.openzwave, '_libopenzwave.a')
+                os.path.join(build_clib.build_clib, 'libopenzwave.a')
             ]
+
         else:
             import pyozw_pkgconfig
 
@@ -30,7 +31,7 @@ class Extension(extension_base.Extension):
         self.report_config()
 
     def __init__(self):
-        libraries = []
+        libraries = ['resolv']
         include_dirs = []
         extra_objects = []
 

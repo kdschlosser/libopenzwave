@@ -56,7 +56,7 @@ class Extension(setuptools.extension.Extension):
                 )
             ]
             self.include_dirs += [
-                '_libopenzwave'
+                os.path.join(openzwave, '_libopenzwave')
             ]
 
         cpp_path = os.path.join(openzwave, 'cpp')

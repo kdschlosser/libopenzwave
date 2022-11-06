@@ -304,7 +304,8 @@ class Library(library_base.Library):
 
     @property
     def obj_path(self):
-        return os.path.join(self.dest_path, 'lib_build_temp')
+        path = library_base.Library.obj_path.fget(self)
+        return os.path.split(path)[0]
 
     def link_shared(self, objects, build_clib):
         pass

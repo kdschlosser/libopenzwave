@@ -11,6 +11,69 @@ import libopenzwave_version
 dummy_return = b''
 
 """
+
+
+gcc 
+-Wno-unused-result
+ -Wsign-compare 
+ -DNDEBUG 
+ -g 
+ -fwrapv 
+ -O2 
+ -Wall 
+ 
+ -g 
+ -fstack-protector-strong 
+ -Wformat 
+ -Werror=format-security 
+ 
+ -g 
+ -fwrapv 
+ -O2 
+ -fPIC 
+ 
+ -DPY_LIB_VERSION=0.5.0 
+ -D_MT=1 
+ -D_DLL=1 
+ -DPY_LIB_FLAVOR=release 
+ -DPY_LIB_BACKEND=cython 
+ -DCYTHON_FAST_PYCCALL=1 
+ -DPY_SSIZE_T_CLEAN=1 
+ 
+ -I_libopenzwave 
+ -I/mnt/c/Users/drsch/PycharmProjects/libopenzwave/openzwave/cpp/src 
+ -I/mnt/c/Users/drsch/PycharmProjects/libopenzwave/openzwave/cpp/src/value_classes 
+ -I/mnt/c/Users/drsch/PycharmProjects/libopenzwave/openzwave/cpp/src/platform 
+ -I/mnt/c/Users/drsch/PycharmProjects/libopenzwave/openzwave/cpp/src/command_classes 
+ -I/mnt/c/Users/drsch/PycharmProjects/libopenzwave/openzwave/cpp/src/aes 
+ -I/mnt/c/Users/drsch/PycharmProjects/libopenzwave/openzwave/cpp/src/tinyxml 
+ -I/usr/include/python3.8 
+ -c _libopenzwave/_libopenzwave.cpp 
+ -o build/temp.linux-x86_64-cpython-38/_libopenzwave/_libopenzwave.o 
+ 
+ -std=c++11 
+ -Wno-builtin-macro-redefined 
+ -Wno-deprecated-declarations 
+ -Wno-deprecated 
+ -Wno-unreachable-code-fallthrough
+ 
+ 
+g++ 
+-shared 
+-Wl,-O1 
+
+-Wl,-Bsymbolic-functions 
+-Wl,-Bsymbolic-functions 
+-Wl,-z,relro 
+-g 
+-fwrapv 
+-O2 
+build/temp.linux-x86_64-cpython-38/_libopenzwave/_libopenzwave.o 
+build/temp.linux-x86_64-cpython-38/lib_build/libopenzwave.a 
+-L/usr/lib 
+-o build/lib.linux-x86_64-cpython-38/_libopenzwave.so 
+-std=c++11
+
     c language options
 
     -ansi 
@@ -187,6 +250,8 @@ def get_sources(src_path, ignore):
         if os.path.isdir(src):
             if src_f.lower() in ignore:
                 continue
+            if src.lower() in ignore:
+                continue
 
             found += get_sources(src, ignore)
         elif src_f.endswith('.c') or src_f.endswith('.cpp'):
@@ -220,6 +285,8 @@ class Library(object):
         self.dest_path = None
         self.print_lock = threading.Lock()
         self.running_threads = {}
+        self.build_path = ''
+        self.build_temp_path = ''
 
         # packages = self.packages
         #
@@ -391,11 +458,11 @@ class Library(object):
 
     @property
     def obj_path(self):
-        return os.path.join(self.openzwave, '.lib')
+        return os.path.join(self.build_temp_path, '.lib')
 
     @property
     def dep_path(self):
-        return os.path.join(self.openzwave, '.dep')
+        return os.path.join(self.build_temp_path, '.dep')
 
     @property
     def so_path(self):
@@ -470,13 +537,15 @@ class Library(object):
         build_clib.spawn(command)
 
     def link_static(self, objects, build_clib):
-        libopenzwave = os.path.join(self.openzwave, 'libopenzwave.a')
+        libopenzwave = '"' + os.path.join(self.build_path, 'libopenzwave.a') + '"'
 
         if os.path.exists(libopenzwave):
             return
 
         with self.print_lock:
             print('linking static library...')
+
+        objects = list('"' + obj + '"' for obj in objects)
 
         command = [self.ar, libopenzwave] + objects
         build_clib.spawn(command)
@@ -486,12 +555,12 @@ class Library(object):
 
     def link_shared(self, objects, build_clib):
         libopenzwave_lib_no_version = os.path.join(
-            self.openzwave,
+            self.build_temp_path,
             self.shared_lib_no_version_name
         )
 
         libopenzwave_lib = os.path.join(
-            self.openzwave,
+            self.build_temp_path,
             self.shared_lib_name
         )
 
@@ -513,7 +582,7 @@ class Library(object):
             libopenzwave_lib_no_version
         ]
         build_clib.spawn(command)
-        build_clib.spawn(['ldconfig', self.so_path], cwd=self.openzwave)
+        build_clib.spawn(['ldconfig', self.so_path], cwd=self.build_temp_path)
 
     def build_pkg_config_file(self):
         pc_path = os.path.join(self.openzwave, 'libopenzwave.pc')
@@ -620,9 +689,12 @@ class Library(object):
     #     :return:
     #     """
 
-    def __call__(self, openzwave):
+    def __call__(self, build_clib, openzwave):
+        self.build_path = build_clib.build_clib
+        self.build_temp_path = build_clib.build_temp
+
         self.openzwave = openzwave
-        self.build_path = os.path.join(self.openzwave, 'build')
+        # self.build_path = os.path.join(self.openzwave, 'build')
 
     @property
     def packages(self):
@@ -724,7 +796,6 @@ class Library(object):
             CFLAGS=' '.join(self.c_flags),
             INCLUDES=' '.join(self.include_dirs),
             DEPDIR=self.dep_path,
-            top_builddir=self.openzwave,
             OBJDIR=self.obj_path,
             FMTCMD=self.fmt_cmd,
             TARCH=' '.join(self.t_arch),
@@ -760,7 +831,6 @@ class Library(object):
             CPPFLAGS=' '.join(self.cpp_flags),
             INCLUDES=' '.join(self.include_dirs),
             DEPDIR=self.dep_path,
-            top_builddir=self.openzwave,
             OBJDIR=self.obj_path,
             FMTCMD=self.fmt_cmd,
             TARCH=' '.join(self.t_arch),
@@ -779,25 +849,25 @@ class Library(object):
         self.dest_path = os.path.join(build.openzwave, 'build')
 
         if build.static:
-            build_path = os.path.join(self.dest_path, self.lib_inst_path)
+            build_path = self.build_path
         else:
             build_path = self.lib_inst_path
 
         if not os.path.exists(build_path):
-            LOG.debug('Creating directory ' + build_path)
+            LOG.info('Creating directory ' + build_path)
             os.makedirs(build_path)
 
         if not os.path.exists(self.obj_path):
-            LOG.debug('Creating directory ' + self.obj_path)
-            os.mkdir(self.obj_path)
+            LOG.info('Creating directory ' + self.obj_path)
+            os.makedirs(self.obj_path)
 
         if not os.path.exists(self.dep_path):
-            LOG.debug('Creating directory ' + self.dep_path)
-            os.mkdir(self.dep_path)
+            LOG.info('Creating directory ' + self.dep_path)
+            os.makedirs(self.dep_path)
 
         if not os.path.exists(self.dest_path):
-            LOG.debug('Creating directory ' + self.dest_path)
-            os.mkdir(self.dest_path)
+            LOG.info('Creating directory ' + self.dest_path)
+            os.makedirs(self.dest_path)
 
         self.build_version_file()
         self.build_pkg_config_file()

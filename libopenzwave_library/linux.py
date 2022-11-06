@@ -70,9 +70,8 @@ class Library(library_base.Library):
             '-c',
             '-Wall',
             '-Wno-unknown-pragmas',
-            '-Werror',
-            '-Wno-error=sequence-point',
             '-Wno-sequence-point',
+            '-Wno-nonnull',
             '-O3',
             '-fPIC'
         ):
@@ -80,6 +79,3 @@ class Library(library_base.Library):
                 c_flags.append(flag)
 
         return c_flags
-
-    def __call__(self, openzwave):
-        library_base.Library.__call__(self, openzwave)

@@ -100,6 +100,9 @@ def setup():
         else:
             raise RuntimeError('Unable to locate g++')
 
+        if ' rc' not in ar:
+            ar = ar.replace('ar', 'ar rc')
+
         AR = ar
         C = gcc
         CPP = gpp
@@ -250,6 +253,9 @@ def setup():
         else:
             ld = cpp
 
+        if ' rc' not in ar:
+            ar = ar.replace('ar', 'ar rc')
+
         AR = ar
         C = c
         CPP = cpp
@@ -341,6 +347,9 @@ def setup():
         else:
             ld = cpp
 
+        if ' rc' not in ar:
+            ar = ar.replace('ar', 'ar rc')
+
         AR = ar
         C = c
         CPP = cpp
@@ -369,36 +378,85 @@ def setup():
 
         gcc = find_executable("gcc")
         gpp = find_executable("g++")
-        make = find_executable("make")
+        ar = find_executable('ar')
+        ld = find_executable('ld')
+        ranlib = find_executable('ranlib')
         cc = os.environ.get('CC', '')
         cxx = os.environ.get('CXX', '')
+        ar_env = os.environ.get('AR', '')
+        ld_env = os.environ.get('LD', '')
+        ranlib_env = os.environ.get('RANLIB', '')
+        make = find_executable("make")
 
-        if not make:
-            raise RuntimeError('Unable to locate make')
+        if ranlib:
+            ranlib = 'ranlib'
+            if ranlib != ranlib_env and ranlib_env.endswith('ranlib'):
+                ranlib = ranlib_env
+            else:
+                os.environ['RANLIB'] = 'ranlib'
+        elif ranlib_env.endswith('ranlib'):
+            ranlib = ranlib_env
+        else:
+            raise RuntimeError('Unable to locate ranlib')
+
+        if ar:
+            if ar != ar_env and ar_env.endswith('ar'):
+                ar = ar_env
+            else:
+                os.environ['AR'] = 'ar'
+        elif ar_env.endswith('ar'):
+            ar = ar_env
+        else:
+            raise RuntimeError('Unable to locate ar')
 
         if gcc:
             if gcc != cc and cc.endswith('gcc'):
                 gcc = cc
+            else:
+                os.environ['CC'] = 'gcc'
         elif cc.endswith('gcc'):
             gcc = cc
         else:
             raise RuntimeError('Unable to locate gcc')
 
+        print("Found gcc : {0}".format(gcc))
+
         if gpp:
             if gpp != cxx and cxx.endswith('g++'):
                 gpp = cxx
-
+            else:
+                os.environ['CXX'] = 'g++'
         elif cxx.endswith('g++'):
             gpp = cxx
         else:
             raise RuntimeError('Unable to locate g++')
 
-        AR = 'ar'
+        if ld:
+            if ld != ld_env and ar_env.endswith('ld'):
+                ld = ld_env
+            else:
+                os.environ['LD'] = 'ld'
+        elif ld_env.endswith('ld'):
+            ld = ld_env
+        else:
+            ld = gpp
+            os.environ['LD'] = 'g++'
+
+        if ' rc' not in ar:
+            ar = ar.replace('ar', 'ar rc')
+
+        AR = ar
         C = gcc
         CPP = gpp
-        RANLIB = 'ranlib'
-        LD = gpp
+        RANLIB = ranlib
+        LD = ld
         MAKE = make
+
+        print("Found gcc : {0}".format(gcc))
+        print("Found g++ : {0}".format(gpp))
+        print("Found ar : {0}".format(ar))
+        print("Found ld : {0}".format(ld))
+        print("Found ranlib : {0}".format(ranlib))
 
         os.environ['CC'] = gcc
         os.environ['LD'] = gpp
@@ -406,10 +464,7 @@ def setup():
         os.environ['RANLIB'] = 'ranlib'
         os.environ['CXX'] = gpp
 
-        print("Found gcc : {0}".format(gcc))
-        print("Found g++ : {0}".format(gpp))
-        print("Found make : {0}".format(make))
-        check_packages('libresolv', 'libiconv', 'libusb-1.0')
+        check_packages('libusb-1.0')
 
     elif os_.startswith('linux'):
 
@@ -478,6 +533,9 @@ def setup():
             ld = gpp
             os.environ['LD'] = 'g++'
 
+        if ' rc' not in ar:
+            ar = ar.replace('ar', 'ar rc')
+
         AR = ar
         C = gcc
         CPP = gpp
@@ -490,7 +548,7 @@ def setup():
         print("Found ld : {0}".format(ld))
         print("Found ranlib : {0}".format(ranlib))
 
-        check_packages('libusb-1.0')
+        check_packages('libresolv', 'libusb-1.0')
 
     else:
         raise RuntimeError(

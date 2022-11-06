@@ -77,13 +77,12 @@ class build_clib(_build_clib):
 
         openzwave = builder.openzwave
         self.build_clib = os.path.join(
-            openzwave,
-            'build',
+            builder.build_temp,
             'lib_build'
         )
+
         self.build_temp = os.path.join(
-            openzwave,
-            'build',
+            builder.build_temp,
             'lib_build_temp'
         )
 
@@ -101,7 +100,7 @@ class build_clib(_build_clib):
         converted_libraries = []
 
         for lib in libraries:
-            lib(openzwave)
+            lib(self, openzwave)
             build_info = dict(
                 sources=lib.sources,
                 macros=lib.define_macros,

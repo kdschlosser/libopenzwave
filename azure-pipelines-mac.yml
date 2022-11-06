@@ -19,8 +19,8 @@ jobs:
           - script: python -m pip install -r build_requirements.txt
             displayName: 'Install build requirements'
 
-          - script: python setup.py install --service build_docs bdist_wheel
-            displayName: 'install --service build_docs bdist_wheel'
+          - script: python setup.py install --service bdist_wheel
+            displayName: 'install --service bdist_wheel'
 
           - script: python setup.py build --service --cython bdist_wheel
             displayName: 'build --service --cython bdist_wheel'

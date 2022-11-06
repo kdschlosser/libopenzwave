@@ -176,10 +176,15 @@ class build_docs(setuptools.Command):
             'dev',
             None,
             'use development version of OpenZWave'
+        ),
+        (
+            'run-build',
+            None,
+            'internal use'
         )
     ]
-
     boolean_options = [
+        'run-build',
         'dev',
         'full-traceback',
         'keep-going',
@@ -198,6 +203,7 @@ class build_docs(setuptools.Command):
     sphinx_conf = None
 
     def initialize_options(self):
+        self.run_build = False
         self.html_values = ''
         self.config_overrides = ''
         self.source_path = '/docs'
@@ -226,7 +232,16 @@ class build_docs(setuptools.Command):
     def finalize_options(self):
         flatten = lambda l: [item for sublist in l for item in sublist]
 
+        args = [
+            'run-build',
+            'builder-name=' + repr(self.builder_name),
+            'output-path=' + repr(self.output_path),
+            'source-path=' + repr(self.source_path)
+        ]
+
         if self.html_values:
+            args.append('html-values=' + repr(self.html_values))
+
             self.html_values = flatten(
                 ['-A', item] for item in self.html_values.split(';')
             )
@@ -234,6 +249,7 @@ class build_docs(setuptools.Command):
             self.html_values = []
 
         if self.config_overrides:
+            args.append('config-overrides=' + repr(self.html_values))
             self.config_overrides = flatten(
                 ['-D', item] for item in self.config_overrides.split(';')
             )
@@ -241,22 +257,26 @@ class build_docs(setuptools.Command):
             self.config_overrides = []
 
         if self.full_traceback:
+            args.append('full-traceback')
             self.full_traceback = ['-T']
         else:
             self.full_traceback = []
 
         if self.make_mode:
+            args.append('make-mode')
             self.builder_name = ['-M', self.builder_name]
 
         else:
             self.builder_name = ['-b', self.builder_name]
 
         if self.all_output:
+            args.append('all-output')
             self.all_output = ['-a']
         else:
             self.all_output = []
 
         if self.no_saved_environment:
+            args.append('no-saved-environment')
             self.no_saved_environment = ['-E']
         else:
             self.no_saved_environment = []
@@ -264,36 +284,39 @@ class build_docs(setuptools.Command):
         if self.tag is None:
             self.tag = []
         else:
+            args.append('tag=' + repr(self.tag))
             self.tag = ['-t', self.tag]
 
         if self.doctree_path is None:
             self.doctree_path = []
         else:
+            args.append('doctree-path=' + repr(self.doctree_path))
             self.doctree_path = ['-d', self.doctree_path]
 
         self.num_processes = ['-j', self.num_processes]
 
+
         if self.config_path is None:
             self.config_path = []
         else:
+            args.append('config-path=' + repr(self.config_path))
             self.config_path = ['-c', self.config_path]
 
         if self.no_config:
-            self.no_config = ['-C']
-        else:
-            self.no_config = []
-
-        if self.no_config:
+            args.append('no-config')
             self.no_config = ['-C']
         else:
             self.no_config = []
 
         if self.keep_going:
+            args.append('keep-going')
+
             self.keep_going = ['--keep_going']
         else:
             self.keep_going = []
 
         if self.warnings_are_errors:
+            args.append('warnings-are-errors')
             self.warnings_are_errors = ['-W']
         else:
             self.warnings_are_errors = []
@@ -301,24 +324,29 @@ class build_docs(setuptools.Command):
         if self.error_log is None:
             self.error_log = []
         else:
+            args.append('error-log=' + repr(self.error_log))
             self.error_log = ['-w', self.error_log]
 
         if self.only_errors:
+            args.append('only-errors')
             self.only_errors = ['-Q']
         else:
             self.only_errors = []
 
         if self.quiet:
+            args.append('quiet')
             self.quiet = ['-q']
         else:
             self.quiet = []
 
         if self.no_color:
+            args.append('no-color')
             self.no_color = ['-N']
         else:
             self.no_color = []
 
         if self.nit_picky:
+            args.append('nit-picky')
             self.nit_picky = ['-n']
         else:
             self.nit_picky = []
@@ -329,6 +357,7 @@ class build_docs(setuptools.Command):
             self.verbose = []
 
         if self.debug:
+            args.append('debug')
             self.verbose = ['-vvvv']
 
         if self.sphinx_conf is not None:
@@ -382,6 +411,7 @@ class build_docs(setuptools.Command):
         builder.ensure_finalized()
 
         self.build_lib = builder.build_lib
+        self.args = args
 
     def run(self):
 
@@ -393,13 +423,61 @@ class build_docs(setuptools.Command):
         # things start happening. so we want to make sure that we load the one
         # that was just compiled and also remove any python-openzwave
         # references in sys.path. this ensures the proper one gets loaded
+        #
+        # import subprocess
+        #
+        # if not sys.platform.startswith('win') and not self.run_build:
+        #     p = subprocess.Popen(
+        #         'bash',
+        #         stdout=subprocess.PIPE,
+        #         stderr=subprocess.PIPE,
+        #         stdin=subprocess.PIPE
+        #     )
+        #
+        #     args = ' '.join('--' + arg for arg in self.args)
+        #
+        #     cmd = sys.executable + ' setup.py build_docs ' + args
+        #
+        #     p.stdin.write(cmd.encode('utf-8'))
+        #     p.stdin.close()
+        #
+        #     while p.poll() is None:
+        #         for line in iter(p.stdout.readline, b''):
+        #             line = line.strip()
+        #             if line:
+        #                 sys.stdout.write(
+        #                     line.decode('utf-8') + '\n'
+        #                 )
+        #
+        #                 sys.stdout.flush()
+        #
+        #         for line in iter(p.stderr.readline, b''):
+        #             line = line.strip()
+        #             if line:
+        #                 sys.stderr.write(line.decode('utf-8') + '\n')
+        #                 sys.stderr.flush()
+        #
+        #     if not p.stdout.closed:
+        #         p.stdout.close()
+        #
+        #     if not p.stderr.closed:
+        #         p.stderr.close()
+        #
+        #     sys.stdout.flush()
+        #     sys.stderr.flush()
+        #
+        #     return
 
         build_ext = self.distribution.get_command_obj('build_ext')
         build_ext.ensure_finalized()
         extension = self.distribution.ext_modules[0]
         ext_path = build_ext.get_ext_fullpath(extension.name)
-        ext_path = os.path.split(ext_path)[-1]
-        sys.path.insert(0, ext_path)
+
+        if not os.path.exists(ext_path):
+            raise RuntimeError(
+                'You need to build the library before building the docs.'
+            )
+        ext_path = os.path.split(ext_path)[0]
 
         for path in sys.path[:]:
             if 'libopenzwave' in path:
@@ -411,8 +489,8 @@ class build_docs(setuptools.Command):
         if self.sphinx_conf is not None:
             self.sphinx_conf.additional_lines = (
                 'import sys\n'
-                'sys.path.insert(0, r\'{path}\')\n\n'.format(
-                    path=os.path.abspath(ext_path)
+                'sys.path.insert(0, {path})\n\n'.format(
+                    path=repr(os.path.abspath(ext_path))
                 )
             ) + self.sphinx_conf.additional_lines
 

@@ -548,7 +548,7 @@ def setup():
         print("Found ld : {0}".format(ld))
         print("Found ranlib : {0}".format(ranlib))
 
-        check_packages('libresolv', 'libusb-1.0')
+        check_packages('libusb-1.0')
 
     else:
         raise RuntimeError(

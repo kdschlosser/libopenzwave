@@ -61,11 +61,8 @@ class build(_build):
         if not os.path.exists(self.openzwave):
             self.get_openzwave()
 
-        for build_type in ('wheel', 'egg', 'build', 'install'):
-            if build_type in sys.argv:
-                build_config = self.distribution.get_command_obj('build_config')
-                build_config.ensure_finalized()
-                break
+        build_config = self.distribution.get_command_obj('build_config')
+        build_config.ensure_finalized()
 
         # build_clib = self.distribution.get_command_obj('build_clib')
         # build_clib.ensure_finalized()
@@ -111,13 +108,13 @@ class build(_build):
         else:
             iter_copy('libopenzwave', build_lib)
 
-        build_config = self.distribution.get_command_obj('build_config')
-
+        # build_config = self.distribution.get_command_obj('build_config')
+        self.run_command('build_config')
         for sub_command in self.get_sub_commands():
             self.run_command(sub_command)
 
-            if sub_command == 'build_py' and build_config.is_finalized:
-                build_config.run()
+        #     if sub_command == 'build_py' and build_config.is_finalized:
+        #         build_config.run()
 
     def build_cython(self):
         cython_libopenzwave_build_path = os.path.join(

@@ -406,8 +406,6 @@ class build_docs(setuptools.Command):
                 sys.path.remove(path)
 
         sys.path.insert(0, os.path.abspath(ext_path))
-        __import__('_libopenzwave')
-
         # *********************************************************************
 
         if self.sphinx_conf is not None:
@@ -424,8 +422,6 @@ class build_docs(setuptools.Command):
         try:
             if self.output_path is None:
                 self.output_path = os.path.join(self.build_lib, 'docs')
-
-            self.run_command('bdist_egg')
 
             from sphinx.cmd.build import build_main
 

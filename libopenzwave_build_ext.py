@@ -35,6 +35,23 @@ class build_ext(_build_ext):
             if nthreads == 0:
                 nthreads = None
 
+            import sys
+            # [
+            # '/mnt/c/Users/drsch/PycharmProjects/libopenzwave',
+            # '/usr/lib/python3.8',
+            # '/usr/local/lib/python3.8/dist-packages',
+            # '/usr/lib/python3/dist-packages'
+            # ]
+
+            # [
+            # '',
+            # '/usr/lib/python38.zip',
+            # '/home/kgschlosser/.local/lib/python3.8/site-packages',
+            # '/usr/local/lib/python3.8/dist-packages',
+            # '/usr/lib/python3/dist-packages'
+            # ]
+
+            print(sys.path)
             from Cython.Build.Dependencies import cythonize
 
             self.distribution.ext_modules[:] = cythonize(

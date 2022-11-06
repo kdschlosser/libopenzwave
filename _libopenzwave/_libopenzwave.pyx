@@ -248,16 +248,12 @@ class EnumItem(str):
     """
 
     doc = ''
-    idx = -1
+    index = -1
     type = None
     _value = None
 
     @classmethod
     def __new__(cls, *args, **kwargs):
-        """
-        :param *args:
-        :param **kwargs:
-        """
         self = super(EnumItem, cls).__new__(*args, **kwargs)
         return self
 
@@ -305,7 +301,7 @@ class EnumItem(str):
         :rtype: "EnumItem"
         """
         self.doc = doc
-        self.idx = idx
+        self.index = idx
         self.type = type_
         self._value = value
         return self
@@ -313,10 +309,10 @@ class EnumItem(str):
     @property
     def value(self):
         """
-        :rtype: int, str
+        :rtype: int, str, None
         """
         if self._value is None:
-            return self.idx
+            return self.index
 
         return self._value
 
@@ -399,8 +395,8 @@ class Enum(dict):
 
     def __getattr__(self, item):
         """
-        :param item:
-        :type item: str
+        :param key:
+        :type key: str
         """
         if item in self.__dict__:
             return self.__dict__[item]
@@ -409,6 +405,7 @@ class Enum(dict):
             return self[item]
 
         raise AttributeError(item)
+
 
 class NotificationItem(EnumItem):
     _handler = None
@@ -421,7 +418,7 @@ class NotificationItem(EnumItem):
         :rtype: bool
         """
         if isinstance(other, int):
-            return other == self.idx
+            return other == self.index
 
         return str.__eq__(self, other)
 
@@ -433,7 +430,7 @@ class NotificationItem(EnumItem):
         :rtype: bool
         """
         if isinstance(other, int):
-            return other != self.idx
+            return other != self.index
 
         return str.__ne__(self, other)
 
@@ -441,7 +438,7 @@ class NotificationItem(EnumItem):
         """
         :rtype: int
         """
-        return self.idx
+        return self.index
 
     def __hash__(self):
         """
@@ -1533,15 +1530,13 @@ cdef class PyOptions:
         """
         Create an option object and check that parameters are valid.
 
-        :param config_path: The openzwave config directory. If None,
-            try to configure automatically.
+        :param config_path: The openzwave config directory.
         :type config_path: str, optional
 
         :param user_path: The user directory
         :type user_path: str, optional
 
-        :param cmd_line: The "command line" options of the
-            openzwave library
+        :param cmd_line: The "command line" options of the openzwave library
         :type cmd_line: str, optional
         """
 
@@ -1752,7 +1747,7 @@ cdef class PyOptions:
         :type name: str
 
         :return: The value or None
-        :rtype: bool, optional
+        :rtype: bool, None
         """
         cdef bool_t type_bool
         cret = self.options.GetOptionAsBool(_cstr(name), &type_bool)
@@ -1767,7 +1762,7 @@ cdef class PyOptions:
         :type name: str
 
         :return: The value or None
-        :rtype: int, optional
+        :rtype: int, None
         """
         cdef int32_t type_int
         cret = self.options.GetOptionAsInt(_cstr(name), &type_int)
@@ -1782,7 +1777,7 @@ cdef class PyOptions:
         :type name: str
 
         :return: The value or None
-        :rtype: str, optional
+        :rtype: str, None
         """
 
         cdef string type_string
@@ -3514,7 +3509,7 @@ cdef class PyManager:
 
         :param manufacturer_name: A string containing the nodes
             manufacturer name.
-        :type manufacturer_name: str, None
+        :type manufacturer_name: str
         
         :rtype: None
         """
@@ -3933,7 +3928,7 @@ cdef class PyManager:
         :type query_stage: str
 
         :return: code value.
-        :rtype: int, optional
+        :rtype: int, None
         """
         query_stage_mapping = [
             # Retrieve protocol information
@@ -4158,7 +4153,7 @@ cdef class PyManager:
         :type value_id: int
 
         :return: A string containing the user-friendly label of the value
-        :rtype: str, optional
+        :rtype: str, None
        """
         cdef string c_string
         if _values_map.find(value_id) != _values_map.end():
@@ -4193,7 +4188,7 @@ cdef class PyManager:
         :type value_id: int
 
         :return: A string containing the value of the units.
-        :rtype: str, optional
+        :rtype: str, None
         """
         cdef string c_string
         if _values_map.find(value_id) != _values_map.end():
@@ -4228,7 +4223,7 @@ cdef class PyManager:
         :type value_id: int
 
         :return: A string containing the value help text.
-        :rtype: str, optional
+        :rtype: str, None
         """
         cdef string c_string
         if _values_map.find(value_id) != _values_map.end():
@@ -4263,7 +4258,7 @@ cdef class PyManager:
         :type value_id: int
 
         :return: The value minimum.
-        :rtype: int, optional
+        :rtype: int, None
         """
         if _values_map.find(value_id) != _values_map.end():
             return self.manager.GetValueMin(_values_map.at(value_id))
@@ -4278,7 +4273,7 @@ cdef class PyManager:
         :type value_id: int
 
         :return: The value maximum.
-        :rtype: int, optional
+        :rtype: int, None
 
         """
         if _values_map.find(value_id) != _values_map.end():
@@ -4294,7 +4289,7 @@ cdef class PyManager:
         :type value_id: int
 
         :return: `True` if the value cannot be changed by the user.
-        :rtype: bool, optional
+        :rtype: bool, None
         """
         if _values_map.find(value_id) != _values_map.end():
             return self.manager.IsValueReadOnly(_values_map.at(value_id))
@@ -4309,7 +4304,7 @@ cdef class PyManager:
         :type value_id: int
 
         :return: `True` if the value can only be written to and not read.
-        :rtype: bool, optional
+        :rtype: bool, None
         """
         if _values_map.find(value_id) != _values_map.end():
             return self.manager.IsValueWriteOnly(_values_map.at(value_id))
@@ -4325,7 +4320,7 @@ cdef class PyManager:
 
         :return: True if the value has actually been set by a status
             message from the device, rather than simply being the default.
-        :rtype: bool, optional
+        :rtype: bool, None
         """
         if _values_map.find(value_id) != _values_map.end():
             return self.manager.IsValueSet(_values_map.at(value_id))
@@ -4340,7 +4335,7 @@ cdef class PyManager:
         :type value_id: int
 
         :return: `True` if the value is being polled, otherwise `False`.
-        :rtype: bool, optional
+        :rtype: bool, None
         """
         if _values_map.find(value_id) != _values_map.end():
             return self.manager.IsValuePolled(_values_map.at(value_id))
@@ -4358,7 +4353,7 @@ cdef class PyManager:
         :type value_id: int
 
         :return: A string containing the type of the value
-        :rtype: str, optional
+        :rtype: str, None
        """
         if _values_map.find(value_id) != _values_map.end():
             genre = PyGenres[_values_map.at(value_id).GetGenre()]
@@ -4380,7 +4375,7 @@ cdef class PyManager:
         :type value_id: int
 
         :return: The command class of the value
-        :rtype: int, optional
+        :rtype: int, None
        """
         if _values_map.find(value_id) != _values_map.end():
             cmd_cls = _values_map.at(value_id).GetCommandClassId()
@@ -4400,7 +4395,7 @@ cdef class PyManager:
         :type value_id: int
 
         :return: A string containing the type of the value
-        :rtype: str, optional
+        :rtype: str, None
        """
         if _values_map.find(value_id) != _values_map.end():
             genre = _values_map.at(value_id).GetInstance()
@@ -4421,7 +4416,7 @@ cdef class PyManager:
         :type value_id: int
 
         :return: A string containing the type of the value
-        :rtype: str, optional
+        :rtype: str, None
        """
         if _values_map.find(value_id) != _values_map.end():
             genre = _values_map.at(value_id).GetIndex()
@@ -4437,7 +4432,7 @@ cdef class PyManager:
         :type value_id: int
 
         :return: A string containing the type of the value
-        :rtype: str, optional
+        :rtype: str, None
        """
         if _values_map.find(value_id) != _values_map.end():
             datatype = PyValueTypes[_values_map.at(value_id).GetType()]
@@ -4453,7 +4448,7 @@ cdef class PyManager:
         :type value_id: int
 
         :return: Depending of the type of the valueId, None otherwise
-        :rtype: int, str, float, bool
+        :rtype: int, str, float, bool, None
         """
         return _getValueFromType(self.manager, value_id)
 
@@ -4598,7 +4593,7 @@ cdef class PyManager:
         :type value_id: int
 
         :return: The list of possible values
-        :rtype: list
+        :rtype: List[str]
         """
         cdef vector[string] vect
         cdef string temp
@@ -4623,7 +4618,7 @@ cdef class PyManager:
         :type value_id: int
 
         :return: The list of values
-        :rtype: list
+        :rtype: List[int]
         """
         cdef vector[int32_t] vect
         cdef int32_t temp
@@ -4860,7 +4855,7 @@ cdef class PyManager:
               are two special setback values - 121 is used to set Frost
               Protection mode, and 122 is used to set Energy Saving mode.
 
-        :rtype: tuple, optional
+        :rtype: tuple, None
         """
         cdef uint8_t ohours
         cdef uint8_t ominutes
@@ -5511,7 +5506,7 @@ cdef class PyManager:
         :type home_id: int
 
         :param failed_node_id: The ID of the node that is marked as failed.
-        :type failed_node_id: int
+        :type failed_node_id: int, optional
 
         :return: `True` if the request was sent successfully.
         :rtype: bool

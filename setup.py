@@ -210,9 +210,9 @@ if __name__ == '__main__':
 
     _verbose = '--verbose' in sys.argv
 
-    import setuptools._distutils.file_util  # NOQA
+    import distutils.file_util  # NOQA
 
-    _copy_file = setuptools._distutils.file_util.copy_file  # NOQA
+    _copy_file = distutils.file_util.copy_file  # NOQA
 
 
     def copy_file(
@@ -237,7 +237,7 @@ if __name__ == '__main__':
         )
 
 
-    setuptools._distutils.file_util.copy_file = copy_file  # NOQA
+    distutils.file_util.copy_file = copy_file  # NOQA
 
     from setuptools import setup, find_packages # NOQA
 
@@ -280,11 +280,9 @@ if __name__ == '__main__':
             )
 
     if 'build_docs' in sys.argv:
-        options['build_docs'] = dict(
-            full_traceback=True
-        )
-
+        options['build_docs'] = options.get('build_docs', dict())
         bd = options['build_docs']
+        bd['full_traceback'] = True
 
         for arg in sys.argv[:]:
             for switch in ('--source-path', '--builder-name'):
@@ -409,8 +407,6 @@ if __name__ == '__main__':
         ]
 
         sphinx_conf.additional_lines = sphinx_extra_lines
-
-        install_requires = []
 
     packages = []
     package_dir = dict(

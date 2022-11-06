@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
-from setuptools._distutils import log as LOG  # NOQA
+from distutils import log as LOG  # NOQA
 
 
 LOG.info('Getting Extension for platform {0}'.format(sys.platform))

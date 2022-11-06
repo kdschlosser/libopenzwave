@@ -25,6 +25,9 @@ class Extension(extension_base.Extension):
         else:
             self.libraries += ['openzwave']
 
+        os.environ['CC'] = 'g++'
+        os.environ['DISTUTILS_USE_SDK'] = '1'
+
         self.report_config()
 
     def __init__(self):

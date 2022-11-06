@@ -168,23 +168,6 @@ class Library(library_base.Library):
         return object_file
 
     def __init__(self):
-        define_macros = [
-            '/DWIN32=1',
-            '/D_MBCS=1',
-            '/D_LIB=1',
-            '/D_MT=1',
-            '/D_DLL=1',
-            '/DOPENZWAVE_MAKEDLL=1'
-        ]
-
-        if DEBUG_BUILD:
-            define_macros += ['/DDEBUG=1']
-        else:
-            define_macros += ['/DNDEBUG=1']
-
-        if environment.platform == 'x64':
-            define_macros += ['/DWIN64=1']
-
         extra_compile_args = [
             # Enables function-level linking.
             '/Gy',
@@ -251,12 +234,28 @@ class Library(library_base.Library):
 
         library_base.Library.__init__(
             self,
-            define_macros=define_macros,
             libraries=libraries,
             library_dirs=library_dirs,
             extra_compile_args=extra_compile_args,
             extra_link_args=extra_link_args
         )
+
+        self._define_macros = [
+            '/DWIN32=1',
+            '/D_MBCS=1',
+            '/D_LIB=1',
+            '/D_MT=1',
+            '/D_DLL=1',
+            '/DOPENZWAVE_MAKEDLL=1'
+        ]
+
+        if DEBUG_BUILD:
+            self._define_macros += ['/DDEBUG=1']
+        else:
+            self._define_macros += ['/DNDEBUG=1']
+
+        if environment.platform == 'x64':
+            self._define_macros += ['/DWIN64=1']
 
     @property
     def define_macros(self):

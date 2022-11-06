@@ -194,7 +194,7 @@ class Library(object):
 
     @property
     def sys_config_path(self):
-        return os.path.join(self.prefix, 'etc', 'openzwave')
+        return os.path.join('etc', 'openzwave')
 
     @property
     def include_path(self):
@@ -202,7 +202,7 @@ class Library(object):
 
     @property
     def shared_lib_name(self):
-        return 'libopenzwave-{0}.so'.format(self.ozw_version_string)
+        return 'libopenzwave.so.{0}'.format(self.ozw_version_string)
 
     @property
     def shared_lib_no_version_name(self):
@@ -362,9 +362,14 @@ class Library(object):
         objects = list('"' + obj + '"' for obj in objects)
 
         command = [self.ar, libopenzwave] + objects
+        with self.print_lock:
+            print(command)
         build_clib.spawn(command)
 
         command = [self.ranlib, libopenzwave]
+
+        with self.print_lock:
+            print(command)
         build_clib.spawn(command)
 
     def link_shared(self, objects, build_clib):
@@ -591,10 +596,10 @@ class Library(object):
     def compile_c(self, c_file, build_clib):
         cmd = [
             'echo "compiling {c_filename}..."',
-            "{CC} -MM {CFLAGS} {INCLUDES} {c_file} > {DEPDIR}/{filename}.d",
+            "{CC} -MM {CFLAGS} {MACROS} {INCLUDES} {c_file} > {DEPDIR}/{filename}.d",
             "mv -f {DEPDIR}/{filename}.d {DEPDIR}/{filename}.d.tmp",
             "sed -e 's|.*:|{OBJDIR}/{filename}.o: {DEPDIR}/{filename}.d|' < {DEPDIR}/{filename}.d.tmp > {DEPDIR}/{filename}.d;",
-            "sed -e 's/.*://' -e 's/\\$$//' < {DEPDIR}/{filename}.d.tmp | {FMTCMD} | sed -e 's/^ *//' -e 's/$$/:/' >> {DEPDIR}/.{filename}.d;",
+            "sed -e 's/.*://' -e 's/\\\\$//' < {DEPDIR}/{filename}.d.tmp | {FMTCMD} | sed -e 's/^ *//' -e 's/$/:/' >> {DEPDIR}/.{filename}.d;",
             "rm -f {DEPDIR}/{filename}.d.tmp",
             "{CC} {CFLAGS} {TARCH} {INCLUDES} -o {o_file} {c_file}"
         ]
@@ -608,6 +613,7 @@ class Library(object):
             c_filename=os.path.split(c_file)[-1],
             CC=self.cc,
             CFLAGS=' '.join(self.c_flags),
+            MACROS=' '.join(self.define_macros),
             INCLUDES=' '.join(self.include_dirs),
             DEPDIR=self.dep_path,
             OBJDIR=self.obj_path,
@@ -618,6 +624,9 @@ class Library(object):
             o_file=o_file
         )
 
+        with self.print_lock:
+            print(cmd)
+
         for command in cmd.split('\n'):
             build_clib.spawn(command)
 
@@ -626,10 +635,10 @@ class Library(object):
     def compile_cpp(self, cpp_file, build_clib):
         cmd = [
             'echo "compiling {cpp_filename}..."',
-            "{CXX} -MM {CFLAGS} {CPPFLAGS} {INCLUDES} {cpp_file} > {DEPDIR}/{filename}.d",
+            "{CXX} -MM {CFLAGS} {CPPFLAGS} {MACROS} {INCLUDES} {cpp_file} > {DEPDIR}/{filename}.d",
             "mv -f {DEPDIR}/{filename}.d {DEPDIR}/{filename}.d.tmp",
             "sed -e 's|.*:|{OBJDIR}/{filename}.o: {DEPDIR}/{filename}.d|' < {DEPDIR}/{filename}.d.tmp > {DEPDIR}/{filename}.d;",
-            "sed -e 's/.*://' -e 's/\\$$//' < {DEPDIR}/{filename}.d.tmp | {FMTCMD} | sed -e 's/^ *//' -e 's/$$/:/' >> {DEPDIR}/.{filename}.d;",
+            "sed -e 's/.*://' -e 's/\\\\$//' < {DEPDIR}/{filename}.d.tmp | {FMTCMD} | sed -e 's/^ *//' -e 's/$/:/' >> {DEPDIR}/.{filename}.d;",
             "rm -f {DEPDIR}/{filename}.d.tmp",
             "{CXX} {CFLAGS} {CPPFLAGS} {TARCH} {INCLUDES} -o {o_file} {cpp_file}",
         ]
@@ -643,6 +652,7 @@ class Library(object):
             CXX=self.cxx,
             CFLAGS=' '.join(self.c_flags),
             CPPFLAGS=' '.join(self.cpp_flags),
+            MACROS=' '.join(self.define_macros),
             INCLUDES=' '.join(self.include_dirs),
             DEPDIR=self.dep_path,
             OBJDIR=self.obj_path,
@@ -652,6 +662,9 @@ class Library(object):
             filename=filename,
             o_file=o_file
         )
+
+        with self.print_lock:
+            print(cmd)
 
         for command in cmd.split('\n'):
             build_clib.spawn(command)

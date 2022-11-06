@@ -135,6 +135,13 @@ class build_clib(_build_clib):
     # thread to wait for output.
 
     def spawn(self, cmd, search_path=1, level=1, cwd=None):
+        if isinstance(cmd, (list, tuple)):
+            cmd_debug = ' '.join(str(item) for item in cmd)
+        else:
+            cmd_debug = cmd
+
+        LOG.debug(cmd_debug)
+
         if sys.platform.startswith('win'):
             if cwd is None:
                 p = subprocess.Popen(
@@ -151,12 +158,6 @@ class build_clib(_build_clib):
                     stdin=subprocess.PIPE,
                     cwd=cwd
                 )
-
-            if isinstance(cmd, (list, tuple)):
-                cmd = ' '.join(cmd) + '\n'
-
-            LOG.debug(cmd)
-
         else:
             if cwd is None:
                 p = subprocess.Popen(
@@ -174,11 +175,8 @@ class build_clib(_build_clib):
                     cwd=cwd
                 )
 
-            if isinstance(cmd, (list, tuple)):
-                cmd = ' '.join(cmd) + '\n'
-
-            LOG.debug(cmd)
-            p.stdin.write(cmd.encode('utf-8'))
+            cmd_debug += '\n'
+            p.stdin.write(cmd_debug.encode('utf-8'))
             p.stdin.close()
 
         while p.poll() is None:

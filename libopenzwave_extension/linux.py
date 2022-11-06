@@ -34,6 +34,9 @@ class Extension(extension_base.Extension):
                         os.path.normpath(os.path.join(extra, ssubstitute))
                     ]
 
+        # os.environ['CC'] = 'g++'
+        # os.environ['DISTUTILS_USE_SDK'] = '1'
+
         self.report_config()
 
     def __init__(self):
@@ -45,10 +48,10 @@ class Extension(extension_base.Extension):
         sources = []
 
         extra_link_args = [
-            '-std=c++11'
+            # '-std=c++11'
         ]
         extra_compile_args = [
-            '-std=c++11',
+            # '-std=c++11',
             '-Wno-builtin-macro-redefined',
             '-Wno-deprecated-declarations',
             '-Wno-deprecated',

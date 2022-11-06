@@ -11,7 +11,7 @@ jobs:
               versionSpec: ${{ pythonVersion }}
               addToPath: true
 
-          - script: sudo apt-get install --force-yes -y make libudev-dev g++ libyaml-dev libusb-1.0
+          - script: sudo apt-get install --force-yes -y make libudev-dev g++ libyaml-dev libusb-1.0 libresolv
             displayName: 'Install libs'
 
           - script: python -m pip install --upgrade pip setuptools wheel
@@ -20,10 +20,10 @@ jobs:
           - script: python -m pip install -r build_requirements.txt
             displayName: 'Install build requirements'
 
-          - script: python setup.py build --service
+          - script: python setup.py install --service  build_docs bdist_wheel
             displayName: 'install --service build_docs bdist_wheel'
 
-          - script: python setup.py build --service --cython
+          - script: python setup.py build --service --cython bdist_wheel
             displayName: 'build --service --cython bdist_wheel'
 
 

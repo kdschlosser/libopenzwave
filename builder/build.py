@@ -116,8 +116,8 @@ class build(_build):
                 exclude='command_classes'
             )
             self.build_cython()
-
-        iter_copy('libopenzwave', build_lib)
+        else:
+            iter_copy('libopenzwave', build_lib)
 
         # build_config = self.distribution.get_command_obj('build_config')
         self.run_command('build_config')
@@ -128,6 +128,8 @@ class build(_build):
         #         build_config.run()
 
     def build_cython(self):
+        build_lib = os.path.join(self.build_lib, 'libopenzwave')
+
         cython_libopenzwave_build_path = os.path.join(
             self.build_temp,
             'cython_libopenzwave'
@@ -197,8 +199,14 @@ class build(_build):
         with open(cc_cmd_path, 'r') as f:
             cc_cmd = f.read()
 
+        command_classes_stub = []
+        zwave_cmd_class_stub = 'class zwave_cmd_class(object):\n'
+
         for line in _strip_module(cc_cmd.split('\n')):
             command_classes.write(line + '\n')
+            zwave_cmd_class_stub += '    ' + line + '\n'
+
+        command_classes_stub.append(zwave_cmd_class_stub)
 
         names = [
             'zwave_cmd_class',
@@ -208,7 +216,9 @@ class build(_build):
             if f in ('__init__.py', 'zwave_cmd_class.py', '__pycache__'):
                 continue
 
-            names.append(os.path.splitext(f)[0])
+            name = os.path.splitext(f)[0]
+            stub = 'class {name}(object):\n'.format(name=name)
+            names.append(name)
             f = os.path.join(lib_command_classes_path, f)
 
             with open(f, 'r') as file:
@@ -218,6 +228,8 @@ class build(_build):
             data = data.replace('from . import zwave_cmd_class\n', '')
             data = data.replace('zwave_cmd_class.', '')
             command_classes.write(data + '\n')
+            stub += '\n'.join('    ' + line for line in data.split('\n'))
+            command_classes_stub.append(stub)
 
         with open(cc_init_path, 'r') as f:
             cc_init = f.read().split('\n')
@@ -285,6 +297,34 @@ class build(_build):
 
         self.distribution.ext_modules.extend(extensions)  # NOQA
 
+        def make_stubs(src_path, dst_path):
+            for src_f in os.listdir(src_path):
+                dst_f = os.path.join(dst_path, src_f)
+                src_f = os.path.join(src_path, src_f)
+                if os.path.isdir(src_f):
+                    if not os.path.exists(dst_f):
+                        print('creating directory', dst_f)
+                        os.makedirs(dst_f)
+
+                    make_stubs(src_f, dst_f)
+
+                elif src_f.endswith('.py'):
+                    dst_f += 'i'
+                    print('copying ', src_f, '-->', dst_f)
+                    shutil.copyfile(src_f, dst_f)
+
+                    if 'command_classes' in src_f:
+                        with open(dst_f, 'r') as fle:
+                            dta = fle.read()
+
+                        dta += '\n\n'
+                        dta += '\n\n'.join(command_classes_stub)
+
+                        with open(dst_f, 'w') as fle:
+                            fle.write(dta)
+
+        make_stubs(cython_libopenzwave_build_path, build_lib)
+
     def get_openzwave_dev(self):
         get_openzwave(
             self.openzwave,
@@ -338,12 +378,10 @@ IMPORT_WRAPPER = '''\
 _names = [
 {mod_names}
 ]
-
+import sys
 
 class ImportWrapper(object):
     def __init__(self, mod_name):
-        import sys
-
         mod = sys.modules[__name__]
         mod_name = __name__ + '.' + mod_name
 
@@ -377,9 +415,14 @@ class ImportWrapper(object):
             setattr(mod, item, value)
 
 
+
+mod = sys.modules[__name__]
+
 for _name in _names:
-    ImportWrapper(_name)
+    setattr(mod, _name, ImportWrapper(_name))
 
 del _names
 del ImportWrapper
+del mod
+del sys
 '''

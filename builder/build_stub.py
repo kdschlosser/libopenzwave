@@ -4,6 +4,7 @@ import os
 import sys
 import inspect
 from setuptools import Command
+from distutils import log as LOG
 
 
 HEADER = '''\
@@ -487,7 +488,6 @@ class build_stub(Command):
 
     def run(self):
         build = self.distribution.get_command_obj('build')  # NOQA
-        print('BUILDLIB:', build.build_lib)
 
         import subprocess
 
@@ -504,10 +504,7 @@ class build_stub(Command):
             _, err = p.communicate(cmd.encode('utf-8'))
 
             if b'Traceback' in err:
-                print()
-                print()
-                print(err)
-                print()
+                LOG.error('\n\n' + err + '\n')
                 sys.exit(1)
 
             # p.stdin.write(cmd.encode('utf-8'))

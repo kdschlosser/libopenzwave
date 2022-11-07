@@ -4,6 +4,7 @@ import sys
 import os
 import platform
 from distutils.spawn import find_executable
+from distutils import log as LOG
 
 
 AR = None
@@ -24,7 +25,7 @@ def check_packages(*needed_packages):
 
     if pkg_config:
         PACKAGE_CONFIG = pkg_config
-        print("Found pkg-config : {0}".format(pkg_config))
+        LOG.info("Found pkg-config : {0}".format(pkg_config))
 
         from . import pkgconfig
 
@@ -34,7 +35,7 @@ def check_packages(*needed_packages):
             if package not in packages:
                 raise RuntimeError('Missing package "{0}"'.format(package))
 
-            print('Found Package "{0}"'.format(package))
+            LOG.info('Found Package "{0}"'.format(package))
 
 
 def setup():
@@ -52,7 +53,7 @@ def setup():
         import pyMSVC  # NOQA
         win_env = pyMSVC.setup_environment()
 
-        print(win_env)
+        LOG.info(win_env)
 
     elif os_.startswith("cygwin"):
         gcc = find_executable("gcc")
@@ -115,11 +116,11 @@ def setup():
         RANLIB = ranlib
         LD = ld
 
-        print("Found gcc : {0}".format(gcc))
-        print("Found g++ : {0}".format(gpp))
-        print("Found ar : {0}".format(ar))
-        print("Found ld : {0}".format(ld))
-        print("Found ranlib : {0}".format(ranlib))
+        LOG.info("Found gcc : {0}".format(gcc))
+        LOG.info("Found g++ : {0}".format(gpp))
+        LOG.info("Found ar : {0}".format(ar))
+        LOG.info("Found ld : {0}".format(ld))
+        LOG.info("Found ranlib : {0}".format(ranlib))
 
         os.environ['CC'] = gcc
         os.environ['CXX'] = gpp
@@ -187,11 +188,11 @@ def setup():
         RANLIB = ranlib
         LD = ld
 
-        print("Found clang : {0}".format(clang))
-        print("Found clang++ : {0}".format(clang_pp))
-        print("Found ar : {0}".format(ar))
-        print("Found ld : {0}".format(ld))
-        print("Found ranlib : {0}".format(ranlib))
+        LOG.info("Found clang : {0}".format(clang))
+        LOG.info("Found clang++ : {0}".format(clang_pp))
+        LOG.info("Found ar : {0}".format(ar))
+        LOG.info("Found ld : {0}".format(ld))
+        LOG.info("Found ranlib : {0}".format(ranlib))
 
         os.environ['CXX'] = clang_pp
         os.environ['AR'] = ar
@@ -269,12 +270,12 @@ def setup():
         LD = ld
         MAKE = gmake
 
-        print("Found cc : {0}".format(c))
-        print("Found c++ : {0}".format(cpp))
-        print("Found ranlib : {0}".format(ranlib))
-        print("Found ld : {0}".format(ld))
-        print("Found ar : {0}".format(ar))
-        print("Found gmake : {0}".format(gmake))
+        LOG.info("Found cc : {0}".format(c))
+        LOG.info("Found c++ : {0}".format(cpp))
+        LOG.info("Found ranlib : {0}".format(ranlib))
+        LOG.info("Found ld : {0}".format(ld))
+        LOG.info("Found ar : {0}".format(ar))
+        LOG.info("Found gmake : {0}".format(gmake))
 
         os.environ['CXX'] = cpp
         os.environ['CC'] = c
@@ -363,12 +364,12 @@ def setup():
         LD = ld
         MAKE = gmake
 
-        print("Found cc : {0}".format(c))
-        print("Found c++ : {0}".format(cpp))
-        print("Found ranlib : {0}".format(ranlib))
-        print("Found ld : {0}".format(ld))
-        print("Found ar : {0}".format(ar))
-        print("Found gmake : {0}".format(gmake))
+        LOG.info("Found cc : {0}".format(c))
+        LOG.info("Found c++ : {0}".format(cpp))
+        LOG.info("Found ranlib : {0}".format(ranlib))
+        LOG.info("Found ld : {0}".format(ld))
+        LOG.info("Found ar : {0}".format(ar))
+        LOG.info("Found gmake : {0}".format(gmake))
 
         os.environ['CXX'] = cpp
         os.environ['CC'] = c
@@ -425,8 +426,6 @@ def setup():
         else:
             raise RuntimeError('Unable to locate gcc')
 
-        print("Found gcc : {0}".format(gcc))
-
         if gpp:
             if gpp != cxx and cxx.endswith('g++'):
                 gpp = cxx
@@ -458,11 +457,11 @@ def setup():
         LD = ld
         MAKE = make
 
-        print("Found gcc : {0}".format(gcc))
-        print("Found g++ : {0}".format(gpp))
-        print("Found ar : {0}".format(ar))
-        print("Found ld : {0}".format(ld))
-        print("Found ranlib : {0}".format(ranlib))
+        LOG.info("Found gcc : {0}".format(gcc))
+        LOG.info("Found g++ : {0}".format(gpp))
+        LOG.info("Found ar : {0}".format(ar))
+        LOG.info("Found ld : {0}".format(ld))
+        LOG.info("Found ranlib : {0}".format(ranlib))
 
         os.environ['CC'] = gcc
         os.environ['LD'] = gpp
@@ -516,8 +515,6 @@ def setup():
         else:
             raise RuntimeError('Unable to locate gcc')
 
-        print("Found gcc : {0}".format(gcc))
-
         if gpp:
             if gpp != cxx and cxx.endswith('g++'):
                 gpp = cxx
@@ -548,11 +545,11 @@ def setup():
         RANLIB = ranlib
         LD = ld
 
-        print("Found gcc : {0}".format(gcc))
-        print("Found g++ : {0}".format(gpp))
-        print("Found ar : {0}".format(ar))
-        print("Found ld : {0}".format(ld))
-        print("Found ranlib : {0}".format(ranlib))
+        LOG.info("Found gcc : {0}".format(gcc))
+        LOG.info("Found g++ : {0}".format(gpp))
+        LOG.info("Found ar : {0}".format(ar))
+        LOG.info("Found ld : {0}".format(ld))
+        LOG.info("Found ranlib : {0}".format(ranlib))
 
         check_packages('libusb-1.0')
 

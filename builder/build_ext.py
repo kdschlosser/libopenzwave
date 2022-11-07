@@ -52,7 +52,6 @@ class build_ext(_build_ext):
             # '/usr/lib/python3/dist-packages'
             # ]
 
-            print(sys.path)
             from Cython.Build.Dependencies import cythonize  # NOQA
 
             self.distribution.ext_modules[:] = cythonize(  # NOQA

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
-from distutils import log as LOG  # NOQA
+from distutils import log as LOG
 import sys
 import threading
 import shutil
@@ -296,7 +296,7 @@ class Library(object):
         version_file = os.path.join(self.openzwave, 'cpp', 'src', 'vers.cpp')
 
         with self.print_lock:
-            print('generating {0} ...'.format(version_file))
+            LOG.info('generating {0} ...'.format(version_file))
 
         template = [
             '#include "Defs.h"',
@@ -323,7 +323,7 @@ class Library(object):
         spec_out = spec_in.rsplit('.', 1)[0]
 
         with self.print_lock:
-            print('generating {0} ...'.format(spec_out))
+            LOG.info('generating {0} ...'.format(spec_out))
 
         with open(spec_in, 'r') as f:
             spec = f.read()
@@ -360,19 +360,16 @@ class Library(object):
             return
 
         with self.print_lock:
-            print('linking static library...')
+            LOG.info('linking static library...')
 
         objects = list('"' + obj + '"' for obj in objects)
 
         command = [self.ar, libopenzwave] + objects
-        with self.print_lock:
-            print(command)
+
         build_clib.spawn(command)
 
         command = [self.ranlib, libopenzwave]
 
-        with self.print_lock:
-            print(command)
         build_clib.spawn(command)
 
     def link_shared(self, objects, build_clib):
@@ -390,7 +387,7 @@ class Library(object):
             return
 
         with self.print_lock:
-            print('linking shared library...')
+            LOG.info('linking shared library...')
 
         command = [self.ld] + self.ld_flags + self.t_arch
         command += ['-o', libopenzwave_lib]
@@ -416,7 +413,7 @@ class Library(object):
         )
 
         with self.print_lock:
-            print('generating {0} ...'.format(pc_path))
+            LOG.info('generating {0} ...'.format(pc_path))
 
         exec_prefix = os.path.join(self.prefix, 'bin')
 
@@ -443,7 +440,7 @@ class Library(object):
     def build_config_file(self):
         if self.pkg_config_path is None:
             with self.print_lock:
-                print('skipping config file generation ...')
+                LOG.info('skipping config file generation ...')
 
             return
 
@@ -457,7 +454,7 @@ class Library(object):
         config_path = config_in_path.rsplit('.', 1)[0]
 
         with self.print_lock:
-            print('generating {0} ...'.format(config_path))
+            LOG.info('generating {0} ...'.format(config_path))
 
         with open(config_in_path, 'r') as f:
             config = f.read()
@@ -598,9 +595,6 @@ class Library(object):
             o_file=o_file
         )
 
-        with self.print_lock:
-            print(cmd)
-
         for command in cmd.split('\n'):
             build_clib.spawn(command)
 
@@ -649,9 +643,6 @@ class Library(object):
             filename=filename,
             o_file=o_file
         )
-
-        with self.print_lock:
-            print(cmd)
 
         for command in cmd.split('\n'):
             build_clib.spawn(command)

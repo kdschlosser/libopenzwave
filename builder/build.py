@@ -303,14 +303,14 @@ class build(_build):
                 src_f = os.path.join(src_path, src_f)
                 if os.path.isdir(src_f):
                     if not os.path.exists(dst_f):
-                        print('creating directory', dst_f)
+                        LOG.info('creating directory', dst_f)
                         os.makedirs(dst_f)
 
                     make_stubs(src_f, dst_f)
 
                 elif src_f.endswith('.py'):
                     dst_f += 'i'
-                    print('copying ', src_f, '-->', dst_f)
+                    LOG.info('copying ', src_f, '-->', dst_f)
                     shutil.copyfile(src_f, dst_f)
 
                     if 'command_classes' in src_f:

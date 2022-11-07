@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import sys
+from distutils import log as LOG
 
-print('Getting Library for platform {0}'.format(sys.platform))
+LOG.info('Getting Library for platform {0}'.format(sys.platform))
 
 os = sys.platform.lower()
 

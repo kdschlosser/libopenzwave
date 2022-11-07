@@ -79,12 +79,26 @@ def _get_z_stick():
                 return port.device
     return None
 
+import weakref
+
 
 class ZWaveOption(_libopenzwave.PyOptions):
     """
     Represents a Zwave option used to start the manager.
-
     """
+
+    _instances = {}
+
+    def __del__(self):
+        args = (
+            self.device,
+            self.config_path,
+            self.user_path,
+            self.cmd_line
+        )
+        if args in ZWaveOption._instances:
+            del ZWaveOption._instances[args]
+
     def __init__(
         self,
         device='',
@@ -206,6 +220,24 @@ class ZWaveOption(_libopenzwave.PyOptions):
             user_path=user_path,
             cmd_line=cmd_line
         )
+
+        args = (
+            self.device,
+            self.config_path,
+            self.user_path,
+            self.cmd_line
+        )
+        if args in ZWaveOption._instances:
+            instance = ZWaveOption._instances[args]()
+
+            if instance is None:
+                del ZWaveOption._instances[args]
+                ZWaveOption._instances[args] = weakref.ref(self)
+            else:
+                self.__dict__.update(instance.__dict__)
+
+        else:
+            ZWaveOption._instances[args] = weakref.ref(self)
 
     def create(self):
         if self._local_connection:
@@ -1066,6 +1098,13 @@ class ZWaveOption(_libopenzwave.PyOptions):
     def custom_secured_cc(self, custom_cc='0x62,0x4c,0x63'):
         if self._local_connection:
             self.addOptionString("CustomSecuredCC", custom_cc)
+
+    @property
+    def cmd_line(self):
+        """
+        :rtype: str
+        """
+        return self._cmd_line
 
     @property
     def device(self):

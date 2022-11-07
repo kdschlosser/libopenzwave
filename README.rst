@@ -15,64 +15,89 @@ ease of use and performance.
 Build Instructions
 ------------------
 
-The build process has been rewritten. It is entirely controlled using distutils
-The --flavor option has been removed in favor of using build commands.
+Requirements
 
-There is now a single command line option --dev which will download the master
-branch of ozw (OpenZWave) on GitHub. This is the branch that gets used to add
-new code that is going to get released. If no --dev option is specified then
-the latest release of ozw that will work gets downloaded.
+  * Python 3.8, 3.9 or 3.10.
 
-Here are the build commands.
+    * Run `pip install -r build_requirements.txt` and all the needed
+      requirements for your python version will be installed
+|
 
-* build
+  * Windows
 
-  .. code-block:: cmd
+    * Visual Studio >= 2019
+    * Windows SDK (latest)
+|
 
-      python setup.py build
+  * Ubuntu
 
+    * libudev-dev
+    * g++
+    * libyaml-dev
+    * libusb-1.0
+    * python "-dev" package for the version of Python you are running.
+|
 
-and these are the install commands
+  * OSX
+    * ??? It compiles on Azure Pipelines but I do not know what is installed
+    onto the VM that is used in the pipeline
+    * python "-dev" package for the version of Python you are running.
+|
 
-* install
+  * FreeBSD
 
-  .. code-block:: cmd
+    * libresolv
+    * libusb-1.0
+    * e2fsprogs-libuuid
+    * libiconv (if OS version is < 10.2.0)
+    * python "-dev" package for the version of Python you are running.
+|
 
-      python setup.py install
+  * NetBSD
 
-To add the development switch to any of the above
+    * libresolv
+    * libusb-1.0
+    * python "-dev" package for the version of Python you are running.
+|
 
-.. code-block:: cmd
+  * SunOS
 
-      python setup.py {build command} --dev
-
-I am going to recommend building the documentation I have spent quite a bit of
-time documenting everything and I have also added quite a few code examples.
-
-.. code-block:: cmd
-
-    python setup.py build_docs
-
-
-You also can optionally chain the build commands.
-
-.. code-block:: cmd
-
-    python setup.py build build_docs --dev
-
-
-Any requirements that only get used during the build process do not get
-installed into your site-packages folder. This makes for easy cleanup. Any
-requirements that are not needed to run are place into the `.egg` directory
-where this readme file is located.
-
-all build output is placed into a directory called `build` where this readme
-file is located.
+    * libusb-1.0
+    * python "-dev" package for the version of Python you are running.
+|
 
 
-------------------------------------------
-PLEASE BUILD THE DOCUMENTATION AND READ IT
-------------------------------------------
+There is only one build command you are going to want to use or one install
+command The setup program takes all of the funky work to get a proper build
+environment. It even works running Python >= 3.10 running on Windows with
+Visual Studio > 2019 No need to set up a build environment on Windows. It is
+better if you don't as Visual Studio has been known to not set up correct build
+environments.
+
+  * `python setup.py build --cython`
+  * `python setup.py install --cython`
+
+The `--cython` switch tells the setup program to compile the entire library
+into C extensions. It is not a requirement that you compile the whole library
+using Cython but I do suggest it because it gives  a signifigant speed boost to
+the library. A network with 30 nodes starts up > 10 seconds faster when the
+entire library is compiled into C extensions.
+
+Fear not!!!! Your IDE is still going to have auto complete and intellisense
+with this library even when it is compiled into C extensions. You will find both
+the source files and also the C extensions in the library directory. Python will
+load the C extensions but an IDE will use the source files.
+
+There are no Python 3 annotations yet. Most IDE's will use the Sphinx
+annotations in the docstrings and most classes, methods and functions have
+been done that way.
+
+
+
+<h3>*PLEASE BUILD THE DOCUMENTATION AND READ IT*</h3>
+
+Documentation building is not functional ye. Most classes, methods and functions
+do have docstrings.
 
 This is not a drop in replacement for python-openzwave. reading the
 documentation is going help you to get pyozw up and running. There are way to

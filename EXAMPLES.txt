@@ -1,4 +1,0 @@
-libopenzwave
-****************
-
-You need to install and build libopenzwave to test examples.

@@ -133,7 +133,7 @@ def setup(app):
     #     f.write('\\n'.join(node_types_doc))
 
     app.add_stylesheet('css/libopenzwave.css')
-'''
+'''  # NOQA
 
 if __name__ == '__main__':
     import os
@@ -183,9 +183,9 @@ if __name__ == '__main__':
             sys.exit(0)
 
 
-    import libopenzwave_environment # NOQA
+    import builder  # NOQA
 
-    libopenzwave_environment.setup()
+    builder.setup()
 
     if '--no_deps' in sys.argv:
         sys.argv.remove('--no_deps')
@@ -211,6 +211,7 @@ if __name__ == '__main__':
     _verbose = '--verbose' in sys.argv
 
     import distutils.file_util  # NOQA
+    import version  # NOQA
 
     _copy_file = distutils.file_util.copy_file  # NOQA
 
@@ -222,7 +223,7 @@ if __name__ == '__main__':
         preserve_times=1,
         update=0,
         link=None,
-        verbose=1,
+        verbose=1,  # NOQA
         dry_run=0
     ):
         return _copy_file(
@@ -240,20 +241,6 @@ if __name__ == '__main__':
     distutils.file_util.copy_file = copy_file  # NOQA
 
     from setuptools import setup, find_packages # NOQA
-
-    import libopenzwave_build  # NOQA
-    import libopenzwave_install  # NOQA
-    import libopenzwave_library  # NOQA
-    import libopenzwave_extension  # NOQA
-    import libopenzwave_bdist_egg  # NOQA
-    import libopenzwave_bdist_wheel  # NOQA
-    import libopenzwave_build_config  # NOQA
-    import libopenzwave_clean  # NOQA
-    import libopenzwave_build_clib  # NOQA
-    import libopenzwave_build_ext  # NOQA
-    import libopenzwave_version  # NOQA
-    import libopenzwave_build_docs  # NOQA
-    import libopenzwave_build_stub  # NOQA
 
     if '--dev' in sys.argv:
         sys.argv.remove('--dev')
@@ -301,10 +288,10 @@ if __name__ == '__main__':
         ):
             bd[key] = bd.get(key, value)
 
-        sphinx_conf = libopenzwave_build_docs.ConfigOptions()
-        libopenzwave_build_docs.build_docs.sphinx_conf = sphinx_conf
+        sphinx_conf = builder.build_docs.ConfigOptions()
+        builder.build_docs.sphinx_conf = sphinx_conf
 
-        # -- GENERAL options ------------------------------------------------------
+        # -- GENERAL options ---------------------------------------------------
         sphinx_conf.suppress_warnings = ['image.nonlocal_uri']
         sphinx_conf.extensions = [
             'sphinx.ext.autodoc',
@@ -335,15 +322,15 @@ if __name__ == '__main__':
         sphinx_conf.templates_path = ['_templates']
         sphinx_conf.source_suffix = '.rst'
         sphinx_conf.master_doc = 'index'
-        sphinx_conf.version = libopenzwave_version.libopenzwave_version_short
-        sphinx_conf.release = libopenzwave_version.libopenzwave_version
+        sphinx_conf.version = version.libopenzwave_version_short
+        sphinx_conf.release = version.libopenzwave_version
         sphinx_conf.exclude_patterns = ['_build']
         sphinx_conf.add_function_parentheses = True
         sphinx_conf.show_authors = True
         sphinx_conf.pygments_style = 'sphinx'
         sphinx_conf.add_module_names = True
 
-        # -- Options for HTML output ----------------------------------------------
+        # -- Options for HTML output -------------------------------------------
         sphinx_conf.html_baseurl = '/docs/'
         sphinx_conf.html_theme = 'groundwork'
         sphinx_conf.html_theme_options = {
@@ -450,22 +437,22 @@ if __name__ == '__main__':
         name='libopenzwave',
         author='Kevin G. Schlosser',
         author_email='',
-        version=libopenzwave_version.libopenzwave_version,
+        version=version.libopenzwave_version,
         zip_safe=False,
         options=options,
         url='https://github.com/kdschlosser/libopenzwave',
-        ext_modules=[libopenzwave_extension.extension],
-        libraries=[libopenzwave_library.library],
+        ext_modules=[builder.extension],
+        libraries=[builder.library],
         install_requires=install_requires,
         cmdclass=dict(
-            build_clib=libopenzwave_build_clib.build_clib,
-            build_docs=libopenzwave_build_docs.build_docs,
-            bdist_egg=libopenzwave_bdist_egg.egg,
-            build=libopenzwave_build.build,
-            install=libopenzwave_install.install,
-            build_ext=libopenzwave_build_ext.build_ext,
-            build_config=libopenzwave_build_config.build_config,
-            build_stub=libopenzwave_build_stub.build_stub,
+            build_clib=builder.build_clib,
+            build_docs=builder.build_docs,
+            bdist_egg=builder.bdist_egg,
+            build=builder.build,
+            install=builder.install,
+            build_ext=builder.build_ext,
+            build_config=builder.build_config,
+            build_stub=builder.build_stub,
         ),
         packages=packages,
         entry_points=entry_points,

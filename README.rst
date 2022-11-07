@@ -93,8 +93,9 @@ annotations in the docstrings and most classes, methods and functions have
 been done that way.
 
 
-
-<h3>*PLEASE BUILD THE DOCUMENTATION AND READ IT*</h3>
+------------------------------------------
+PLEASE BUILD THE DOCUMENTATION AND READ IT
+------------------------------------------
 
 Documentation building is not functional ye. Most classes, methods and functions
 do have docstrings.

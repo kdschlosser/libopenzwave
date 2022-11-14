@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import SecurityScheme0Mark, COMMAND_CLASS_SECURITY_SCHEME0_MARK
+from libopenzwave.command_classes import COMMAND_CLASS_SECURITY_SCHEME0_MARK
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveSecurityScheme0Mark(SecurityScheme0Mark):
+class ZWaveSecurityScheme0Mark(COMMAND_CLASS_SECURITY_SCHEME0_MARK):
 
     def __init__(self):
         self._security_scheme0_mark_panel = None
-        SecurityScheme0Mark.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._security_scheme0_mark_panel is None:

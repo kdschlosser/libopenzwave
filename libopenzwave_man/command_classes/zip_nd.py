@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import ZIPND, COMMAND_CLASS_ZIP_ND
+from libopenzwave.command_classes import COMMAND_CLASS_ZIP_ND
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveZIPND(ZIPND):
+class ZWaveZIPND(COMMAND_CLASS_ZIP_ND):
 
     def __init__(self):
         self._zip_nd_panel = None
-        ZIPND.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._zip_nd_panel is None:

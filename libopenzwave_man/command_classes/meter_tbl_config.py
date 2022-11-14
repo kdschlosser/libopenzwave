@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import MeterTableConfig, COMMAND_CLASS_METER_TBL_CONFIG
+from libopenzwave.command_classes import COMMAND_CLASS_METER_TBL_CONFIG
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveMeterTableConfig(MeterTableConfig):
+class ZWaveMeterTableConfig(COMMAND_CLASS_METER_TBL_CONFIG):
 
     def __init__(self):
         self._meter_tbl_config_panel = None
-        MeterTableConfig.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._meter_tbl_config_panel is None:

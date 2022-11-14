@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import Hail, COMMAND_CLASS_HAIL
+from libopenzwave.command_classes import COMMAND_CLASS_HAIL
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveHail(Hail):
+class ZWaveHail(COMMAND_CLASS_HAIL):
 
     def __init__(self):
         self._hail_panel = None
-        Hail.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._hail_panel is None:

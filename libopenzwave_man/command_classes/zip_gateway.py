@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import ZIPGateway, COMMAND_CLASS_ZIP_GATEWAY
+from libopenzwave.command_classes import COMMAND_CLASS_ZIP_GATEWAY
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveZIPGateway(ZIPGateway):
+class ZWaveZIPGateway(COMMAND_CLASS_ZIP_GATEWAY):
 
     def __init__(self):
         self._zip_gatewa_panel = None
-        ZIPGateway.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._zip_gatewa_panel is None:

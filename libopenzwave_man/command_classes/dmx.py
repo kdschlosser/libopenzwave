@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import DMX, COMMAND_CLASS_DMX
+from libopenzwave.command_classes import COMMAND_CLASS_DMX
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveDMX(DMX):
+class ZWaveDMX(COMMAND_CLASS_DMX):
 
     def __init__(self):
         self._dmx_panel = None
-        DMX.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._dmx_panel is None:

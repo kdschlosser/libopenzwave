@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import ScreenAttributes, COMMAND_CLASS_SCREEN_ATTRIBUTES
+from libopenzwave.command_classes import COMMAND_CLASS_SCREEN_ATTRIBUTES
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveScreenAttributes(ScreenAttributes):
+class ZWaveScreenAttributes(COMMAND_CLASS_SCREEN_ATTRIBUTES):
 
     def __init__(self):
         self._screen_attributes_panel = None
-        ScreenAttributes.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._screen_attributes_panel is None:

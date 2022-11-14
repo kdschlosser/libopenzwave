@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import Lock, COMMAND_CLASS_LOCK
+from libopenzwave.command_classes import COMMAND_CLASS_LOCK
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveLock(Lock):
+class ZWaveLock(COMMAND_CLASS_LOCK):
 
     def __init__(self):
         self._lock_panel = None
-        Lock.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._lock_panel is None:

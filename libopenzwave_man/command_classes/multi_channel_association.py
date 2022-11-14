@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import MultiChannelAssociation, COMMAND_CLASS_MULTI_CHANNEL_ASSOCIATION
+from libopenzwave.command_classes import COMMAND_CLASS_MULTI_CHANNEL_ASSOCIATION
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveMultiChannelAssociation(MultiChannelAssociation):
+class ZWaveMultiChannelAssociation(COMMAND_CLASS_MULTI_CHANNEL_ASSOCIATION):
 
     def __init__(self):
         self._multi_channel_association_panel = None
-        MultiChannelAssociation.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._multi_channel_association_panel is None:

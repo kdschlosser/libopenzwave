@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import ZIP6Lowpan, COMMAND_CLASS_ZIP_6LOWPAN
+from libopenzwave.command_classes import COMMAND_CLASS_ZIP_6LOWPAN
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveZIP6Lowpan(ZIP6Lowpan):
+class ZWaveZIP6Lowpan(COMMAND_CLASS_ZIP_6LOWPAN):
 
     def __init__(self):
         self._zip_6lowpan_panel = None
-        ZIP6Lowpan.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._zip_6lowpan_panel is None:

@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import SwitchToggleMultilevel, COMMAND_CLASS_SWITCH_TOGGLE_MULTILEVEL
+from libopenzwave.command_classes import COMMAND_CLASS_SWITCH_TOGGLE_MULTILEVEL
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveSwitchToggleMultilevel(SwitchToggleMultilevel):
+class ZWaveSwitchToggleMultilevel(COMMAND_CLASS_SWITCH_TOGGLE_MULTILEVEL):
 
     def __init__(self):
         self._switch_toggle_multilevel_panel = None
-        SwitchToggleMultilevel.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._switch_toggle_multilevel_panel is None:

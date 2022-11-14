@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import GeographicLocation, COMMAND_CLASS_GEOGRAPHIC_LOCATION
+from libopenzwave.command_classes import COMMAND_CLASS_GEOGRAPHIC_LOCATION
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveGeographicLocation(GeographicLocation):
+class ZWaveGeographicLocation(COMMAND_CLASS_GEOGRAPHIC_LOCATION):
 
     def __init__(self):
         self._geographic_location_panel = None
-        GeographicLocation.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._geographic_location_panel is None:

@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import AVContentSearchMD, COMMAND_CLASS_AV_CONTENT_SEARCH_MD
+from libopenzwave.command_classes import COMMAND_CLASS_AV_CONTENT_SEARCH_MD
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveAVContentSearchMD(AVContentSearchMD):
+class ZWaveAVContentSearchMD(COMMAND_CLASS_AV_CONTENT_SEARCH_MD):
 
     def __init__(self):
         self._av_content_search_md_panel = None
-        AVContentSearchMD.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._av_content_search_md_panel is None:

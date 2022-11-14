@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import WindowCovering, COMMAND_CLASS_WINDOW_COVERING
+from libopenzwave.command_classes import COMMAND_CLASS_WINDOW_COVERING
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveWindowCovering(WindowCovering):
+class ZWaveWindowCovering(COMMAND_CLASS_WINDOW_COVERING):
 
     def __init__(self):
         self._window_covering_panel = None
-        WindowCovering.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._window_covering_panel is None:

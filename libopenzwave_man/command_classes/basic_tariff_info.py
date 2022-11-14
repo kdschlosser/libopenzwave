@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import BasicTariffInfo, COMMAND_CLASS_BASIC_TARIFF_INFO
+from libopenzwave.command_classes import COMMAND_CLASS_BASIC_TARIFF_INFO
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveBasicTariffInfo(BasicTariffInfo):
+class ZWaveBasicTariffInfo(COMMAND_CLASS_BASIC_TARIFF_INFO):
 
     def __init__(self):
         self._basic_tariff_info_panel = None
-        BasicTariffInfo.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._basic_tariff_info_panel is None:

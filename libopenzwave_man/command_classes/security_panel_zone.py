@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import SecurityPanelZone, COMMAND_CLASS_SECURITY_PANEL_ZONE
+from libopenzwave.command_classes import COMMAND_CLASS_SECURITY_PANEL_ZONE
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveSecurityPanelZone(SecurityPanelZone):
+class ZWaveSecurityPanelZone(COMMAND_CLASS_SECURITY_PANEL_ZONE):
 
     def __init__(self):
         self._security_panel_zone_panel = None
-        SecurityPanelZone.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._security_panel_zone_panel is None:

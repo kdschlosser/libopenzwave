@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import ZensorNet, COMMAND_CLASS_ZENSOR_NET
+from libopenzwave.command_classes import COMMAND_CLASS_ZENSOR_NET
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveZensorNet(ZensorNet):
+class ZWaveZensorNet(COMMAND_CLASS_ZENSOR_NET):
 
     def __init__(self):
         self._zensor_net_panel = None
-        ZensorNet.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._zensor_net_panel is None:

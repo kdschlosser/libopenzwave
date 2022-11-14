@@ -27,21 +27,21 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import CRC16Encap, COMMAND_CLASS_CRC_16_ENCAP
+from libopenzwave.command_classes import COMMAND_CLASS_CRC_16_ENCAP
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveCRC16Encap(CRC16Encap):
+class ZWaveCRC16Encap(COMMAND_CLASS_CRC_16_ENCAP):
 
     def __init__(self):
         self._crc_16_enca_panel = None
-        CRC16Encap.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._crc_16_enca_panel is None:
-            self._crc_16_enca_panel = CRC16EncapPanel(parent, self)
+            self._crc_16_enca_panel = Crc16EncapPanel(parent, self)
 
         return self._crc_16_enca_panel
 

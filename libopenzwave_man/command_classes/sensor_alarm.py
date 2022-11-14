@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import SensorAlarm, COMMAND_CLASS_SENSOR_ALARM
+from libopenzwave.command_classes import COMMAND_CLASS_SENSOR_ALARM
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveSensorAlarm(SensorAlarm):
+class ZWaveSensorAlarm(COMMAND_CLASS_SENSOR_ALARM):
 
     def __init__(self):
         self._sensor_alarm_panel = None
-        SensorAlarm.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._sensor_alarm_panel is None:

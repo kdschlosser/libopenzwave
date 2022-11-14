@@ -5,6 +5,7 @@ import os
 import sys
 import shutil
 
+import version
 from . import library_base
 from builder import environment
 
@@ -47,6 +48,9 @@ class Library(library_base.Library):
                 '/Zc:inline'
             ]
 
+        if version.OZW_VERSION >= (1, 7):
+            self.extra_compile_args.append('/std:c++20')
+
         # not used but here for completeness.
         self.extra_link_args = [
             '/LTCG',
@@ -70,8 +74,6 @@ class Library(library_base.Library):
             'unsigned short ozw_vers_revision = {revision};\n' 
             'char ozw_version_string[] = "{version}.{revision}\0";'
         )
-
-        import version
 
         minor = version.OZW_VERSION_MIN
         major = version.OZW_VERSION_MAJ
@@ -209,6 +211,7 @@ class Library(library_base.Library):
             '/Zc:wchar_t',
             # Specifies standard behavior
             '/Zc:forScope',
+            '/Zc:__cplusplus',
             # I cannot remember what this does. I do know it does get rid of
             # a compiler warning
             '/EHsc',

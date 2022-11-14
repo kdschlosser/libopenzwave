@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import SensorBinary, COMMAND_CLASS_SENSOR_BINARY
+from libopenzwave.command_classes import COMMAND_CLASS_SENSOR_BINARY
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveSensorBinary(SensorBinary):
+class ZWaveSensorBinary(COMMAND_CLASS_SENSOR_BINARY):
 
     def __init__(self):
         self._sensor_binar_panel = None
-        SensorBinary.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._sensor_binar_panel is None:

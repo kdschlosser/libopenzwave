@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import TimeParameters, COMMAND_CLASS_TIME_PARAMETERS
+from libopenzwave.command_classes import COMMAND_CLASS_TIME_PARAMETERS
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveTimeParameters(TimeParameters):
+class ZWaveTimeParameters(COMMAND_CLASS_TIME_PARAMETERS):
 
     def __init__(self):
         self._time_parameters_panel = None
-        TimeParameters.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._time_parameters_panel is None:

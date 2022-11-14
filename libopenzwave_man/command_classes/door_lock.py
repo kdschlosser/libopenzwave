@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import DoorLock, COMMAND_CLASS_DOOR_LOCK
+from libopenzwave.command_classes import COMMAND_CLASS_DOOR_LOCK
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveDoorLock(DoorLock):
+class ZWaveDoorLock(COMMAND_CLASS_DOOR_LOCK):
 
     def __init__(self):
         self._door_lock_panel = None
-        DoorLock.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._door_lock_panel is None:

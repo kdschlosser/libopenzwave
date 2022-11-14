@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import EnergyProduction, COMMAND_CLASS_ENERGY_PRODUCTION
+from libopenzwave.command_classes import COMMAND_CLASS_ENERGY_PRODUCTION
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveEnergyProduction(EnergyProduction):
+class ZWaveEnergyProduction(COMMAND_CLASS_ENERGY_PRODUCTION):
 
     def __init__(self):
         self._energy_production_panel = None
-        EnergyProduction.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._energy_production_panel is None:

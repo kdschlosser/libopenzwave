@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import SilenceAlarm, COMMAND_CLASS_SILENCE_ALARM
+from libopenzwave.command_classes import COMMAND_CLASS_SILENCE_ALARM
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveSilenceAlarm(SilenceAlarm):
+class ZWaveSilenceAlarm(COMMAND_CLASS_SILENCE_ALARM):
 
     def __init__(self):
         self._silence_alarm_panel = None
-        SilenceAlarm.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._silence_alarm_panel is None:

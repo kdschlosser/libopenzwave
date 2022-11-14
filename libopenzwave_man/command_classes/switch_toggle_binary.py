@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import SwitchToggleBinary, COMMAND_CLASS_SWITCH_TOGGLE_BINARY
+from libopenzwave.command_classes import COMMAND_CLASS_SWITCH_TOGGLE_BINARY
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveSwitchToggleBinary(SwitchToggleBinary):
+class ZWaveSwitchToggleBinary(COMMAND_CLASS_SWITCH_TOGGLE_BINARY):
 
     def __init__(self):
         self._switch_toggle_binar_panel = None
-        SwitchToggleBinary.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._switch_toggle_binar_panel is None:

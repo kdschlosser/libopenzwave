@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import AuthenticationMediaWrite, COMMAND_CLASS_AUTHENTICATION_MEDIA_WRITE
+from libopenzwave.command_classes import COMMAND_CLASS_AUTHENTICATION_MEDIA_WRITE
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveAuthenticationMediaWrite(AuthenticationMediaWrite):
+class ZWaveAuthenticationMediaWrite(COMMAND_CLASS_AUTHENTICATION_MEDIA_WRITE):
 
     def __init__(self):
         self._authentication_media_write_panel = None
-        AuthenticationMediaWrite.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._authentication_media_write_panel is None:

@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import PrepaymentEncapsulation, COMMAND_CLASS_PREPAYMENT_ENCAPSULATION
+from libopenzwave.command_classes import COMMAND_CLASS_PREPAYMENT_ENCAPSULATION
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWavePrepaymentEncapsulation(PrepaymentEncapsulation):
+class ZWavePrepaymentEncapsulation(COMMAND_CLASS_PREPAYMENT_ENCAPSULATION):
 
     def __init__(self):
         self._prepayment_encapsulation_panel = None
-        PrepaymentEncapsulation.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._prepayment_encapsulation_panel is None:

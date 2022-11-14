@@ -27,23 +27,23 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import NetworkManagementInstallationMaintenance, COMMAND_CLASS_NETWORK_MANAGEMENT_INSTALLATION_MAINTENANCE
+from libopenzwave.command_classes import COMMAND_CLASS_NETWORK_MANAGEMENT_INSTALLATION_MAINTENANCE
 
 from .. import value_index_panel
 from .. import header_panel
 
-
-class ZWaveNetworkManagementInstallationMaintenance(NetworkManagementInstallationMaintenance):
+class ZWaveNetworkManagementInstallationMaintenance(COMMAND_CLASS_NETWORK_MANAGEMENT_INSTALLATION_MAINTENANCE):
 
     def __init__(self):
         self._network_management_installation_maintenance_panel = None
-        NetworkManagementInstallationMaintenance.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._network_management_installation_maintenance_panel is None:
             self._network_management_installation_maintenance_panel = NetworkManagementInstallationMaintenancePanel(parent, self)
 
         return self._network_management_installation_maintenance_panel
+
 
 
 class NetworkManagementInstallationMaintenancePanel(wx.Panel):

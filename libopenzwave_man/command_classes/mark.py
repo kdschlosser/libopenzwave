@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import Mark, COMMAND_CLASS_MARK
+from libopenzwave.command_classes import COMMAND_CLASS_MARK
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveMark(Mark):
+class ZWaveMark(COMMAND_CLASS_MARK):
 
     def __init__(self):
         self._mark_panel = None
-        Mark.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._mark_panel is None:

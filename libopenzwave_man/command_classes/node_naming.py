@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import NodeNaming, COMMAND_CLASS_NODE_NAMING
+from libopenzwave.command_classes import COMMAND_CLASS_NODE_NAMING
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveNodeNaming(NodeNaming):
+class ZWaveNodeNaming(COMMAND_CLASS_NODE_NAMING):
 
     def __init__(self):
         self._node_naming_panel = None
-        NodeNaming.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._node_naming_panel is None:

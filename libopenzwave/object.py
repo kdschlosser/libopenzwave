@@ -26,7 +26,7 @@ This file is part of the **libopenzwave** project
 import logging
 
 from .singleton import InstanceSingleton
-from . import xml_handler
+from . import xml_handler  # NOQA
 
 
 logger = logging.getLogger(__name__)
@@ -36,6 +36,8 @@ class ZWaveObject(object, metaclass=InstanceSingleton):
     """
     Represents a ZWave object. Values, nodes, ...
     """
+
+    _command_classes = []
 
     def __init__(self, object_id, network=None, xml_data=None):
         """
@@ -84,7 +86,7 @@ class ZWaveObject(object, metaclass=InstanceSingleton):
             pass
 
         try:
-            return self.command_class == other
+            return self.command_class == other  # NOQA
         except AttributeError:
             return False
 

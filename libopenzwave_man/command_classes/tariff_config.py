@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import TariffConfig, COMMAND_CLASS_TARIFF_CONFIG
+from libopenzwave.command_classes import COMMAND_CLASS_TARIFF_CONFIG
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveTariffConfig(TariffConfig):
+class ZWaveTariffConfig(COMMAND_CLASS_TARIFF_CONFIG):
 
     def __init__(self):
         self._tariff_config_panel = None
-        TariffConfig.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._tariff_config_panel is None:

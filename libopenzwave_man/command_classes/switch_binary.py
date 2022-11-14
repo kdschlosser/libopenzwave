@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import SwitchBinary, COMMAND_CLASS_SWITCH_BINARY
+from libopenzwave.command_classes import COMMAND_CLASS_SWITCH_BINARY
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveSwitchBinary(SwitchBinary):
+class ZWaveSwitchBinary(COMMAND_CLASS_SWITCH_BINARY):
 
     def __init__(self):
         self._switch_binar_panel = None
-        SwitchBinary.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._switch_binar_panel is None:

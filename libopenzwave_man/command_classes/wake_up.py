@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import WakeUp, COMMAND_CLASS_WAKE_UP
+from libopenzwave.command_classes import COMMAND_CLASS_WAKE_UP
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveWakeUp(WakeUp):
+class ZWaveWakeUp(COMMAND_CLASS_WAKE_UP):
 
     def __init__(self):
         self._wake_u_panel = None
-        WakeUp.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._wake_u_panel is None:

@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import IPConfiguration, COMMAND_CLASS_IP_CONFIGURATION
+from libopenzwave.command_classes import COMMAND_CLASS_IP_CONFIGURATION
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveIPConfiguration(IPConfiguration):
+class ZWaveIPConfiguration(COMMAND_CLASS_IP_CONFIGURATION):
 
     def __init__(self):
         self._ip_configuration_panel = None
-        IPConfiguration.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._ip_configuration_panel is None:

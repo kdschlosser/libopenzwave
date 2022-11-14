@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import ChimneyFan, COMMAND_CLASS_CHIMNEY_FAN
+from libopenzwave.command_classes import COMMAND_CLASS_CHIMNEY_FAN
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveChimneyFan(ChimneyFan):
+class ZWaveChimneyFan(COMMAND_CLASS_CHIMNEY_FAN):
 
     def __init__(self):
         self._chimney_fan_panel = None
-        ChimneyFan.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._chimney_fan_panel is None:

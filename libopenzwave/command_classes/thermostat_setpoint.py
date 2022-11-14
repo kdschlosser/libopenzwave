@@ -721,6 +721,7 @@ class ThermostatSetpoint(zwave_cmd_class.ZWaveCommandClass):
         thermostat_cooling_econ = 12
         thermostat_away_heating = 13
         thermostat_away_cooling = 14
+        thermostat_full_power = 15
         thermostat_unused_0_stage_1 = 100
         thermostat_heating_stage_1 = 101
         thermostat_cooling_stage_1 = 102

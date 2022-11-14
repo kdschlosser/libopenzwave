@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import Prepayment, COMMAND_CLASS_PREPAYMENT
+from libopenzwave.command_classes import COMMAND_CLASS_PREPAYMENT
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWavePrepayment(Prepayment):
+class ZWavePrepayment(COMMAND_CLASS_PREPAYMENT):
 
     def __init__(self):
         self._prepayment_panel = None
-        Prepayment.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._prepayment_panel is None:

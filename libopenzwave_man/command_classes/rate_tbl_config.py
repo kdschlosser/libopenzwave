@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import RateTableConfig, COMMAND_CLASS_RATE_TBL_CONFIG
+from libopenzwave.command_classes import COMMAND_CLASS_RATE_TBL_CONFIG
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveRateTableConfig(RateTableConfig):
+class ZWaveRateTableConfig(COMMAND_CLASS_RATE_TBL_CONFIG):
 
     def __init__(self):
         self._rate_tbl_config_panel = None
-        RateTableConfig.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._rate_tbl_config_panel is None:

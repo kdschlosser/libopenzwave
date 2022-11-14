@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import Clock, COMMAND_CLASS_CLOCK
+from libopenzwave.command_classes import COMMAND_CLASS_CLOCK
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveClocks(Clock):
+class ZWaveClocks(COMMAND_CLASS_CLOCK):
 
     def __init__(self):
         self._clock_panel = None
-        Clock.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._clock_panel is None:

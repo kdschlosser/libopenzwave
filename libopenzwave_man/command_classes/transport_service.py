@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import TransportService, COMMAND_CLASS_TRANSPORT_SERVICE
+from libopenzwave.command_classes import COMMAND_CLASS_TRANSPORT_SERVICE
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveTransportService(TransportService):
+class ZWaveTransportService(COMMAND_CLASS_TRANSPORT_SERVICE):
 
     def __init__(self):
         self._transport_service_panel = None
-        TransportService.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._transport_service_panel is None:

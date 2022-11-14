@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import ScheduleEntryLock, COMMAND_CLASS_SCHEDULE_ENTRY_LOCK
+from libopenzwave.command_classes import COMMAND_CLASS_SCHEDULE_ENTRY_LOCK
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveScheduleEntryLock(ScheduleEntryLock):
+class ZWaveScheduleEntryLock(COMMAND_CLASS_SCHEDULE_ENTRY_LOCK):
 
     def __init__(self):
         self._schedule_entry_lock_panel = None
-        ScheduleEntryLock.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._schedule_entry_lock_panel is None:

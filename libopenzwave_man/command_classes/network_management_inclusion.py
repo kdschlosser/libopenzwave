@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import NetworkManagementInclusion, COMMAND_CLASS_NETWORK_MANAGEMENT_INCLUSION
+from libopenzwave.command_classes import COMMAND_CLASS_NETWORK_MANAGEMENT_INCLUSION
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveNetworkManagementInclusion(NetworkManagementInclusion):
+class ZWaveNetworkManagementInclusion(COMMAND_CLASS_NETWORK_MANAGEMENT_INCLUSION):
 
     def __init__(self):
         self._network_management_inclusion_panel = None
-        NetworkManagementInclusion.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._network_management_inclusion_panel is None:

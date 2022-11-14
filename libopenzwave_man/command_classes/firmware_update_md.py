@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import FirmwareUpdateMD, COMMAND_CLASS_FIRMWARE_UPDATE_MD
+from libopenzwave.command_classes import COMMAND_CLASS_FIRMWARE_UPDATE_MD
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveFirmwareUpdateMD(FirmwareUpdateMD):
+class ZWaveFirmwareUpdateMD(COMMAND_CLASS_FIRMWARE_UPDATE_MD):
 
     def __init__(self):
         self._firmware_update_md_panel = None
-        FirmwareUpdateMD.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._firmware_update_md_panel is None:

@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import ManufacturerSpecific, COMMAND_CLASS_MANUFACTURER_SPECIFIC
+from libopenzwave.command_classes import COMMAND_CLASS_MANUFACTURER_SPECIFIC
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveManufacturerSpecific(ManufacturerSpecific):
+class ZWaveManufacturerSpecific(COMMAND_CLASS_MANUFACTURER_SPECIFIC):
 
     def __init__(self):
         self._manufacturer_specific_panel = None
-        ManufacturerSpecific.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._manufacturer_specific_panel is None:

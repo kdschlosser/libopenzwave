@@ -1947,6 +1947,17 @@ class NodeStats(object):
     lastFailedLinkTo = 0
 
 
+class NodeClassInformation(object):
+    """
+    Node Class Information
+
+    Attributes:
+
+    * `name`: class name as a string
+    * `version`: the version of the command class the node is running
+
+    name = ''
+    version = -1
 
 
 # noinspection PyPep8Naming,PyClassicStyleClass
@@ -3800,9 +3811,7 @@ cdef class PyManager:
         self,
         home_id,
         node_id,
-        command_class_id,
-        class_name=None,
-        class_version=None
+        command_class_id
     ):
         """
         Helper method to return whether a particular class is
@@ -3815,23 +3824,17 @@ cdef class PyManager:
         :param node_id: The ID of the node to query.
         :type node_id: int
 
-        :param command_class_id: control class to query
+        :param command_class_id: command class to query
         :type command_class_id: int
-
-        :param class_name: Specific name of class to query
-            (default = `None`)
-        :type class_name: str, optional
-
-        :param class_version: Specific class version
-            (default = `None`)
-        :type class_version: int, optional
 
         :return: True if the node does have the class instantiated,
             will return name & version
-        :rtype: bool
+        :rtype: NodeClassInformation
         """
+
         cdef string oclassName
         cdef uint8_t oclassVersion
+
         ret=self.manager.GetNodeClassInformation(
             home_id,
             node_id,
@@ -3841,12 +3844,15 @@ cdef class PyManager:
         )
 
         if ret :
-            # className = oclassName.c_str()
-            # classVersion = oclassVersion
-            return ret
-
+            namespace = {
+                'name': _str(oclassName.c_str()),
+                'version': oclassVersion
+            }
         else:
-            return False
+            namespace = {}
+
+        return type('NodeClassInformation', (NodeClassInformation,), namespace)
+
 
     def isNodeAwake(self, home_id, node_id):
         """

@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import UserCode, COMMAND_CLASS_USER_CODE
+from libopenzwave.command_classes import COMMAND_CLASS_USER_CODE
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveUserCode(UserCode):
+class ZWaveUserCode(COMMAND_CLASS_USER_CODE):
 
     def __init__(self):
         self._user_code_panel = None
-        UserCode.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._user_code_panel is None:

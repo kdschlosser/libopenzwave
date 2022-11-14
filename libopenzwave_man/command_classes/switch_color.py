@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import SwitchColor, COMMAND_CLASS_SWITCH_COLOR
+from libopenzwave.command_classes import COMMAND_CLASS_SWITCH_COLOR
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveSwitchColor(SwitchColor):
+class ZWaveSwitchColor(COMMAND_CLASS_SWITCH_COLOR):
 
     def __init__(self):
         self._switch_color_panel = None
-        SwitchColor.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._switch_color_panel is None:

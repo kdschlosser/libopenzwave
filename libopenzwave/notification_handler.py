@@ -70,9 +70,9 @@ class NotificationHandler(object, metaclass=HandlerMeta):
         from .network import ZWaveNetwork
 
         if isinstance(obj, ZWaveNetwork):
-            self.name = 'pyOZW-ThreadWorker_NetworkId:' + str(obj.id)
+            self.name = 'libopenzwave-ThreadWorker_NetworkId:' + str(obj.id)
         else:
-            self.name = 'pyOZW-ThreadWorker_NodeId:' + str(obj.id)
+            self.name = 'libopenzwave-ThreadWorker_NodeId:' + str(obj.id)
 
         self.__thread = threading.Thread(
             name=self.name,

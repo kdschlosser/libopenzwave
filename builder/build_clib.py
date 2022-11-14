@@ -143,37 +143,21 @@ class build_clib(_build_clib):
         LOG.debug(cmd_debug)
 
         if sys.platform.startswith('win'):
-            if cwd is None:
-                p = subprocess.Popen(
-                    cmd,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
-                    stdin=subprocess.PIPE
-                )
-            else:
-                p = subprocess.Popen(
-                    cmd,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
-                    stdin=subprocess.PIPE,
-                    cwd=cwd
-                )
+            p = subprocess.Popen(
+                cmd,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                stdin=subprocess.PIPE,
+                cwd=cwd
+            )
         else:
-            if cwd is None:
-                p = subprocess.Popen(
-                    SHELL,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
-                    stdin=subprocess.PIPE
-                )
-            else:
-                p = subprocess.Popen(
-                    SHELL,
-                    stdout=subprocess.PIPE,
-                    stderr=subprocess.PIPE,
-                    stdin=subprocess.PIPE,
-                    cwd=cwd
-                )
+            p = subprocess.Popen(
+                SHELL,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                stdin=subprocess.PIPE,
+                cwd=cwd
+            )
 
             cmd_debug += '\n'
             p.stdin.write(cmd_debug.encode('utf-8'))

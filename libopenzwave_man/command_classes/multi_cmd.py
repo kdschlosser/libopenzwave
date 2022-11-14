@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import MultiCommand, COMMAND_CLASS_MULTI_CMD
+from libopenzwave.command_classes import COMMAND_CLASS_MULTI_CMD
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveMultiCommand(MultiCommand):
+class ZWaveMultiCommand(COMMAND_CLASS_MULTI_CMD):
 
     def __init__(self):
         self._multi_cmd_panel = None
-        MultiCommand.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._multi_cmd_panel is None:

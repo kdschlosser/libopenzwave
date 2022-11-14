@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import Configuration, COMMAND_CLASS_CONFIGURATION
+from libopenzwave.command_classes import COMMAND_CLASS_CONFIGURATION
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveConfiguration(Configuration):
+class ZWaveConfiguration(COMMAND_CLASS_CONFIGURATION):
 
     def __init__(self):
         self._configuration_panel = None
-        Configuration.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._configuration_panel is None:

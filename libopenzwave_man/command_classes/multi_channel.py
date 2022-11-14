@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import MultiChannel, COMMAND_CLASS_MULTI_CHANNEL
+from libopenzwave.command_classes import COMMAND_CLASS_MULTI_CHANNEL
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveMultiChannel(MultiChannel):
+class ZWaveMultiChannel(COMMAND_CLASS_MULTI_CHANNEL):
 
     def __init__(self):
         self._multi_channel_panel = None
-        MultiChannel.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._multi_channel_panel is None:

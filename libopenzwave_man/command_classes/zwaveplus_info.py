@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import ZwavePlusInfo, COMMAND_CLASS_ZWAVEPLUS_INFO
+from libopenzwave.command_classes import COMMAND_CLASS_ZWAVEPLUS_INFO
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveZwavePlusInfo(ZwavePlusInfo):
+class ZWaveZwavePlusInfo(COMMAND_CLASS_ZWAVEPLUS_INFO):
 
     def __init__(self):
         self._zwaveplus_info_panel = None
-        ZwavePlusInfo.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._zwaveplus_info_panel is None:

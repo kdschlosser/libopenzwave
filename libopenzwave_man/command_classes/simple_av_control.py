@@ -27,21 +27,21 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import SimpleAVControl, COMMAND_CLASS_SIMPLE_AV_CONTROL
+from libopenzwave.command_classes import COMMAND_CLASS_SIMPLE_AV_CONTROL
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveSimpleAVControl(SimpleAVControl):
+class ZWaveSimpleAVControl(COMMAND_CLASS_SIMPLE_AV_CONTROL):
 
     def __init__(self):
         self._simple_av_control_panel = None
-        SimpleAVControl.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._simple_av_control_panel is None:
-            self._simple_av_control_panel = SimpleAVControlPanel(parent, self)
+            self._simple_av_control_panel = SimpleAvControlPanel(parent, self)
 
         return self._simple_av_control_panel
 

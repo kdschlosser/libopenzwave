@@ -287,9 +287,30 @@ class build(_build):
         for source, name in sources:
             includes.add(os.path.split(source)[0])
 
+        import sys
+
+        if sys.platform.startswith('win'):
+            extra_compile_args = [
+                '/std=c++11'
+            ]
+
+            extra_link_args = []
+        else:
+            extra_compile_args = [
+                '-Wno-unreachable-code-fallthrough',
+                '-Wno-deprecated-declarations'
+                '-std=c++11'
+            ]
+            extra_link_args = [
+                '-std=c++11'
+            ]
+
         for source, name in sources:
             extension = setuptools.Extension(
                 name=name,
+                language='c++',
+                extra_compile_args=extra_compile_args,
+                extra_link_args=extra_link_args,
                 sources=[source],
                 include_dirs=list(includes)
             )

@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import SoundSwitch, COMMAND_CLASS_SOUND_SWITCH
+from libopenzwave.command_classes import COMMAND_CLASS_SOUND_SWITCH
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveSoundSwitch(SoundSwitch):
+class ZWaveSoundSwitch(COMMAND_CLASS_SOUND_SWITCH):
 
     def __init__(self):
         self._sound_switch_panel = None
-        SoundSwitch.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._sound_switch_panel is None:

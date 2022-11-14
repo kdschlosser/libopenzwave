@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import Schedule, COMMAND_CLASS_SCHEDULE
+from libopenzwave.command_classes import COMMAND_CLASS_SCHEDULE
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveSchedule(Schedule):
+class ZWaveSchedule(COMMAND_CLASS_SCHEDULE):
 
     def __init__(self):
         self._schedule_panel = None
-        Schedule.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._schedule_panel is None:

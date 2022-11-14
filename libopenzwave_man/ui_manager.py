@@ -731,7 +731,6 @@ class NodePanel(scrolledpanel.ScrolledPanel, node_mixin.NodeMixin):
 
             sizer.Add(button_sizer_3)
 
-
         from libopenzwave.command_classes import COMMAND_CLASSES
 
         added_panels = []
@@ -960,6 +959,7 @@ class NetworkPanel(wx.TreeCtrl):
 
         self.Bind(wx.EVT_TREE_ITEM_COLLAPSING, self.on_collapsing)
 
+
 import threading
 
 class InfoBar(wx.InfoBar):
@@ -1187,6 +1187,7 @@ class UIManager:
         
     def stop(self):
         stop_event = threading.Event()
+
         def stop_callback(*_, **__):
             stop_event.set()
                 

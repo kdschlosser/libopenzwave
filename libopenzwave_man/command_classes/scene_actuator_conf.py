@@ -27,21 +27,21 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import SceneActuatorConfig, COMMAND_CLASS_SCENE_ACTUATOR_CONF
+from libopenzwave.command_classes import COMMAND_CLASS_SCENE_ACTUATOR_CONF
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveSceneActuatorConfig(SceneActuatorConfig):
+class ZWaveSceneActuatorConfig(COMMAND_CLASS_SCENE_ACTUATOR_CONF):
 
     def __init__(self):
         self._scene_actuator_conf_panel = None
-        SceneActuatorConfig.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._scene_actuator_conf_panel is None:
-            self._scene_actuator_conf_panel = SceneActuatorConfigPanel(parent, self)
+            self._scene_actuator_conf_panel = SceneActuatorConfPanel(parent, self)
 
         return self._scene_actuator_conf_panel
 

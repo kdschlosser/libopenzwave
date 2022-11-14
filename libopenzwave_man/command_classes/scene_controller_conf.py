@@ -27,21 +27,21 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import SceneControllerConfig, COMMAND_CLASS_SCENE_CONTROLLER_CONF
+from libopenzwave.command_classes import COMMAND_CLASS_SCENE_CONTROLLER_CONF
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveSceneControllerConfig(SceneControllerConfig):
+class ZWaveSceneControllerConfig(COMMAND_CLASS_SCENE_CONTROLLER_CONF):
 
     def __init__(self):
         self._scene_controller_conf_panel = None
-        SceneControllerConfig.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._scene_controller_conf_panel is None:
-            self._scene_controller_conf_panel = SceneControllerConfigPanel(parent, self)
+            self._scene_controller_conf_panel = SceneControllerConfPanel(parent, self)
 
         return self._scene_controller_conf_panel
 

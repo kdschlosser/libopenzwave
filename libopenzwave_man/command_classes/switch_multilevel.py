@@ -27,7 +27,7 @@ This file is part of the **libopenzwave** project
 
 import wx
 import threading
-from libopenzwave.command_classes import SwitchMultilevel, COMMAND_CLASS_SWITCH_MULTILEVEL
+from libopenzwave.command_classes import COMMAND_CLASS_SWITCH_MULTILEVEL
 import libopenzwave
 
 
@@ -37,11 +37,11 @@ from .. import float_slider_ctrl
 from .. import boxed_group
 
 
-class ZWaveSwitchMultilevel(SwitchMultilevel):
+class ZWaveSwitchMultilevel(COMMAND_CLASS_SWITCH_MULTILEVEL):
 
     def __init__(self):
         self._switch_multilevel_panel = None
-        SwitchMultilevel.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._switch_multilevel_panel is None:
@@ -63,6 +63,7 @@ def h_sizer(*ctrls):
         sizer.Add(ctrl, 0, wx.ALL, 5)
 
     return sizer
+
 
 def v_sizer(ctrl1, ctrl2):
     sizer = wx.BoxSizer(wx.VERTICAL)
@@ -249,7 +250,7 @@ class SwitchMultilevelPanel(wx.Panel):
         sizer.Add(light_level_sizer)
         self.SetSizer(sizer)
 
-        openzwave.SIGNAL_VALUE_CHANGED.register(self.on_change, self.node.values.switch_multilevel_level)
+        libopenzwave.SIGNAL_VALUE_CHANGED.register(self.on_change, self.node.values.switch_multilevel_level)
 
     def ramp_up(self, evt):
         step_duration = self.step_duration_ctrl.GetValue()
@@ -306,7 +307,6 @@ class SwitchMultilevelPanel(wx.Panel):
         self.node.switch_state = True
         evt.Skip()
 
-
     def off_left_down(self, evt):
         def callback():
             self.timer = None
@@ -337,11 +337,11 @@ class SwitchMultilevelPanel(wx.Panel):
         evt.Skip()
 
     def on_close(self, evt):
-        openzwave.SIGNAL_VALUE_CHANGED.unregister(self.on_change, self.level_value)
+        libopenzwave.SIGNAL_VALUE_CHANGED.unregister(self.on_change, self.node.values.switch_multilevel_level)
         evt.Skip()
 
     def on_destroy(self, evt):
-        openzwave.SIGNAL_VALUE_CHANGED.unregister(self.on_change, self.level_value)
+        libopenzwave.SIGNAL_VALUE_CHANGED.unregister(self.on_change, self.node.values.switch_multilevel_level)
         evt.Skip()
 
     def on_slider(self, evt):

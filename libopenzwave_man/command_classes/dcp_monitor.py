@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import DCPMonitor, COMMAND_CLASS_DCP_MONITOR
+from libopenzwave.command_classes import COMMAND_CLASS_DCP_MONITOR
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveDCPMonitor(DCPMonitor):
+class ZWaveDCPMonitor(COMMAND_CLASS_DCP_MONITOR):
 
     def __init__(self):
         self._dcp_monitor_panel = None
-        DCPMonitor.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._dcp_monitor_panel is None:

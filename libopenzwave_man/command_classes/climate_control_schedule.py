@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import ClimateControlSchedule, COMMAND_CLASS_CLIMATE_CONTROL_SCHEDULE
+from libopenzwave.command_classes import COMMAND_CLASS_CLIMATE_CONTROL_SCHEDULE
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveClimateControlSchedule(ClimateControlSchedule):
+class ZWaveClimateControlSchedule(COMMAND_CLASS_CLIMATE_CONTROL_SCHEDULE):
 
     def __init__(self):
         self._climate_control_schedule_panel = None
-        ClimateControlSchedule.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._climate_control_schedule_panel is None:

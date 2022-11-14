@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import Battery, COMMAND_CLASS_BATTERY
+from libopenzwave.command_classes import COMMAND_CLASS_BATTERY
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveBattery(Battery):
+class ZWaveBattery(COMMAND_CLASS_BATTERY):
 
     def __init__(self):
         self._batter_panel = None
-        Battery.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._batter_panel is None:

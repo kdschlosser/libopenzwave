@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import Irrigation, COMMAND_CLASS_IRRIGATION
+from libopenzwave.command_classes import COMMAND_CLASS_IRRIGATION
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveIrrigation(Irrigation):
+class ZWaveIrrigation(COMMAND_CLASS_IRRIGATION):
 
     def __init__(self):
         self._irrigation_panel = None
-        Irrigation.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._irrigation_panel is None:

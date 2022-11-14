@@ -43,12 +43,6 @@ __copyright__ = "Copyright © 2022 Kevin G Schlosser"
 __author__ = 'Kevin G Schlosser'
 __email__ = ''
 
-try:
-    __import__('pkg_resources').declare_namespace("libopenzwave_man")
-except:
-    # bootstrapping
-    pass
-
 
 def ui(argv):
     import wx
@@ -57,18 +51,12 @@ def ui(argv):
 
     from . import ui_manager
     import libopenzwave
+    import threading
 
-    def network_ready(network, *_,**__):
-        for node in network:
-            print(node.id)
+    network_start_event = threading.Event()
 
-        for element in network.xml_handler:
-            if element.tag == 'Nodes':
-                for n in element:
-                    print(n['id'])
-
-                print()
-                print()
+    def network_ready(*_, **__):
+        network_start_event.set()
 
     libopenzwave.SIGNAL_NETWORK_READY.register(network_ready)
 
@@ -87,9 +75,14 @@ def ui(argv):
     options.poll_interval = 30
     options.interval_between_polls = False
     options.save_configuration = True
+    options.single_notification_handler = False
 
     options.lock()
-    manager = libopenzwave.ZWaveNetwork(options)
+
+    manager = ui_manager(options)
+
+    network_start_event.wait()
+
     manager.Show()
     app.MainLoop()
 

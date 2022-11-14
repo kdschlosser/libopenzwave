@@ -4,7 +4,6 @@ import setuptools
 import os
 import sys
 import traceback
-import imp  # NOQA
 
 
 def create_property(func):
@@ -842,7 +841,6 @@ class ConfigOptions(object):
         return '# -*- coding: utf-8 -*-\n\n' + output + '\n'
 
 
-
 class build_docs(setuptools.Command):
     description = 'Build Documentation.'
 
@@ -1254,60 +1252,6 @@ class build_docs(setuptools.Command):
         self.args = args  # NOQA
 
     def run(self):
-
-        # *********************************************************************
-        # This code block is to be able to build the documentation if
-        # python-openzwave is installed into the python that is running the
-        # setup program. What happens is for some reason both libopenzwave.pyd
-        # files try to load and this causes them to bump heads and the ugly
-        # things start happening. so we want to make sure that we load the one
-        # that was just compiled and also remove any python-openzwave
-        # references in sys.path. this ensures the proper one gets loaded
-        #
-        # import subprocess
-        #
-        # if not sys.platform.startswith('win') and not self.run_build:
-        #     p = subprocess.Popen(
-        #         'bash',
-        #         stdout=subprocess.PIPE,
-        #         stderr=subprocess.PIPE,
-        #         stdin=subprocess.PIPE
-        #     )
-        #
-        #     args = ' '.join('--' + arg for arg in self.args)
-        #
-        #     cmd = sys.executable + ' setup.py build_docs ' + args
-        #
-        #     p.stdin.write(cmd.encode('utf-8'))
-        #     p.stdin.close()
-        #
-        #     while p.poll() is None:
-        #         for line in iter(p.stdout.readline, b''):
-        #             line = line.strip()
-        #             if line:
-        #                 sys.stdout.write(
-        #                     line.decode('utf-8') + '\n'
-        #                 )
-        #
-        #                 sys.stdout.flush()
-        #
-        #         for line in iter(p.stderr.readline, b''):
-        #             line = line.strip()
-        #             if line:
-        #                 sys.stderr.write(line.decode('utf-8') + '\n')
-        #                 sys.stderr.flush()
-        #
-        #     if not p.stdout.closed:
-        #         p.stdout.close()
-        #
-        #     if not p.stderr.closed:
-        #         p.stderr.close()
-        #
-        #     sys.stdout.flush()
-        #     sys.stderr.flush()
-        #
-        #     return
-
         build_ext = self.distribution.get_command_obj('build_ext')  # NOQA
         build_ext.ensure_finalized()
         extension = self.distribution.ext_modules[0]  # NOQA

@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import DoorLockLogging, COMMAND_CLASS_DOOR_LOCK_LOGGING
+from libopenzwave.command_classes import COMMAND_CLASS_DOOR_LOCK_LOGGING
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveClocks(DoorLockLogging):
+class ZWaveClocks(COMMAND_CLASS_DOOR_LOCK_LOGGING):
 
     def __init__(self):
         self._door_lock_logging_panel = None
-        DoorLockLogging.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._door_lock_logging_panel is None:

@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import Authentication, COMMAND_CLASS_AUTHENTICATION
+from libopenzwave.command_classes import COMMAND_CLASS_AUTHENTICATION
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveAuthentication(Authentication):
+class ZWaveAuthentication(COMMAND_CLASS_AUTHENTICATION):
 
     def __init__(self):
         self._authentication_panel = None
-        Authentication.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._authentication_panel is None:

@@ -45,4 +45,6 @@ class Basic(zwave_cmd_class.ZWaveCommandClass):
 
     # noinspection PyMissingOrEmptyDocstring
     class ValueIndexes(zwave_cmd_class.ValueIndexes):
-        set = 0
+        basic_set = 0
+        basic_target = 1
+        basic_duration = 2

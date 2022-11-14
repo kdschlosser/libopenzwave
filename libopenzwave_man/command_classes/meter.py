@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import Meter, COMMAND_CLASS_METER
+from libopenzwave.command_classes import COMMAND_CLASS_METER
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveMeter(Meter):
+class ZWaveMeter(COMMAND_CLASS_METER):
 
     def __init__(self):
         self._meter_panel = None
-        Meter.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._meter_panel is None:

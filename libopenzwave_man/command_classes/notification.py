@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import Notification, COMMAND_CLASS_NOTIFICATION
+from libopenzwave.command_classes import COMMAND_CLASS_NOTIFICATION
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveNotification(Notification):
+class ZWaveNotification(COMMAND_CLASS_NOTIFICATION):
 
     def __init__(self):
         self._notification_panel = None
-        Notification.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._notification_panel is None:

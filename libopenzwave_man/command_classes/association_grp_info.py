@@ -27,21 +27,21 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import AssociationGroupInfo, COMMAND_CLASS_ASSOCIATION_GRP_INFO
+from libopenzwave.command_classes import COMMAND_CLASS_ASSOCIATION_GRP_INFO
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveAssociationGroupInfo(AssociationGroupInfo):
+class ZWaveAssociationGroupInfo(COMMAND_CLASS_ASSOCIATION_GRP_INFO):
 
     def __init__(self):
         self._association_grp_info_panel = None
-        AssociationGroupInfo.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._association_grp_info_panel is None:
-            self._association_grp_info_panel = AssociationGroupInfoPanel(parent, self)
+            self._association_grp_info_panel = AssociationGrpInfoPanel(parent, self)
 
         return self._association_grp_info_panel
 

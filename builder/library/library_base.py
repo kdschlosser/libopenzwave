@@ -247,17 +247,20 @@ class Library(object):
 
     @property
     def ld_flags(self):
-        return []
+        return parse_flags('LDFLAGS')
 
     @property
     def c_flags(self):
-        return []
+        return parse_flags('CFLAGS')
 
     @property
     def cpp_flags(self):
-        cpp_flags = parse_flags('CFLAGS')
+        cpp_flags = parse_flags('CPPFLAGS')
 
-        if '-std=c++11' not in cpp_flags:
+        if version.OZW_VERSION >= (1, 7):
+            if '-std=c++20' not in cpp_flags:
+                cpp_flags.append('-std:c++20')
+        elif '-std=c++11' not in cpp_flags:
             cpp_flags.append('-std=c++11')
 
         return cpp_flags

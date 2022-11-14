@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import InclusionController, COMMAND_CLASS_INCLUSION_CONTROLLER
+from libopenzwave.command_classes import COMMAND_CLASS_INCLUSION_CONTROLLER
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveInclusionController(InclusionController):
+class ZWaveInclusionController(COMMAND_CLASS_INCLUSION_CONTROLLER):
 
     def __init__(self):
         self._inclusion_controller_panel = None
-        InclusionController.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._inclusion_controller_panel is None:

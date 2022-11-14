@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import Supervision, COMMAND_CLASS_SUPERVISION
+from libopenzwave.command_classes import COMMAND_CLASS_SUPERVISION
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveSupervision(Supervision):
+class ZWaveSupervision(COMMAND_CLASS_SUPERVISION):
 
     def __init__(self):
         self._supervision_panel = None
-        Supervision.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._supervision_panel is None:

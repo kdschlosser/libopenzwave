@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import CentralScene, COMMAND_CLASS_CENTRAL_SCENE
+from libopenzwave.command_classes import COMMAND_CLASS_CENTRAL_SCENE
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveCentralScene(CentralScene):
+class ZWaveCentralScene(COMMAND_CLASS_CENTRAL_SCENE):
 
     def __init__(self):
         self._central_scene_panel = None
-        CentralScene.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._central_scene_panel is None:

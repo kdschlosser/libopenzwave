@@ -137,8 +137,12 @@ class Library(library_base.Library):
     @property
     def cpp_flags(self):
         cpp_flags = library_base.parse_flags('CPPFLAGS')
+        import version
 
-        if '-std=c++11' not in cpp_flags:
+        if version.OZW_VERSION >= (1, 7):
+            if '-std=c++20' not in cpp_flags:
+                cpp_flags.append('-std:c++20')
+        elif '-std=c++11' not in cpp_flags:
             cpp_flags.append('-std=c++11')
 
         return cpp_flags

@@ -190,3 +190,81 @@ class ZWaveCommandClass(object, metaclass=singleton.InstanceSingleton):
     @property
     def as_dict(self):
         return {}
+
+    def _build_gui(self, *args, **kwargs):
+        """
+        This is the function you want to override to build the GUI replated
+        control for a specific command class.
+
+        It is recommended that you keep this as basic as possible and only
+        provide a label for the control and the control itself. The other thing
+        that should be done is setting up a callback for a value change so you
+        can update the control when the device changes the value.
+
+        Here is an example using wxPython.
+
+        .. code-block:: python
+            :linenos:
+
+            import wx
+
+            from libopenzwave.command_classes import COMMAND_CLASS_SWITCH_BINARY
+            from libopenzwave import SIGNAL_VALUE_CHANGED
+
+
+            class ZWaveSwitchBinary(COMMAND_CLASS_SWITCH_BINARY):
+
+                def __init__(self):
+                    self._switch_binary_ctrl = None
+                    super().__init__()
+
+                def _build_gui(self, parent):
+                    if self._switch_binary_ctrl is None:
+                        ctrl = self._switch_binary_ctrl = wx.CheckBox(
+                            parent,
+                            -1,
+                            label=COMMAND_CLASS_SWITCH_BINARY.class_desc,
+                            style=wx.ALIGN_RIGHT
+                        )
+
+                        def _on_check(evt):
+                            self.values.switch_binary_state.data = (
+                                ctrl.GetValue()
+                            )
+                            evt.Skip()
+
+                        def _callback(signal, sender, **kwargs):
+                            ctrl.SetValue(bool(sender.data))
+
+                        def _on_destroy(ext):
+                            SIGNAL_VALUE_CHANGED.unregister(
+                                _callback,
+                                sender=self.values.switch_binary_state
+                            )
+                            self._switch_binary_ctrl = None
+                            evt.Skip()
+
+                        SIGNAL_VALUE_CHANGED.register(
+                            _callback,
+                            sender=self.values.switch_binary_state
+                        )
+
+                        ctrl.Bind(wx.EVT_WINDOW_DESTROY, _on_destroy)
+                        ctrl.Bind(wx.EVT_CHECKBOX, _on_check)
+
+                        ctrl.SetValue(self.values.switch_binary_state.data)
+
+                    return self._switch_binary_ctrl
+
+
+        This method gets called when you call the `gui` method for a node. Most
+        nodes are going to have more than a single command class and if a gui
+        control has been added for other command classes then those controls
+        will also be built. The returned value for `node.gui(*args, **kwargs)`
+        will be a list of the control instances that were built. once you have
+        those instances then you can arrange them to be presented to the user.
+
+        If for some reason you do not want to display a specific command class
+        control to the user then you will have to either hide it or destroy it.
+        """
+        raise NotImplementedError

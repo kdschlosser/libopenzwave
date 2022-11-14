@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import ScreenMD, COMMAND_CLASS_SCREEN_MD
+from libopenzwave.command_classes import COMMAND_CLASS_SCREEN_MD
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveScreenMD(ScreenMD):
+class ZWaveScreenMD(COMMAND_CLASS_SCREEN_MD):
 
     def __init__(self):
         self._screen_md_panel = None
-        ScreenMD.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._screen_md_panel is None:

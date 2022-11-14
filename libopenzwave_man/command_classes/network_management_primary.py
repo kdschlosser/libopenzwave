@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import NetworkManagementPrimary, COMMAND_CLASS_NETWORK_MANAGEMENT_PRIMARY
+from libopenzwave.command_classes import COMMAND_CLASS_NETWORK_MANAGEMENT_PRIMARY
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveNetworkManagementPrimary(NetworkManagementPrimary):
+class ZWaveNetworkManagementPrimary(COMMAND_CLASS_NETWORK_MANAGEMENT_PRIMARY):
 
     def __init__(self):
         self._network_management_primar_panel = None
-        NetworkManagementPrimary.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._network_management_primar_panel is None:

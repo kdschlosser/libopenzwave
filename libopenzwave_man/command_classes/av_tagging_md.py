@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import AVTaggingMD, COMMAND_CLASS_AV_TAGGING_MD
+from libopenzwave.command_classes import COMMAND_CLASS_AV_TAGGING_MD
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveAVTaggingMD(AVTaggingMD):
+class ZWaveAVTaggingMD(COMMAND_CLASS_AV_TAGGING_MD):
 
     def __init__(self):
         self._av_tagging_md_panel = None
-        AVTaggingMD.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._av_tagging_md_panel is None:

@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import SceneActivation, COMMAND_CLASS_SCENE_ACTIVATION
+from libopenzwave.command_classes import COMMAND_CLASS_SCENE_ACTIVATION
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveSceneActivation(SceneActivation):
+class ZWaveSceneActivation(COMMAND_CLASS_SCENE_ACTIVATION):
 
     def __init__(self):
         self._scene_activation_panel = None
-        SceneActivation.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._scene_activation_panel is None:

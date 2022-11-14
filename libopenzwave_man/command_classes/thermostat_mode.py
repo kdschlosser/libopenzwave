@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import ThermostatMode, COMMAND_CLASS_THERMOSTAT_MODE
+from libopenzwave.command_classes import COMMAND_CLASS_THERMOSTAT_MODE
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveThermostatMode(ThermostatMode):
+class ZWaveThermostatMode(COMMAND_CLASS_THERMOSTAT_MODE):
 
     def __init__(self):
         self._thermostat_mode_panel = None
-        ThermostatMode.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._thermostat_mode_panel is None:

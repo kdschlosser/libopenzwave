@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import ZIPNaming, COMMAND_CLASS_ZIP_NAMING
+from libopenzwave.command_classes import COMMAND_CLASS_ZIP_NAMING
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveZIPNaming(ZIPNaming):
+class ZWaveZIPNaming(COMMAND_CLASS_ZIP_NAMING):
 
     def __init__(self):
         self._zip_naming_panel = None
-        ZIPNaming.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._zip_naming_panel is None:

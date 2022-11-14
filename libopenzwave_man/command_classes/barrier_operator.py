@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import BarrierOperator, COMMAND_CLASS_BARRIER_OPERATOR
+from libopenzwave.command_classes import COMMAND_CLASS_BARRIER_OPERATOR
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveBarrierOperator(BarrierOperator):
+class ZWaveBarrierOperator(COMMAND_CLASS_BARRIER_OPERATOR):
 
     def __init__(self):
         self._barrier_operator_panel = None
-        BarrierOperator.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._barrier_operator_panel is None:

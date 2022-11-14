@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import Antitheft, COMMAND_CLASS_ANTITHEFT
+from libopenzwave.command_classes import COMMAND_CLASS_ANTITHEFT
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveAntitheft(Antitheft):
+class ZWaveAntitheft(COMMAND_CLASS_ANTITHEFT):
 
     def __init__(self):
         self._antitheft_panel = None
-        Antitheft.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._antitheft_panel is None:

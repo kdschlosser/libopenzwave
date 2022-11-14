@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import AVContentDirectoryMD, COMMAND_CLASS_AV_CONTENT_DIRECTORY_MD
+from libopenzwave.command_classes import COMMAND_CLASS_AV_CONTENT_DIRECTORY_MD
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveAVContentDirectoryMD(AVContentDirectoryMD):
+class ZWaveAVContentDirectoryMD(COMMAND_CLASS_AV_CONTENT_DIRECTORY_MD):
 
     def __init__(self):
         self._av_content_directory_md_panel = None
-        AVContentDirectoryMD.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._av_content_directory_md_panel is None:

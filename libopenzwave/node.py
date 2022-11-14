@@ -95,24 +95,24 @@ class ZWaveNodes(dict):
 
     def __getitem__(self, *args, **kwargs):
         """
-        :param *args:
-        :param **kwargs:
+        :param args:
+        :param kwargs:
         """
         with self.__lock:
             return dict.__getitem__(self, *args, **kwargs)
 
     def __setitem__(self, *args, **kwargs):
         """
-        :param *args:
-        :param **kwargs:
+        :param args:
+        :param kwargs:
         """
         with self.__lock:
             dict.__setitem__(self, *args, **kwargs)
 
     def __delitem__(self, *args, **kwargs):
         """
-        :param *args:
-        :param **kwargs:
+        :param args:
+        :param kwargs:
         """
         with self.__lock:
             dict.__delitem__(self, *args, **kwargs)
@@ -148,8 +148,8 @@ class ZWaveNodes(dict):
 
     def update(self, *args, **kwargs):
         """
-        :param *args:
-        :param **kwargs:
+        :param args:
+        :param kwargs:
         """
         with self.__lock:
             dict.update(self, *args, **kwargs)
@@ -164,8 +164,8 @@ class ZWaveNodes(dict):
 
     def fromkeys(self, *args, **kwargs):
         """
-        :param *args:
-        :param **kwargs:
+        :param args:
+        :param kwargs:
         """
         with self.__lock:
             return dict.fromkeys(self, *args, **kwargs)
@@ -182,8 +182,8 @@ class NodeId(str):
     @classmethod
     def __new__(cls, *args, **kwargs):
         """
-        :param *args:
-        :param **kwargs:
+        :param args:
+        :param kwargs:
         """
         value = args[1]
 
@@ -531,6 +531,8 @@ class ZWaveNode(ZWaveObject):
     """
     Represents a single Node within the Z-Wave Network.
     """
+    _command_classes = []
+    _bases = ()
 
     def __init__(
         self,
@@ -584,7 +586,9 @@ class ZWaveNode(ZWaveObject):
             self._notification_handler.start()
 
         else:
-            self._notification_handler = parent_node._notification_handler
+            self._notification_handler = (
+                parent_node._notification_handler  # NOQA
+            )
 
         if xml_data is None:
             if parent_node is None:
@@ -640,6 +644,21 @@ class ZWaveNode(ZWaveObject):
 
         self._notification_handler.add(do)
 
+    def gui(self, *args, **kwargs):
+        from . import command_classes
+
+        res = []
+        for cc_id in self._command_classes:
+            cc = command_classes.COMMAND_CLASSES[cc_id]
+            try:
+                ctrl = cc._build_gui(self, *args, **kwargs)  # NOQA
+            except NotImplementedError:
+                continue
+
+            res.append(ctrl)
+
+        return res
+
     @property
     def is_endpoint(self):
         """
@@ -693,6 +712,10 @@ class ZWaveNode(ZWaveObject):
         return self._object_id
 
     def _update_dataset(self):
+        manager = self._network.manager
+        h_id = self.home_id
+        n_id = self.id.node_id
+
         if self._xml_handler is None:
             if self._parent_node is None:
                 handler = xml_handler.XMLElement('Node')
@@ -701,83 +724,56 @@ class ZWaveNode(ZWaveObject):
 
             handler.Description = xml_handler.XMLElement('Description')
             handler.Description.text = (
-                self._network.manager.getMetaData(self.home_id, self.id.node_id, 3)
+                self._network.manager.getMetaData(h_id, n_id, 3)
             )
 
             self.network.xml_handler.Nodes.append(handler)
 
             handler['id'] = self.id
-            handler['name'] = (
-                self._manager.getNodeName(self.home_id, self.id.node_id)
-            )
-            handler['location'] = (
-                self._manager.getNodeLocation(self.home_id, self.id.node_id)
-            )
-            handler['product_name'] = (
-                self._manager.getNodeProductName(self.home_id, self.id.node_id)
-            )
-            handler['product_type'] = (
-                self._manager.getNodeProductType(self.home_id, self.id.node_id)
-            )
-            handler['product_id'] = (
-                self._manager.getNodeProductId(self.home_id, self.id.node_id)
+            handler['name'] = manager.getNodeName(h_id, n_id)
+            handler['location'] = manager.getNodeLocation(h_id, n_id)
+            handler['product_name'] = manager.getNodeProductName(h_id, n_id)
+            handler['product_type'] = manager.getNodeProductType(h_id, n_id)
+            handler['product_id'] = manager.getNodeProductId(h_id, n_id)
+            handler['version'] = manager.getNodeVersion(h_id, n_id)
+            handler['max_baud_rate'] = manager.getNodeMaxBaudRate(h_id, n_id)
+            handler['zwave_frequency'] = manager.getMetaData(h_id, n_id, 11)
+            handler['security'] = manager.getNodeSecurity(h_id, n_id)
+            handler['beaming_device'] = manager.isNodeBeamingDevice(h_id, n_id)
+            handler['routing_device'] = manager.isNodeRoutingDevice(h_id, n_id)
+            handler['node_type'] = manager.getNodeType(h_id, n_id)
+            handler['frequent_listening_device'] = (
+                manager.isNodeFrequentListeningDevice(h_id, n_id)
             )
             handler['manufacturer_id'] = (
-                self._manager.getNodeManufacturerId(self.home_id, self.id.node_id)
+                manager.getNodeManufacturerId(h_id, n_id)
             )
             handler['manufacturer_name'] = (
-                self._manager.getNodeManufacturerName(self.home_id, self.id.node_id)
-            )
-            handler['version'] = (
-                self._manager.getNodeVersion(self.home_id, self.id.node_id)
-            )
-            handler['max_baud_rate'] = (
-                self._manager.getNodeMaxBaudRate(self.home_id, self.id.node_id)
-            )
-            handler['zwave_frequency'] = (
-                self._manager.getMetaData(self.home_id, self.id.node_id, 11)
-            )
-            handler['security'] = (
-                self._manager.getNodeSecurity(self.home_id, self.id.node_id)
+                manager.getNodeManufacturerName(h_id, n_id)
             )
             handler['listening_device'] = (
-                self._manager.isNodeListeningDevice(self.home_id, self.id.node_id)
-            )
-            handler['beaming_device'] = (
-                self._manager.isNodeBeamingDevice(self.home_id, self.id.node_id)
+                manager.isNodeListeningDevice(h_id, n_id)
             )
             handler['security_device'] = (
-                self._manager.isNodeSecurityDevice(self.home_id, self.id.node_id)
-            )
-            handler['routing_device'] = (
-                self._manager.isNodeRoutingDevice(self.home_id, self.id.node_id)
-            )
-            handler['controller_type'] = "0x{0:04X}".format(
-                self._manager.getNodeBasic(self.home_id, self.id.node_id)
+                manager.isNodeSecurityDevice(h_id, n_id)
             )
             handler['role_type'] = "0x{0:04X}".format(
-                self._manager.getNodeRole(self.home_id, self.id.node_id)
+                manager.getNodeRole(h_id, n_id)
             )
             handler['device_type'] = "0x{0:04X}".format(
-                self._manager.getNodeDeviceType(self.home_id, self.id.node_id)
+                manager.getNodeDeviceType(h_id, n_id)
             )
             handler['basic_type'] = "0x{0:04X}".format(
-                self._manager.getNodeBasic(self.home_id, self.id.node_id)
+                manager.getNodeBasic(h_id, n_id)
             )
             handler['generic_type'] = "0x{0:04X}".format(
-                self._manager.getNodeGeneric(self.home_id, self.id.node_id)
+                manager.getNodeGeneric(h_id, n_id)
             )
             handler['specific_type'] = "0x{0:04X}".format(
-                self._manager.getNodeSpecific(self.home_id, self.id.node_id)
+                manager.getNodeSpecific(h_id, n_id)
             )
-            handler['node_type'] = (
-                self._manager.getNodeType(self.home_id, self.id.node_id)
-            )
-            handler['frequent_listening_device'] = (
-                self._manager.isNodeFrequentListeningDevice(
-                    self.home_id,
-                    self.id.node_id
-                )
+            handler['controller_type'] = "0x{0:04X}".format(
+                manager.getNodeBasic(h_id, n_id)
             )
 
             from .command_classes import COMMAND_CLASSES
@@ -812,7 +808,7 @@ class ZWaveNode(ZWaveObject):
             handler = self._xml_handler
 
         handler.Neighbors = xml_handler.XMLElement('Neighbors')
-        neighbors = self._manager.getNodeNeighbors(self.home_id, self.id.node_id)
+        neighbors = manager.getNodeNeighbors(h_id, n_id)
 
         for neighbor_id in sorted(neighbors):
             neighbor = xml_handler.XMLElement('Neighbor')
@@ -822,10 +818,10 @@ class ZWaveNode(ZWaveObject):
         self._xml_handler = handler
 
         urls = URLs(self, None)
-        urls._update_dataset()
+        urls._update_dataset()  # NOQA
 
-        help = Help(self, None)
-        help._update_dataset()
+        help_ = Help(self, None)
+        help_._update_dataset()  # NOQA
 
         from .command_classes import (
             COMMAND_CLASS_ASSOCIATION,
@@ -833,19 +829,20 @@ class ZWaveNode(ZWaveObject):
         )
 
         if (
-            self._parent_node is None and
-            (
+            self._parent_node is None and (
                 self == COMMAND_CLASS_ASSOCIATION or
                 self == COMMAND_CLASS_MULTI_CHANNEL_ASSOCIATION
             )
         ):
-            handler.AssociationGroups = xml_handler.XMLElement('AssociationGroups')
+            handler.AssociationGroups = (
+                xml_handler.XMLElement('AssociationGroups')
+            )
 
             for group in self.association_groups:
-                group._update_dataset()
+                group._update_dataset()  # NOQA
 
         for value in self:
-            value._update_dataset()
+            value._update_dataset()  # NOQA
 
     def __iter__(self):
         for value in sorted(list(self.values.values()), key=lambda x: x.id):
@@ -867,7 +864,11 @@ class ZWaveNode(ZWaveObject):
         :rtype: str
         """
         if self._xml_handler is None:
-            return self._network.manager.getMetaData(self.home_id, self.id.node_id, 3)
+            return self._network.manager.getMetaData(
+                self.home_id,
+                self.id.node_id,
+                3
+            )
         else:
             return self._xml_handler.Description.text
 
@@ -883,7 +884,9 @@ class ZWaveNode(ZWaveObject):
         logger.debug('Node {0}: destroying'.format(self.id.node_id))
 
         if len(self._groups_loaded):
-            logger.debug(str(self.id.node_id) + ' - destroying association groups')
+            logger.debug(
+                str(self.id.node_id) + ' - destroying association groups'
+            )
             for group in self._groups_loaded:
                 group.destroy()
 
@@ -895,7 +898,9 @@ class ZWaveNode(ZWaveObject):
 
         if self._notification_handler.is_owner_object(self):
             logger.debug(
-                'Node {0}: Stopping Notification Handler'.format(self.id.node_id)
+                'Node {0}: Stopping Notification Handler'.format(
+                    self.id.node_id
+                )
             )
             self._notification_handler.stop()
 
@@ -959,7 +964,11 @@ class ZWaveNode(ZWaveObject):
             num_groups = manager.getNumGroups(self.home_id, self.id.node_id)
 
             while groups_added < num_groups and group_id < 256:
-                if manager.getMaxAssociations(self.home_id, self.id.node_id, group_id) > 0:
+                if manager.getMaxAssociations(
+                        self.home_id,
+                        self.id.node_id,
+                        group_id
+                ) > 0:
                     for xml_group in self._xml_handler.AssociationGroups:
                         if xml_group['id'] == group_id:
                             break
@@ -1048,7 +1057,7 @@ class ZWaveNode(ZWaveObject):
                             continue
 
                         if node.id.node_id == self.id.node_id:
-                            node._handle_notification(notif)
+                            node._handle_notification(notif)  # NOQA
 
                 del self.network.nodes[self.id]
 
@@ -1125,7 +1134,7 @@ class ZWaveNode(ZWaveObject):
                             continue
 
                         if node.id.node_id == self.id.node_id:
-                            node._handle_notification(notif)
+                            node._handle_notification(notif)  # NOQA
 
                     signals.SIGNAL_NODE_READY.send(
                         sender=self,
@@ -1136,10 +1145,15 @@ class ZWaveNode(ZWaveObject):
                 else:
                     if self._xml_handler is None:
                         self._update_dataset()
-                        del self._instances[self.__instance_key__]
+                        del self._instances[self.__instance_key__]  # NOQA
                         del self.network.nodes[self.id]
 
-                        node = ZWaveNode(self.id, self.network, self._xml_handler, self._parent)
+                        node = ZWaveNode(
+                            self.id,
+                            self.network,
+                            self._xml_handler,
+                            self._parent  # NOQA
+                        )
                         node._is_ready = True
 
                         for value_id in node.values.keys()[:]:
@@ -1148,9 +1162,11 @@ class ZWaveNode(ZWaveObject):
                         for value in self.values.values():
                             node.values[value.id] = value
                             value._parent = node
-                            value._xml_handler.parent = node.xml_handler
+                            value._xml_handler.parent = node.xml_handler  # NOQA
 
-                            self._xml_handler.parent.remove(self._xml_handler)
+                            self._xml_handler.parent.remove(  # NOQA
+                                self._xml_handler
+                            )
 
                     signals.SIGNAL_VIRTUAL_NODE_READY.send(
                         sender=self,
@@ -1303,7 +1319,7 @@ class ZWaveNode(ZWaveObject):
                 ):
                     value._id = n.value.id
                     self.values[n.value.id] = self.values.pop(value_id)
-                    value._update_dataset()
+                    value._update_dataset()  # NOQA
                     break
             else:
                 value = None
@@ -1339,7 +1355,7 @@ class ZWaveNode(ZWaveObject):
                     )
                 else:
                     del self.values[n.value.id]
-                    value._handle_notification(n)
+                    value._handle_notification(n)  # NOQA
 
             elif notif in (
                 PyNotifications.ValueChanged,
@@ -1357,7 +1373,7 @@ class ZWaveNode(ZWaveObject):
                         )
                     )
                 
-                value._handle_notification(n)
+                value._handle_notification(n)  # NOQA
 
         node_id = str(notif.node_id) + '.' + str(notif.value.instance)
 
@@ -1365,16 +1381,21 @@ class ZWaveNode(ZWaveObject):
             self._notification_handler.add(_do, notif)
         else:
             if node_id not in self.network.nodes:
-                self.network.nodes[node_id] = ZWaveNode(node_id, self.network, None, self)
+                self.network.nodes[node_id] = ZWaveNode(
+                    node_id,
+                    self.network,
+                    None,
+                    self
+                )
 
-            self.network.nodes[node_id]._handle_value(notif)
+            self.network.nodes[node_id]._handle_value(notif)  # NOQA
 
     @property
     def _manager(self):
         """
         :rtype: ZWaveManager
         """
-        return self._network._manager
+        return self._network.manager
 
     @property
     def name(self):
@@ -1427,7 +1448,10 @@ class ZWaveNode(ZWaveObject):
         if self._xml_handler is not None:
             location = self._xml_handler['location']
         else:
-            location = self._manager.getNodeLocation(self.home_id, self.id.node_id)
+            location = self._manager.getNodeLocation(
+                self.home_id,
+                self.id.node_id
+            )
 
         if not location:
             location = 'No Location'
@@ -1455,7 +1479,10 @@ class ZWaveNode(ZWaveObject):
         if self._xml_handler is not None:
             return self._xml_handler['product_name']
         else:
-            return self._manager.getNodeProductName(self.home_id, self.id.node_id)
+            return self._manager.getNodeProductName(
+                self.home_id,
+                self.id.node_id
+            )
 
     @product_name.setter
     @utils.logit
@@ -1475,7 +1502,10 @@ class ZWaveNode(ZWaveObject):
         if self._xml_handler is not None:
             return self._xml_handler['product_type']
         else:
-            return self._manager.getNodeProductType(self.home_id, self.id.node_id)
+            return self._manager.getNodeProductType(
+                self.home_id,
+                self.id.node_id
+            )
 
     @property
     def product_id(self):
@@ -1499,7 +1529,10 @@ class ZWaveNode(ZWaveObject):
         if self._xml_handler is not None:
             return self._xml_handler['manufacturer_id']
         else:
-            return self._manager.getNodeManufacturerId(self.home_id, self.id.node_id)
+            return self._manager.getNodeManufacturerId(
+                self.home_id,
+                self.id.node_id
+            )
 
     @property
     def manufacturer_name(self):
@@ -1515,7 +1548,10 @@ class ZWaveNode(ZWaveObject):
         if self._xml_handler is not None:
             return self._xml_handler['manufacturer_name']
         else:
-            return self._manager.getNodeManufacturerName(self.home_id, self.id.node_id)
+            return self._manager.getNodeManufacturerName(
+                self.home_id,
+                self.id.node_id
+            )
 
     @manufacturer_name.setter
     @utils.logit
@@ -1523,7 +1559,11 @@ class ZWaveNode(ZWaveObject):
         if self._xml_handler is not None:
             self._xml_handler['manufacturer_name'] = value
 
-        self._manager.setNodeManufacturerName(self.home_id, self.id.node_id, value)
+        self._manager.setNodeManufacturerName(
+            self.home_id,
+            self.id.node_id,
+            value
+        )
 
     @property
     def version(self):
@@ -1557,7 +1597,10 @@ class ZWaveNode(ZWaveObject):
         if self._xml_handler is not None:
             return self._xml_handler['max_baud_rate']
         else:
-            return self._manager.getNodeMaxBaudRate(self.home_id, self.id.node_id)
+            return self._manager.getNodeMaxBaudRate(
+                self.home_id,
+                self.id.node_id
+            )
 
     @property
     def security(self):
@@ -1583,7 +1626,10 @@ class ZWaveNode(ZWaveObject):
         """
 
         if self._xml_handler is None:
-            neighbors = self._manager.getNodeNeighbors(self.home_id, self.id.node_id)
+            neighbors = self._manager.getNodeNeighbors(
+                self.home_id,
+                self.id.node_id
+            )
         else:
             neighbors = []
             for neighbor in self._xml_handler.Neighbors:
@@ -1634,7 +1680,7 @@ class ZWaveNode(ZWaveObject):
         :rtype: bool
         """
         if self._xml_handler is not None:
-            code =  int(self._xml_handler['basic_type'], 16)
+            code = int(self._xml_handler['basic_type'], 16)
         else:
             code = self._manager.getNodeBasic(self.home_id, self.id.node_id)
 
@@ -1650,7 +1696,7 @@ class ZWaveNode(ZWaveObject):
         """
 
         if self._xml_handler is not None:
-            code =  int(self._xml_handler['basic_type'], 16)
+            code = int(self._xml_handler['basic_type'], 16)
         else:
             code = self._manager.getNodeBasic(self.home_id, self.id.node_id)
 
@@ -1666,7 +1712,7 @@ class ZWaveNode(ZWaveObject):
         """
 
         if self._xml_handler is not None:
-            code =  int(self._xml_handler['basic_type'], 16)
+            code = int(self._xml_handler['basic_type'], 16)
         else:
             code = self._manager.getNodeBasic(self.home_id, self.id.node_id)
 
@@ -1682,7 +1728,10 @@ class ZWaveNode(ZWaveObject):
         if self._xml_handler is not None:
             return self._xml_handler['listening_device']
         else:
-            return self._manager.isNodeListeningDevice(self.home_id, self.id.node_id)
+            return self._manager.isNodeListeningDevice(
+                self.home_id,
+                self.id.node_id
+            )
 
     @property
     def is_beaming_device(self):
@@ -1695,7 +1744,10 @@ class ZWaveNode(ZWaveObject):
         if self._xml_handler is not None:
             return self._xml_handler['beaming_device']
         else:
-            return self._manager.isNodeBeamingDevice(self.home_id, self.id.node_id)
+            return self._manager.isNodeBeamingDevice(
+                self.home_id,
+                self.id.node_id
+            )
 
     @property
     def is_frequent_listening_device(self):
@@ -1723,7 +1775,10 @@ class ZWaveNode(ZWaveObject):
         if self._xml_handler is not None:
             return self._xml_handler['security_device']
         else:
-            return self._manager.isNodeSecurityDevice(self.home_id, self.id.node_id)
+            return self._manager.isNodeSecurityDevice(
+                self.home_id,
+                self.id.node_id
+            )
 
     @property
     def is_routing_device(self):
@@ -1735,7 +1790,10 @@ class ZWaveNode(ZWaveObject):
         if self._xml_handler is not None:
             return self._xml_handler['routing_device']
         else:
-            return self._manager.isNodeRoutingDevice(self.home_id, self.id.node_id)
+            return self._manager.isNodeRoutingDevice(
+                self.home_id,
+                self.id.node_id
+            )
 
     @property
     def is_sleeping(self):
@@ -1804,7 +1862,10 @@ class ZWaveNode(ZWaveObject):
             self.id.node_id
         )
 
-        return self._manager.requestNodeNeighborUpdate(self.home_id, self.id.node_id)
+        return self._manager.requestNodeNeighborUpdate(
+            self.home_id,
+            self.id.node_id
+        )
 
     @utils.logit
     def create_button(self, button_id):
@@ -1818,7 +1879,7 @@ class ZWaveNode(ZWaveObject):
 
         :rtype: bool
         """
-        if self._controller.is_bridge_controller:
+        if self._controller.is_bridge_controller:  # NOQA
             logger.debug(
                 'Send controller command : create_button, : '
                 'node : %s, button : %s',
@@ -1826,7 +1887,11 @@ class ZWaveNode(ZWaveObject):
                 button_id
             )
 
-            return self._manager.createButton(self.home_id, self.id.node_id, button_id)
+            return self._manager.createButton(
+                self.home_id,
+                self.id.node_id,
+                button_id
+            )
 
         return False
 
@@ -1842,7 +1907,7 @@ class ZWaveNode(ZWaveObject):
 
         :rtype: bool
         """
-        if self._controller.is_bridge_controller:
+        if self._controller.is_bridge_controller:  # NOQA
             logger.debug(
                 'Send controller command : delete_button, : '
                 'node : %s, button : %s',
@@ -1850,7 +1915,11 @@ class ZWaveNode(ZWaveObject):
                 button_id
             )
 
-            return self._manager.deleteButton(self.home_id, self.id.node_id, button_id)
+            return self._manager.deleteButton(
+                self.home_id,
+                self.id.node_id,
+                button_id
+            )
         return False
 
     @property
@@ -1917,7 +1986,11 @@ class ZWaveNode(ZWaveObject):
         if self.is_awake is False:
             logger.warning('Node state must a minimum set to awake')
             return False
-        self._manager.healNetworkNode(self.home_id, self.id.node_id, update_routes)
+        self._manager.healNetworkNode(
+            self.home_id,
+            self.id.node_id,
+            update_routes
+        )
         return True
 
     @utils.logit
@@ -1995,7 +2068,10 @@ class ZWaveNode(ZWaveObject):
             self.id.node_id
         )
 
-        return self._manager.deleteAllReturnRoutes(self.home_id, self.id.node_id)
+        return self._manager.deleteAllReturnRoutes(
+            self.home_id,
+            self.id.node_id
+        )
 
     @utils.logit
     def send_information(self):
@@ -2084,7 +2160,11 @@ class ZWaveNode(ZWaveObject):
         :return: if the request was sent successfully `True`/`False`
         :rtype: bool
         """
-        logger.debug('Set config param %s for node [%s]', param, self.id.node_id)
+        logger.debug(
+            'Set config param %s for node [%s]',
+            param,
+            self.id.node_id
+        )
         return self._manager.setConfigParam(
             self.home_id,
             self.id.node_id,
@@ -2151,7 +2231,10 @@ class ZWaveNode(ZWaveObject):
             is_failed=self.is_failed,
             values=list(value.as_dict for value in self.values.values()),
             neighbors=list(neighbor.id for neighbor in self.neighbors),
-            stats=self.stats.as_dict
+            stats={
+                k: v for k, v in self.stats.__dict__.items()
+                if not k.startswith('_')
+            }
         )
 
         for cls in self._bases:

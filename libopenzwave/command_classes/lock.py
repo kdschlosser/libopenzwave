@@ -45,7 +45,7 @@ class Lock(zwave_cmd_class.ZWaveCommandClass):
 
     # noinspection PyMissingOrEmptyDocstring
     class ValueIndexes(zwave_cmd_class.ValueIndexes):
-        locked = 0
+        lock_locked = 0
 
     @property
     def lock_locked(self):
@@ -58,8 +58,8 @@ class Lock(zwave_cmd_class.ZWaveCommandClass):
         :return: `True`/`False`
         :rtype: bool
         """
-        return self.values.locked.data
+        return self.values.lock_locked.data
 
     @lock_locked.setter
     def lock_locked(self, value):
-        self.values.locked.data = value
+        self.values.lock_locked.data = value

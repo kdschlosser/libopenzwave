@@ -49,7 +49,7 @@ along with python-openzwave. If not, see http://www.gnu.org/licenses.
 #
 # In the node.py file I have commented on how the nodes are built.
 
-# from .alarm import Alarm
+from .alarm import Alarm
 from .antitheft import Antitheft
 from .application_capability import ApplicationCapability
 from .application_status import ApplicationStatus
@@ -184,7 +184,7 @@ from .zwave_plus_info import ZwavePlusInfo
 from .zwave_cmd_class import ZWaveCommandClass
 
 # COMMAND_CLASS_ALARM = Alarm
-COMMAND_CLASS_ALARM = Notification
+COMMAND_CLASS_ALARM = Alarm
 COMMAND_CLASS_ANTITHEFT = Antitheft
 COMMAND_CLASS_APPLICATION_CAPABILITY = ApplicationCapability
 COMMAND_CLASS_APPLICATION_STATUS = ApplicationStatus

@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import HRVStatus, COMMAND_CLASS_HRV_STATUS
+from libopenzwave.command_classes import COMMAND_CLASS_HRV_STATUS
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveHRVStatus(HRVStatus):
+class ZWaveHRVStatus(COMMAND_CLASS_HRV_STATUS):
 
     def __init__(self):
         self._hrv_status_panel = None
-        HRVStatus.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._hrv_status_panel is None:

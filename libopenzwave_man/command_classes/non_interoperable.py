@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import NonInteroperable, COMMAND_CLASS_NON_INTEROPERABLE
+from libopenzwave.command_classes import COMMAND_CLASS_NON_INTEROPERABLE
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveNonInteroperable(NonInteroperable):
+class ZWaveNonInteroperable(COMMAND_CLASS_NON_INTEROPERABLE):
 
     def __init__(self):
         self._non_interoperable_panel = None
-        NonInteroperable.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._non_interoperable_panel is None:

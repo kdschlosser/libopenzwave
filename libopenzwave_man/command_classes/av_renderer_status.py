@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import AVRendererStatus, COMMAND_CLASS_AV_RENDERER_STATUS
+from libopenzwave.command_classes import COMMAND_CLASS_AV_RENDERER_STATUS
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveAVRendererStatus(AVRendererStatus):
+class ZWaveAVRendererStatus(COMMAND_CLASS_AV_RENDERER_STATUS):
 
     def __init__(self):
         self._av_renderer_status_panel = None
-        AVRendererStatus.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._av_renderer_status_panel is None:

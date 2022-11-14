@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import Language, COMMAND_CLASS_LANGUAGE
+from libopenzwave.command_classes import COMMAND_CLASS_LANGUAGE
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveLanguage(Language):
+class ZWaveLanguage(COMMAND_CLASS_LANGUAGE):
 
     def __init__(self):
         self._language_panel = None
-        Language.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._language_panel is None:

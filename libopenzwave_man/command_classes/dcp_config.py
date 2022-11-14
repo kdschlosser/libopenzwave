@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import DCPConfig, COMMAND_CLASS_DCP_CONFIG
+from libopenzwave.command_classes import COMMAND_CLASS_DCP_CONFIG
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveDCPConfig(DCPConfig):
+class ZWaveDCPConfig(COMMAND_CLASS_DCP_CONFIG):
 
     def __init__(self):
         self._dcp_config_panel = None
-        DCPConfig.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._dcp_config_panel is None:

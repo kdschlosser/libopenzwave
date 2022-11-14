@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import Indicator, COMMAND_CLASS_INDICATOR
+from libopenzwave.command_classes import COMMAND_CLASS_INDICATOR
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveIndicator(Indicator):
+class ZWaveIndicator(COMMAND_CLASS_INDICATOR):
 
     def __init__(self):
         self._indicator_panel = None
-        Indicator.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._indicator_panel is None:

@@ -38,6 +38,11 @@ from . import signals
 from . import utils
 from . import xml_handler
 
+from typing import TYPE_CHECKING, Generator
+
+if TYPE_CHECKING:
+    from .node import ZWaveNode
+
 
 logger = logging.getLogger(__name__)
 
@@ -494,6 +499,9 @@ SIGNAL_CONTROLLER_COMMAND
         self._locations_loaded = set()
 
     def __iter__(self):
+        """
+        :rtype: Generator[ZWaveNode]
+        """
         for node in sorted(
             list(self.nodes.values()),
             key=lambda x: (x.id.node_id, x.id.endpoint_id)
@@ -790,7 +798,8 @@ SIGNAL_CONTROLLER_COMMAND
 
         This property iterates over all of the nodes in the network getting
         the location name assigned to each node. it then yields a
-        :py:class:`libopenzwave.location.Location` instance for each unique name.
+        :py:class:`libopenzwave.location.Location` instance for
+        each unique name.
 
         You have the ability to iterate over the location instance to get the
         nodes that are in that location.
@@ -798,7 +807,8 @@ SIGNAL_CONTROLLER_COMMAND
         This is a very handy property for any applications that provide a UI
         that displays rooms and then in the rooms the nodes in that room.
 
-        :return: `list` of :py:class:`libopenzwave.location.ZWaveLocation` instances
+        :return: `list` of :py:class:`libopenzwave.location.ZWaveLocation`
+            instances
         :rtype: List[ZWaveLocation]
         """
 

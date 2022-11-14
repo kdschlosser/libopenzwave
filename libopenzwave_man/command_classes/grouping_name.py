@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import GroupingName, COMMAND_CLASS_GROUPING_NAME
+from libopenzwave.command_classes import COMMAND_CLASS_GROUPING_NAME
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveGroupingName(GroupingName):
+class ZWaveGroupingName(COMMAND_CLASS_GROUPING_NAME):
 
     def __init__(self):
         self._grouping_name_panel = None
-        GroupingName.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._grouping_name_panel is None:

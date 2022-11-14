@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import IRRepeater, COMMAND_CLASS_IR_REPEATER
+from libopenzwave.command_classes import COMMAND_CLASS_IR_REPEATER
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveIRRepeater(IRRepeater):
+class ZWaveIRRepeater(COMMAND_CLASS_IR_REPEATER):
 
     def __init__(self):
         self._ir_repeater_panel = None
-        IRRepeater.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._ir_repeater_panel is None:

@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import Association, COMMAND_CLASS_ASSOCIATION
+from libopenzwave.command_classes import COMMAND_CLASS_ASSOCIATION
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveAssociation(Association):
+class ZWaveAssociation(COMMAND_CLASS_ASSOCIATION):
 
     def __init__(self):
         self._association_panel = None
-        Association.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._association_panel is None:

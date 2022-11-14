@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import Mailbox, COMMAND_CLASS_MAILBOX
+from libopenzwave.command_classes import COMMAND_CLASS_MAILBOX
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveMailbox(Mailbox):
+class ZWaveMailbox(COMMAND_CLASS_MAILBOX):
 
     def __init__(self):
         self._mailbox_panel = None
-        Mailbox.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._mailbox_panel is None:

@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import ThermostatSetback, COMMAND_CLASS_THERMOSTAT_SETBACK
+from libopenzwave.command_classes import COMMAND_CLASS_THERMOSTAT_SETBACK
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveThermostatSetback(ThermostatSetback):
+class ZWaveThermostatSetback(COMMAND_CLASS_THERMOSTAT_SETBACK):
 
     def __init__(self):
         self._thermostat_setback_panel = None
-        ThermostatSetback.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._thermostat_setback_panel is None:

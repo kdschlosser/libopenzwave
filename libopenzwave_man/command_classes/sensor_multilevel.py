@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import SensorMultilevel, COMMAND_CLASS_SENSOR_MULTILEVEL
+from libopenzwave.command_classes import COMMAND_CLASS_SENSOR_MULTILEVEL
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveSensorMultilevel(SensorMultilevel):
+class ZWaveSensorMultilevel(COMMAND_CLASS_SENSOR_MULTILEVEL):
 
     def __init__(self):
         self._sensor_multilevel_panel = None
-        SensorMultilevel.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._sensor_multilevel_panel is None:

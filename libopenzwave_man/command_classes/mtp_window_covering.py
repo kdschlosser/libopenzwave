@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import MTPWindowCovering, COMMAND_CLASS_MTP_WINDOW_COVERING
+from libopenzwave.command_classes import COMMAND_CLASS_MTP_WINDOW_COVERING
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveMTPWindowCovering(MTPWindowCovering):
+class ZWaveMTPWindowCovering(COMMAND_CLASS_MTP_WINDOW_COVERING):
 
     def __init__(self):
         self._mtp_window_covering_panel = None
-        MTPWindowCovering.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._mtp_window_covering_panel is None:

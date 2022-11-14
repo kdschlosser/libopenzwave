@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import NetworkManagementProxy, COMMAND_CLASS_NETWORK_MANAGEMENT_PROXY
+from libopenzwave.command_classes import COMMAND_CLASS_NETWORK_MANAGEMENT_PROXY
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveNetworkManagementProxy(NetworkManagementProxy):
+class ZWaveNetworkManagementProxy(COMMAND_CLASS_NETWORK_MANAGEMENT_PROXY):
 
     def __init__(self):
         self._network_management_prox_panel = None
-        NetworkManagementProxy.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._network_management_prox_panel is None:

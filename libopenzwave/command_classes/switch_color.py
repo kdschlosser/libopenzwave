@@ -94,10 +94,11 @@ class SwitchColor(zwave_cmd_class.ZWaveCommandClass):
 
     # noinspection PyMissingOrEmptyDocstring
     class ValueIndexes(zwave_cmd_class.ValueIndexes):
-        color = 0
+        switch_color = 0
         switch_color_index = 1
         switch_color_channels = 2
         switch_color_fade_duration = 4
+        switch_color_target = 5
 
     @staticmethod
     def __normalize_value(value):

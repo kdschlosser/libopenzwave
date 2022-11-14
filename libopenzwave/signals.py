@@ -760,8 +760,8 @@ class Signal(str, metaclass=_SignalMetaClass):
         Sends the signal. (internal use only)
 
         :param sender:
-        :param *args:
-        :param **kwargs:
+        :param args:
+        :param kwargs:
         """
 
         for callback, obj in self._callbacks:
@@ -1582,7 +1582,8 @@ class _SIGNAL_NODE_ASSOCIATION_GROUP(Signal):
         * network: :py:class:`libopenzwave.network.ZWaveNetwork`
         * controller: :py:class:`libopenzwave.controller.ZWaveController`
         * node: :py:class:`libopenzwave.node.ZWaveNode`
-        * group: :py:class:`libopenzwave.association_group.ZWaveAssociationGroup`
+        * group:
+          :py:class:`libopenzwave.association_group.ZWaveAssociationGroup`
     """
     id = 50
     description = (

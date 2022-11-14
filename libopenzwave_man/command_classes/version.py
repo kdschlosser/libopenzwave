@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import Version, COMMAND_CLASS_VERSION
+from libopenzwave.command_classes import COMMAND_CLASS_VERSION
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveVersion(Version):
+class ZWaveVersion(COMMAND_CLASS_VERSION):
 
     def __init__(self):
         self._version_panel = None
-        Version.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._version_panel is None:

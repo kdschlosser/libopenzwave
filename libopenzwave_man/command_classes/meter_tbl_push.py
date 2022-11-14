@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import MeterTablePush, COMMAND_CLASS_METER_TBL_PUSH
+from libopenzwave.command_classes import COMMAND_CLASS_METER_TBL_PUSH
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveMeterTablePush(MeterTablePush):
+class ZWaveMeterTablePush(COMMAND_CLASS_METER_TBL_PUSH):
 
     def __init__(self):
         self._meter_tbl_push_panel = None
-        MeterTablePush.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._meter_tbl_push_panel is None:

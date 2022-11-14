@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import ManufacturerProprietary, COMMAND_CLASS_MANUFACTURER_PROPRIETARY
+from libopenzwave.command_classes import COMMAND_CLASS_MANUFACTURER_PROPRIETARY
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveManufacturerProprietary(ManufacturerProprietary):
+class ZWaveManufacturerProprietary(COMMAND_CLASS_MANUFACTURER_PROPRIETARY):
 
     def __init__(self):
         self._manufacturer_proprietar_panel = None
-        ManufacturerProprietary.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._manufacturer_proprietar_panel is None:

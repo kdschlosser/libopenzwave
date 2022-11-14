@@ -356,6 +356,11 @@ class NodeStats(object):
     txTime: int
 
 
+class NodeClassInformation(object):
+    name: str
+    version: int
+
+
 class NotificationEnum(Enum):
     # no doc
     def __init__(self, **kwargs):  # real signature unknown
@@ -1154,33 +1159,24 @@ class PyManager(object):
         """
         pass
 
-    def getNodeClassInformation(self, *args,
-                                **kwargs):  # real signature unknown
+    def getNodeClassInformation(self, home_id: int, node_id: int, command_class_id: int) -> NodeClassInformation:  # real signature unknown
         """
         Helper method to return whether a particular class is
-                available in a node
+        available in a node
 
-                :param home_id: The Home ID of the Z-Wave controller
-                    that manages the node.
-                :type home_id: int
+        :param home_id: The Home ID of the Z-Wave controller
+            that manages the node.
+        :type home_id: int
 
-                :param node_id: The ID of the node to query.
-                :type node_id: int
+        :param node_id: The ID of the node to query.
+        :type node_id: int
 
-                :param command_class_id: control class to query
-                :type command_class_id: int
+        :param command_class_id: control class to query
+        :type command_class_id: int
 
-                :param class_name: Specific name of class to query
-                    (default = `None`)
-                :type class_name: str, optional
+        :return: NodeClassInformation
 
-                :param class_version: Specific class version
-                    (default = `None`)
-                :type class_version: int, optional
-
-                :return: True if the node does have the class instantiated,
-                    will return name & version
-                :rtype: bool
+        :rtype: NodeClassInformation
         """
         pass
 

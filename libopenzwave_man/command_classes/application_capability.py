@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import ApplicationCapability, COMMAND_CLASS_APPLICATION_CAPABILITY
+from libopenzwave.command_classes import COMMAND_CLASS_APPLICATION_CAPABILITY
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveApplicationCapability(ApplicationCapability):
+class ZWaveApplicationCapability(COMMAND_CLASS_APPLICATION_CAPABILITY):
 
     def __init__(self):
         self._application_capabilit_panel = None
-        ApplicationCapability.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._application_capabilit_panel is None:

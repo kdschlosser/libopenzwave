@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import HumidityControlOperatingState, COMMAND_CLASS_HUMIDITY_CONTROL_OPERATING_STATE
+from libopenzwave.command_classes import COMMAND_CLASS_HUMIDITY_CONTROL_OPERATING_STATE
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveHumidityControlOperatingState(HumidityControlOperatingState):
+class ZWaveHumidityControlOperatingState(COMMAND_CLASS_HUMIDITY_CONTROL_OPERATING_STATE):
 
     def __init__(self):
         self._humidity_control_operating_state_panel = None
-        HumidityControlOperatingState.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._humidity_control_operating_state_panel is None:

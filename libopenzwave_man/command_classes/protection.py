@@ -27,17 +27,17 @@ This file is part of the **libopenzwave** project
 
 import wx
 
-from libopenzwave.command_classes import Protection, COMMAND_CLASS_PROTECTION
+from libopenzwave.command_classes import COMMAND_CLASS_PROTECTION
 
 from .. import value_index_panel
 from .. import header_panel
 
 
-class ZWaveProtection(Protection):
+class ZWaveProtection(COMMAND_CLASS_PROTECTION):
 
     def __init__(self):
         self._protection_panel = None
-        Protection.__init__(self)
+        super().__init__()
 
     def get_panel(self, parent):
         if self._protection_panel is None:
